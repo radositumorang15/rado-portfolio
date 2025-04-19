@@ -4,5 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()]
+  plugins: [react(), tailwindcss()],
+  assetsInclude: ['**/*.glb'], // This line ensures .glb files are handled as assets
 });

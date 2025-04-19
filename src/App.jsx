@@ -9,6 +9,7 @@ import { Projects } from "./components/projects/Projects";
 import { Blog } from "./components/blog/Blog";
 import "./index.css";
 import { Contact } from "./components/contacts/Contact";
+import Lanyard from "./components/lanyard/Lanyard";
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -24,6 +25,7 @@ function App() {
       >
         <Navbar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <MobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+          <Lanyard position={[0, 0, 12]} gravity={[0, -40, 0]} />
         <Home />
         <About />
         <Projects />
