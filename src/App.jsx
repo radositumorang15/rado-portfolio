@@ -6,10 +6,12 @@ import { MobileMenu } from "./components/nav/MobileMenu";
 import { Home } from "./components/home/Home";
 import { About } from "./components/about/About";
 import { Projects } from "./components/projects/Projects";
-import { Blog } from "./components/blog/Blog";
+import { Blog } from "./components/blog/Blog"
 import "./index.css";
 import { Contact } from "./components/contacts/Contact";
 import Lanyard from "./components/lanyard/Lanyard";
+import {Footer} from "./components/footer/Footer";
+
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -31,6 +33,7 @@ function App() {
         <Projects />
         <Blog/>
         <Contact />
+        <Footer/>
       </div>
     </>
   );
