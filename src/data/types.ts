@@ -65,3 +65,4 @@ export interface Skill {
   category: 'competent' | 'novice' | 'tool';
   related: string[];
 }
+

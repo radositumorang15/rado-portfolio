@@ -51,3 +51,4 @@ export function toggleAmbientAudio(enable: boolean) {
     console.error('Audio initialization error:', err);
   }
 }
+

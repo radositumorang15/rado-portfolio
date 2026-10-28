@@ -41,7 +41,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex justify-center items-end pb-24"
+      className="fixed inset-0 z-[1100] flex justify-center items-end pb-14"
       onClick={onClose}
     >
       <div

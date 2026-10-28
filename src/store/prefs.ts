@@ -53,7 +53,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
   setShell: (shell) => {
     let resolved: 'windows' | 'android' = 'windows';
     if (shell === 'auto') {
-      resolved = typeof window !== 'undefined' && window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches ? 'windows' : 'android';
+      resolved = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 'windows' : 'android';
     } else {
       resolved = shell;
     }
@@ -107,7 +107,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     const { shell, resolvedShell } = get();
     if (shell !== 'auto') return;
 
-    const isDesktop = window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches;
+    const isDesktop = window.innerWidth >= 1024;
     const nextResolved: 'windows' | 'android' = isDesktop ? 'windows' : 'android';
 
     if (nextResolved !== resolvedShell) {
@@ -131,7 +131,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
       });
     }
 
-    const isDesktop = window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches;
+    const isDesktop = window.innerWidth >= 1024;
     const effectiveShell = savedShell === 'auto' ? (isDesktop ? 'windows' : 'android') : savedShell;
 
     document.documentElement.setAttribute('data-shell', effectiveShell);

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Search,
   User,
@@ -11,42 +11,31 @@ import {
   FileText,
   Mail,
   Settings,
+  CloudSun,
+  Layers,
 } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
-import { usePrefsStore } from '../../../store/prefs';
 import { AppId } from '../../../lib/constants';
 import { DockItem } from './DockItem';
 import { StartLogo } from './StartLogo';
+import { TrayPill } from './TrayPill';
 
 interface DockProps {
   onToggleStart: () => void;
   onToggleSearch: () => void;
+  onToggleWidgets?: () => void;
 }
 
-export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => {
+export const Dock: React.FC<DockProps> = ({
+  onToggleStart,
+  onToggleSearch,
+  onToggleWidgets,
+}) => {
   const windows = useWindowsStore((s) => s.windows);
   const activeId = useWindowsStore((s) => s.activeId);
   const openWindow = useWindowsStore((s) => s.openWindow);
   const focusWindow = useWindowsStore((s) => s.focusWindow);
   const minimizeWindow = useWindowsStore((s) => s.minimizeWindow);
-  const dockAutoHide = usePrefsStore((s) => s.dockAutoHide);
-
-  const [isNearBottom, setIsNearBottom] = useState(false);
-  const hasMaximized = Object.values(windows).some((w) => w.isOpen && !w.isMinimized && w.isMaximized);
-  const shouldHide = dockAutoHide && hasMaximized && !isNearBottom;
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (window.innerHeight - e.clientY < 32) {
-        setIsNearBottom(true);
-      } else if (window.innerHeight - e.clientY > 90) {
-        setIsNearBottom(false);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handleAppClick = (id: AppId) => {
     const win = windows[id];
@@ -62,12 +51,24 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
   };
 
   return (
-    <div
-      className={`fixed bottom-3 left-1/2 -translate-x-1/2 z-[900] transition-transform duration-300 ease-out ${
-        shouldHide ? 'translate-y-[120%]' : 'translate-y-0'
-      }`}
-    >
-      <div className="glass-dock flex items-center gap-1 px-3 py-1.5 h-16 max-w-[92vw]">
+    <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#1c1c1c]/85 backdrop-blur-2xl border-t border-white/10 z-[1000] flex items-center justify-between px-3 select-none text-white shadow-2xl">
+      {/* Left: Weather Widget */}
+      <div className="flex items-center min-w-[140px]">
+        <button
+          onClick={onToggleWidgets}
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group"
+          title="Widgets & Weather"
+        >
+          <CloudSun size={18} className="text-amber-400 group-hover:scale-105 transition-transform" />
+          <div className="flex flex-col text-left leading-none">
+            <span className="text-[11px] font-semibold text-white/95">29°C</span>
+            <span className="text-[10px] text-white/60">Partly sunny</span>
+          </div>
+        </button>
+      </div>
+
+      {/* Center: Windows 11 Centered Taskbar Group */}
+      <div className="flex items-center gap-1">
         {/* Start Button */}
         <DockItem
           id="start"
@@ -84,9 +85,17 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
           onClick={onToggleSearch}
         />
 
-        <div className="w-[1px] h-7 bg-white/10 mx-1" />
+        {/* Task View */}
+        <DockItem
+          id="widgets"
+          label="Task View / Widgets"
+          icon={Layers}
+          onClick={onToggleWidgets || onToggleSearch}
+        />
 
-        {/* Content Apps */}
+        <div className="w-[1px] h-5 bg-white/15 mx-1" />
+
+        {/* Pinned & Open Content Apps */}
         <DockItem
           id="about"
           label="About Me"
@@ -128,9 +137,8 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
           onClick={() => handleAppClick('terminal')}
         />
 
-        <div className="w-[1px] h-7 bg-white/10 mx-1" />
+        <div className="w-[1px] h-5 bg-white/15 mx-1" />
 
-        {/* Action Apps */}
         <DockItem
           id="resume"
           label="Resume (CV)"
@@ -147,10 +155,6 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
           isActive={activeId === 'contact' && !windows.contact.isMinimized}
           onClick={() => handleAppClick('contact')}
         />
-
-        <div className="w-[1px] h-7 bg-white/10 mx-1" />
-
-        {/* Settings */}
         <DockItem
           id="settings"
           label="Settings"
@@ -160,7 +164,11 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
           onClick={() => handleAppClick('settings')}
         />
       </div>
-    </div>
+
+      {/* Right: Windows 11 System Tray */}
+      <div className="flex items-center justify-end min-w-[140px] h-full">
+        <TrayPill />
+      </div>
+    </footer>
   );
 };
-

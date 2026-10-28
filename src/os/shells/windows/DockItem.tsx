@@ -5,7 +5,7 @@ import { LucideIcon } from 'lucide-react';
 import { AppId } from '../../../lib/constants';
 
 interface DockItemProps {
-  id: AppId | 'start' | 'search';
+  id: AppId | 'start' | 'search' | 'widgets';
   label: string;
   icon: LucideIcon | React.ComponentType<{ size?: number; className?: string }>;
   isOpen?: boolean;
@@ -22,11 +22,22 @@ export const DockItem: React.FC<DockItemProps> = ({
   onClick,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isBouncing, setIsBouncing] = useState(false);
+
+  const handleClick = () => {
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 667);
+    onClick();
+  };
 
   return (
     <div
-      className="dock-item flex flex-col items-center justify-center w-12 h-12 relative cursor-pointer group"
-      onClick={onClick}
+      className={`relative flex items-center justify-center w-10 h-10 rounded-[var(--win-control-corner-radius)] transition-all cursor-pointer select-none group ${
+        isActive
+          ? 'bg-white/15 shadow-xs'
+          : 'hover:bg-white/10 active:bg-white/5'
+      } ${isBouncing ? 'animate-taskbar-bounce' : ''}`}
+      onClick={handleClick}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
       role="button"
@@ -35,33 +46,40 @@ export const DockItem: React.FC<DockItemProps> = ({
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onClick();
+          handleClick();
         }
       }}
     >
-      {/* Tooltip */}
+      {/* Windows 11 Official Tooltip (4px radius rule exception) */}
       {showTooltip && (
-        <div className="absolute -top-10 px-2.5 py-1 text-xs font-medium text-white bg-neutral-900/90 backdrop-blur-md border border-white/10 rounded-md shadow-lg whitespace-nowrap pointer-events-none z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div
+          className="win-tooltip absolute -top-9 px-2.5 py-1 text-[11px] font-normal text-white pointer-events-none z-50 animate-in fade-in zoom-in-95 duration-100 whitespace-nowrap"
+          style={{
+            borderRadius: 'var(--win-control-corner-radius)',
+            backgroundColor: 'var(--win-acrylic-transient-bg)',
+            border: '1px solid var(--win-surface-stroke-flyout)',
+            boxShadow: 'var(--win-shadow-tooltip)',
+          }}
+        >
           {label}
         </div>
       )}
 
-      {/* Icon Squircle */}
-      <div className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white transition-colors shadow-sm">
+      {/* App Icon */}
+      <div className="flex items-center justify-center text-white/90 group-hover:text-white transition-colors">
         <Icon size={20} />
       </div>
 
-      {/* Active/Open Pill */}
+      {/* Windows 11 Running/Active Indicator Bar */}
       {isOpen && (
         <span
-          className="dock-pill"
-          style={{
-            width: isActive ? 16 : 6,
-            backgroundColor: isActive ? 'var(--rn-accent, #4C8DF6)' : 'rgba(255, 255, 255, 0.4)',
-          }}
+          className={`absolute bottom-0.5 transition-all duration-200 ${
+            isActive
+              ? 'w-4 h-[3px] bg-[var(--win-accent-default)] rounded-full shadow-[0_0_6px_rgba(96,205,255,0.8)]'
+              : 'w-1.5 h-1.5 bg-white/60 rounded-full'
+          }`}
         />
       )}
     </div>
   );
 };
-

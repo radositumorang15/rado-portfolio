@@ -1,60 +1,49 @@
 [data-shell="android"] {
-  --md-shape-none: 0px;
-  --md-shape-xs: 4px;
-  --md-shape-sm: 8px;
-  --md-shape-md: 12px;
-  --md-shape-large: 16px;
-  --md-shape-large-inc: 20px;
-  --md-shape-xl: 28px;
-  --md-shape-xl-inc: 32px;
-  --md-shape-xxl: 48px;
-  --md-shape-full: 9999px;
-
-  --shell-radius-card:    var(--md-shape-large);
-  --shell-radius-control: var(--md-shape-full);
-
-  --shadow-2: 0 1px 2px rgba(0,0,0,.15);
-  --shadow-8: 0 2px 6px 2px rgba(0,0,0,.15);
-  --shadow-16: 0 4px 12px 4px rgba(0,0,0,.18);
-  --shadow-dock: 0 4px 16px rgba(0,0,0,.20);
-  --shadow-window-active: 0 4px 16px rgba(0,0,0,.20);
-  --shadow-window-inactive: 0 2px 8px rgba(0,0,0,.12);
+  --shell-bg: var(--m3-surface);
+  --shell-surface: var(--m3-surface-container);
+  --shell-surface-alt: var(--m3-surface-container-high);
+  --shell-text: var(--m3-on-surface);
+  --shell-text-muted: var(--m3-on-surface-variant);
+  --shell-border: var(--m3-outline-variant);
+  --shell-accent: var(--m3-primary);
+  --shell-on-accent: var(--m3-on-primary);
+  --shell-accent-soft: var(--m3-primary-container);
+  --shell-radius-card: var(--m3-radius-card);
+  --shell-radius-control: var(--m3-radius-pill);
 }
 
-[data-shell="android"][data-theme="light"] {
-  --shell-bg:           #F8FAFD;
-  --shell-surface:      #ECF0F7;
-  --shell-surface-alt:  #E6EAF2;
-  --shell-text:         #1A1C1E;
-  --shell-text-muted:   #43474E;
-  --shell-text-disabled:rgba(26,28,30,.38);
-  --shell-border:       #C3C7CF;
-  --shell-border-strong:#73777F;
-  --shell-accent:       #0B57D0;
-  --shell-on-accent:    #FFFFFF;
-  --shell-accent-soft:  #D3E3FD;
-  --shell-success:      #146C2E;
-  --shell-danger:       #B3261E;
-  --shell-focus:        #0B57D0;
-  --acrylic-bg:         rgba(248,250,253,.85);
-  --acrylic-border:     rgba(0,0,0,.08);
+/* M3 Expressive Floating Toolbar */
+.m3-floating-toolbar {
+  height: 64px;
+  padding: 0 12px;
+  border-radius: var(--m3-radius-pill);
+  background-color: var(--m3-surface-container-highest);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
-[data-shell="android"][data-theme="dark"] {
-  --shell-bg:           #131314;
-  --shell-surface:      #1E1F20;
-  --shell-surface-alt:  #282A2C;
-  --shell-text:         #E3E3E3;
-  --shell-text-muted:   #C4C7C5;
-  --shell-text-disabled:rgba(227,227,227,.38);
-  --shell-border:       #444746;
-  --shell-border-strong:#8E918F;
-  --shell-accent:       #A8C7FA;
-  --shell-on-accent:    #062E6F;
-  --shell-accent-soft:  #0842A0;
-  --shell-success:      #6DD58C;
-  --shell-danger:       #F2B8B5;
-  --shell-focus:        #A8C7FA;
-  --acrylic-bg:         rgba(19,19,20,.85);
-  --acrylic-border:     rgba(255,255,255,.08);
+/* M3 Grouped Notification Cards Stack */
+.m3-card-stack-top {
+  border-radius: 24px 24px 6px 6px;
+}
+
+.m3-card-stack-mid {
+  border-radius: 6px;
+}
+
+.m3-card-stack-bottom {
+  border-radius: 6px 6px 24px 24px;
+}
+
+.m3-card-single {
+  border-radius: var(--m3-radius-card);
+}
+
+/* M3 Scallop / Cookie Decorative Avatar Mask */
+.m3-shape-cookie {
+  clip-path: polygon(
+    50% 0%, 63% 5%, 75% 14%, 85% 25%, 95% 37%, 100% 50%,
+    95% 63%, 85% 75%, 75% 86%, 63% 95%, 50% 100%,
+    37% 95%, 25% 86%, 15% 75%, 5% 63%, 0% 50%,
+    5% 37%, 15% 25%, 25% 14%, 37% 5%
+  );
 }

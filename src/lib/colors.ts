@@ -29,3 +29,4 @@ export function applyAccentColor(accentId: string) {
 
   localStorage.setItem('rn_accent', preset.id);
 }
+

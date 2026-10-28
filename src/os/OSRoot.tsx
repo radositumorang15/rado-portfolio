@@ -24,7 +24,7 @@ export const OSRoot: React.FC = () => {
       updateResponsiveShell();
     };
 
-    const mediaQuery = window.matchMedia('(min-width: 1024px) and (pointer: fine)');
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
     const handleMedia = () => {
       updateResponsiveShell();
     };

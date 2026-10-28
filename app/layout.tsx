@@ -54,7 +54,7 @@ export default function RootLayout({
                   }
                   var s = localStorage.getItem('rn_shell');
                   if (!s || s === 'auto') {
-                    s = (window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches) ? 'windows' : 'android';
+                    s = window.innerWidth >= 1024 ? 'windows' : 'android';
                   }
                   var l = localStorage.getItem('rn_lang') || 'en';
                   document.documentElement.setAttribute('data-theme', t);

@@ -34,3 +34,4 @@ export function getTranslation(lang: Language, path: string): string {
 
   return typeof current === 'string' ? current : path;
 }
+

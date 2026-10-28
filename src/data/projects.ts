@@ -113,3 +113,4 @@ export const projectsData: Project[] = [
     images: ['/images/projects/titik-makan.png'],
   },
 ];
+

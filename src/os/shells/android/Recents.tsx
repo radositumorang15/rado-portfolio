@@ -88,3 +88,4 @@ export const Recents: React.FC<RecentsProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
+

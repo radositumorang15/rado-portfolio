@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Rnd } from 'react-rnd';
-import { Minus, Square, Copy, X, LucideIcon } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 import { useWindowsStore, WindowState } from '../../../store/windows';
 
 interface WindowProps {
@@ -23,70 +23,96 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
 
   const isActive = activeId === win.id;
 
+  const renderTitleBar = () => (
+    <header
+      className="window-titlebar h-9 flex items-center justify-between pl-3.5 pr-0 select-none shrink-0 cursor-grab active:cursor-grabbing border-b border-[var(--win-card-stroke-default)]"
+      onDoubleClick={() => toggleMaximizeWindow(win.id)}
+    >
+      <div className="flex items-center gap-2.5 pointer-events-none">
+        <Icon
+          size={14}
+          className={isActive ? 'text-[var(--win-accent-default)]' : 'text-[var(--win-text-tertiary)]'}
+        />
+        <span
+          className={`text-xs tracking-normal ${
+            isActive
+              ? 'font-semibold text-[var(--win-text-primary)]'
+              : 'font-normal text-[var(--win-text-secondary)]'
+          }`}
+        >
+          {win.title}
+        </span>
+      </div>
+
+      {/* Windows 11 Official Caption Controls */}
+      <div className="flex items-center h-full">
+        <button
+          onClick={() => minimizeWindow(win.id)}
+          className="w-[46px] h-full flex items-center justify-center hover:bg-white/10 active:bg-white/5 text-[var(--win-text-primary)] transition-colors"
+          aria-label="Minimize"
+          title="Minimize"
+        >
+          <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
+            <rect width="10" height="1" />
+          </svg>
+        </button>
+        <button
+          onClick={() => toggleMaximizeWindow(win.id)}
+          className="w-[46px] h-full flex items-center justify-center hover:bg-white/10 active:bg-white/5 text-[var(--win-text-primary)] transition-colors"
+          aria-label={win.isMaximized ? 'Restore' : 'Maximize'}
+          title={win.isMaximized ? 'Restore' : 'Maximize'}
+        >
+          {win.isMaximized ? (
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+              <rect x="2.5" y="0.5" width="7" height="7" />
+              <polyline points="0.5,2.5 0.5,9.5 7.5,9.5 7.5,7.5" />
+            </svg>
+          ) : (
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+              <rect x="0.5" y="0.5" width="9" height="9" />
+            </svg>
+          )}
+        </button>
+        <button
+          onClick={() => closeWindow(win.id)}
+          className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--win-text-primary)] transition-colors"
+          aria-label="Close"
+          title="Close"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+            <line x1="0" y1="0" x2="10" y2="10" />
+            <line x1="10" y1="0" x2="0" y2="10" />
+          </svg>
+        </button>
+      </div>
+    </header>
+  );
+
+  // Maximized State: 0px Radius Rule
   if (win.isMaximized) {
     return (
       <div
-        className="fixed inset-0 z-[500] flex flex-col bg-[var(--shell-bg)] border-none overflow-hidden select-text"
+        className="fixed top-0 left-0 right-0 bottom-12 z-[500] flex flex-col rounded-none border-none overflow-hidden select-text shadow-none"
+        style={{
+          backgroundColor: isActive ? 'var(--win-mica-active-bg)' : 'var(--win-mica-inactive-bg)',
+          backdropFilter: isActive ? 'blur(60px)' : 'none',
+        }}
         onClick={() => focusWindow(win.id)}
         role="dialog"
         aria-label={win.title}
       >
-        {/* Title bar */}
-        <div
-          className="h-8 flex items-center justify-between pl-3 pr-0 bg-[var(--shell-surface)] border-b border-[var(--shell-border)] select-none shrink-0"
-          onDoubleClick={() => toggleMaximizeWindow(win.id)}
-        >
-          <div className="flex items-center gap-2">
-            <Icon size={14} className={isActive ? 'text-[var(--rn-accent)]' : 'text-neutral-400'} />
-            <span className={`text-xs ${isActive ? 'font-semibold text-[var(--shell-text)]' : 'font-normal text-[var(--shell-text-muted)]'}`}>
-              {win.title}
-            </span>
-          </div>
+        {/* Base Layer: Title Bar */}
+        {renderTitleBar()}
 
-          <div className="flex items-center h-full">
-            <button
-              onClick={() => minimizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
-              aria-label="Minimize"
-              title="Minimize"
-            >
-              <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
-                <rect width="10" height="1" />
-              </svg>
-            </button>
-            <button
-              onClick={() => toggleMaximizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
-              aria-label="Restore"
-              title="Restore"
-            >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
-                <rect x="2.5" y="0.5" width="7" height="7" />
-                <polyline points="0.5,2.5 0.5,9.5 7.5,9.5 7.5,7.5" />
-              </svg>
-            </button>
-            <button
-              onClick={() => closeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--shell-text)] transition-colors"
-              aria-label="Close"
-              title="Close"
-            >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
-                <line x1="0" y1="0" x2="10" y2="10" />
-                <line x1="10" y1="0" x2="0" y2="10" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-auto bg-[var(--shell-bg)] text-[var(--shell-text)]">
+        {/* Content Layer: Primary Workspace */}
+        <div className="flex-1 overflow-auto bg-[var(--win-layer-bg)] rounded-none text-[var(--win-text-primary)]">
           {children}
         </div>
       </div>
     );
   }
 
+  // Floating Restored State: 8px Radius & Two-Layer System
   return (
     <Rnd
       size={{ width: win.w, height: win.h }}
@@ -95,8 +121,8 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
       onResizeStop={(e, direction, ref, delta, position) => {
         updatePosition(win.id, position.x, position.y, ref.offsetWidth, ref.offsetHeight);
       }}
-      minWidth={360}
-      minHeight={280}
+      minWidth={380}
+      minHeight={290}
       bounds="window"
       dragHandleClassName="window-titlebar"
       style={{ zIndex: win.z }}
@@ -104,63 +130,20 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
       className="flex flex-col"
     >
       <div
-        className={`flex-1 flex flex-col rounded-lg border overflow-hidden select-text transition-shadow duration-150 ${
-          isActive
-            ? 'border-[var(--shell-border-strong,#757575)] shadow-[0_16px_40px_rgba(0,0,0,0.35)]'
-            : 'border-[var(--shell-border,rgba(255,255,255,0.08))] shadow-[0_8px_20px_rgba(0,0,0,0.2)]'
-        } bg-[var(--shell-bg)]`}
+        className="flex-1 flex flex-col rounded-[8px] border border-[var(--win-surface-stroke-default)] overflow-hidden select-text transition-all duration-150"
+        style={{
+          boxShadow: isActive ? 'var(--win-shadow-window-active)' : 'var(--win-shadow-window-inactive)',
+          backgroundColor: isActive ? 'var(--win-mica-active-bg)' : 'var(--win-mica-inactive-bg)',
+          backdropFilter: isActive ? 'blur(60px)' : 'none',
+        }}
         role="dialog"
         aria-label={win.title}
       >
-        {/* Title bar */}
-        <div
-          className="window-titlebar h-8 flex items-center justify-between pl-3 pr-0 bg-[var(--shell-surface)] border-b border-[var(--shell-border)] cursor-grab active:cursor-grabbing select-none shrink-0"
-          onDoubleClick={() => toggleMaximizeWindow(win.id)}
-        >
-          <div className="flex items-center gap-2 pointer-events-none">
-            <Icon size={14} className={isActive ? 'text-[var(--rn-accent)]' : 'text-neutral-400'} />
-            <span className={`text-xs ${isActive ? 'font-semibold text-[var(--shell-text)]' : 'font-normal text-[var(--shell-text-muted)]'}`}>
-              {win.title}
-            </span>
-          </div>
+        {/* Base Layer: Foundation (Title Bar) */}
+        {renderTitleBar()}
 
-          <div className="flex items-center h-full">
-            <button
-              onClick={() => minimizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
-              aria-label="Minimize"
-              title="Minimize"
-            >
-              <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
-                <rect width="10" height="1" />
-              </svg>
-            </button>
-            <button
-              onClick={() => toggleMaximizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
-              aria-label="Maximize"
-              title="Maximize"
-            >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
-                <rect x="0.5" y="0.5" width="9" height="9" />
-              </svg>
-            </button>
-            <button
-              onClick={() => closeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--shell-text)] transition-colors"
-              aria-label="Close"
-              title="Close"
-            >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
-                <line x1="0" y1="0" x2="10" y2="10" />
-                <line x1="10" y1="0" x2="0" y2="10" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Content Body */}
-        <div className="flex-1 overflow-auto bg-[var(--shell-bg)] text-[var(--shell-text)]">
+        {/* Content Layer: Primary Workspace with 8px top-left radius */}
+        <div className="flex-1 overflow-auto bg-[var(--win-layer-bg)] rounded-tl-[8px] border-t border-l border-[var(--win-card-stroke-default)] text-[var(--win-text-primary)]">
           {children}
         </div>
       </div>

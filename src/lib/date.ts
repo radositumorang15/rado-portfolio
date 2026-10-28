@@ -24,3 +24,4 @@ export function formatDuration(startISO: string, endISO: string | 'present'): st
 
   return durationStr.trim();
 }
+

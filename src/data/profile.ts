@@ -40,3 +40,4 @@ export const profileData: Profile = {
     languages: 'Indonesian, English',
   },
 };
+
