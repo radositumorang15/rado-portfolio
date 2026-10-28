@@ -55,9 +55,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
               onClose();
               onOpenSearch();
             }}
-            className="flex items-center gap-2.5 px-4 h-10 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-sm text-white/60 transition-colors"
+            className="flex items-center gap-2.5 px-4 h-9 rounded-md bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-xs text-white/60 transition-colors shadow-xs"
           >
-            <Search size={16} />
+            <Search size={14} className="text-white/60" />
             <span>Search apps, projects, skills... (Ctrl+K)</span>
           </div>
 
@@ -65,8 +65,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs font-semibold text-white/80 px-1">
               <span>Pinned</span>
+              <span className="text-[11px] text-blue-400 font-normal">All apps ›</span>
             </div>
-            <div className="grid grid-cols-4 gap-3 py-1">
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2.5 py-1">
               {PINNED_APPS.map((app) => {
                 const Icon = app.icon;
                 return (

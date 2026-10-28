@@ -18,17 +18,17 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
 }) => {
   return (
     <div className="absolute inset-0 z-30 flex flex-col bg-[var(--shell-bg,#131314)] text-[var(--shell-text,#E3E3E3)] animate-in slide-in-from-bottom-8 duration-250 select-text">
-      {/* Top App Bar */}
-      <div className="h-14 px-4 flex items-center justify-between border-b border-[var(--shell-border,rgba(255,255,255,0.08))] shrink-0 bg-[var(--shell-surface,#1E1F20)] select-none">
-        <div className="flex items-center gap-3">
+      {/* Top App Bar (Material 3 style) */}
+      <div className="h-16 px-4 flex items-center justify-between border-b border-white/5 shrink-0 bg-[var(--shell-surface,#1E1F20)] select-none shadow-xs">
+        <div className="flex items-center gap-3.5">
           <button
             onClick={onBack}
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all"
             aria-label="Back"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={20} />
           </button>
-          <h1 className="text-sm font-semibold tracking-wide">{title}</h1>
+          <h1 className="text-base font-bold tracking-tight text-white/95">{title}</h1>
         </div>
       </div>
 

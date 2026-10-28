@@ -38,7 +38,7 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
         >
           <div className="flex items-center gap-2">
             <Icon size={14} className={isActive ? 'text-[var(--rn-accent)]' : 'text-neutral-400'} />
-            <span className={`text-xs font-medium ${isActive ? 'text-[var(--shell-text)]' : 'text-[var(--shell-text-muted)]'}`}>
+            <span className={`text-xs ${isActive ? 'font-semibold text-[var(--shell-text)]' : 'font-normal text-[var(--shell-text-muted)]'}`}>
               {win.title}
             </span>
           </div>
@@ -46,24 +46,35 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
           <div className="flex items-center h-full">
             <button
               onClick={() => minimizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/20 text-[var(--shell-text)] transition-colors"
+              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
               aria-label="Minimize"
+              title="Minimize"
             >
-              <Minus size={12} />
+              <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
+                <rect width="10" height="1" />
+              </svg>
             </button>
             <button
               onClick={() => toggleMaximizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/20 text-[var(--shell-text)] transition-colors"
+              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
               aria-label="Restore"
+              title="Restore"
             >
-              <Copy size={11} />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+                <rect x="2.5" y="0.5" width="7" height="7" />
+                <polyline points="0.5,2.5 0.5,9.5 7.5,9.5 7.5,7.5" />
+              </svg>
             </button>
             <button
               onClick={() => closeWindow(win.id)}
               className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--shell-text)] transition-colors"
               aria-label="Close"
+              title="Close"
             >
-              <X size={13} />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+                <line x1="0" y1="0" x2="10" y2="10" />
+                <line x1="10" y1="0" x2="0" y2="10" />
+              </svg>
             </button>
           </div>
         </div>
@@ -108,7 +119,7 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
         >
           <div className="flex items-center gap-2 pointer-events-none">
             <Icon size={14} className={isActive ? 'text-[var(--rn-accent)]' : 'text-neutral-400'} />
-            <span className={`text-xs font-medium ${isActive ? 'text-[var(--shell-text)]' : 'text-[var(--shell-text-muted)]'}`}>
+            <span className={`text-xs ${isActive ? 'font-semibold text-[var(--shell-text)]' : 'font-normal text-[var(--shell-text-muted)]'}`}>
               {win.title}
             </span>
           </div>
@@ -116,24 +127,34 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
           <div className="flex items-center h-full">
             <button
               onClick={() => minimizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/20 text-[var(--shell-text)] transition-colors"
+              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
               aria-label="Minimize"
+              title="Minimize"
             >
-              <Minus size={12} />
+              <svg width="10" height="1" viewBox="0 0 10 1" fill="currentColor">
+                <rect width="10" height="1" />
+              </svg>
             </button>
             <button
               onClick={() => toggleMaximizeWindow(win.id)}
-              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/20 text-[var(--shell-text)] transition-colors"
+              className="w-[46px] h-full flex items-center justify-center hover:bg-neutral-500/15 active:bg-neutral-500/25 text-[var(--shell-text)] transition-colors"
               aria-label="Maximize"
+              title="Maximize"
             >
-              <Square size={11} />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+                <rect x="0.5" y="0.5" width="9" height="9" />
+              </svg>
             </button>
             <button
               onClick={() => closeWindow(win.id)}
               className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--shell-text)] transition-colors"
               aria-label="Close"
+              title="Close"
             >
-              <X size={13} />
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1">
+                <line x1="0" y1="0" x2="10" y2="10" />
+                <line x1="10" y1="0" x2="0" y2="10" />
+              </svg>
             </button>
           </div>
         </div>
