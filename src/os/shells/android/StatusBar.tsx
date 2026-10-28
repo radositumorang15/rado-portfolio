@@ -50,3 +50,4 @@ export const StatusBar: React.FC<StatusBarProps> = ({ onPullDownShade }) => {
     </div>
   );
 };
+

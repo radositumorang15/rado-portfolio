@@ -47,3 +47,4 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
     </div>
   );
 };
+

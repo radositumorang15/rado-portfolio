@@ -31,3 +31,4 @@ export const APP_IDS = [
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];
+

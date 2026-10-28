@@ -78,3 +78,4 @@ export const notch = {
   setState: (state: NotchState) => useNotchStore.getState().setState(state),
   setMood: (mood: Mood) => useNotchStore.getState().setMood(mood),
 };
+

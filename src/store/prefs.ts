@@ -10,12 +10,14 @@ interface PrefsState {
   shell: Shell;
   resolvedShell: 'windows' | 'android';
   language: Language;
+  accent: string;
   reduceMotion: boolean;
   dockAutoHide: boolean;
   dynamicColor: boolean;
   setTheme: (theme: Theme) => void;
   setShell: (shell: Shell) => void;
   setLanguage: (lang: Language) => void;
+  setAccent: (accent: string) => void;
   setReduceMotion: (reduce: boolean) => void;
   setDockAutoHide: (autoHide: boolean) => void;
   setDynamicColor: (dynamic: boolean) => void;
@@ -28,6 +30,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
   shell: 'auto',
   resolvedShell: 'windows',
   language: 'en',
+  accent: 'blue',
   reduceMotion: false,
   dockAutoHide: true,
   dynamicColor: true,
@@ -68,6 +71,15 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     set({ language });
   },
 
+  setAccent: (accent) => {
+    if (typeof window !== 'undefined') {
+      import('../lib/colors').then(({ applyAccentColor }) => {
+        applyAccentColor(accent);
+      });
+    }
+    set({ accent });
+  },
+
   setReduceMotion: (reduceMotion) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('rn_motion', String(reduceMotion));
@@ -95,12 +107,21 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     const domShell = document.documentElement.getAttribute('data-shell') as 'windows' | 'android' | null;
     const savedLang = localStorage.getItem('rn_lang') as Language | null;
     const savedMotion = localStorage.getItem('rn_motion') === 'true';
+    const savedAccent = localStorage.getItem('rn_accent');
+
+    if (savedAccent) {
+      import('../lib/colors').then(({ applyAccentColor }) => {
+        applyAccentColor(savedAccent);
+      });
+    }
 
     set({
       resolvedTheme: domTheme || 'dark',
       resolvedShell: domShell || (window.innerWidth >= 1024 ? 'windows' : 'android'),
       language: savedLang || 'en',
+      accent: savedAccent || 'blue',
       reduceMotion: savedMotion,
     });
   },
 }));
+

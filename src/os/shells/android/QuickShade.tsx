@@ -108,3 +108,4 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
+

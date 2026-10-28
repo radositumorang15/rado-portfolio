@@ -174,3 +174,4 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
     });
   },
 }));
+

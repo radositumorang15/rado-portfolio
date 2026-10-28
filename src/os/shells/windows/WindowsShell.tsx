@@ -19,6 +19,7 @@ import { TrayPill } from './TrayPill';
 import { StartMenu } from './StartMenu';
 import { WidgetBoard } from './WidgetBoard';
 import { Palette } from './Palette';
+import { ContextMenu } from './ContextMenu';
 import { NotchHost } from '../../notch/NotchHost';
 import { AppId } from '../../../lib/constants';
 
@@ -47,9 +48,22 @@ export const WindowsShell: React.FC = () => {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isWidgetsOpen, setIsWidgetsOpen] = useState(false);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; isOpen: boolean }>({
+    x: 0,
+    y: 0,
+    isOpen: false,
+  });
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, isOpen: true });
+  };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[#18181b] select-none text-white">
+    <div
+      onContextMenu={handleContextMenu}
+      className="relative w-screen h-screen overflow-hidden bg-[#18181b] select-none text-white"
+    >
       {/* Dynamic Wallpaper background */}
       <div className="absolute inset-0 bg-radial from-blue-900/40 via-neutral-900/90 to-neutral-950 z-0 pointer-events-none" />
 
@@ -143,6 +157,15 @@ export const WindowsShell: React.FC = () => {
 
       {/* Tray Pill (Bottom Right) */}
       <TrayPill />
+
+      {/* Desktop Context Menu */}
+      <ContextMenu
+        x={contextMenu.x}
+        y={contextMenu.y}
+        isOpen={contextMenu.isOpen}
+        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        onOpenSearch={() => setIsSearchOpen(true)}
+      />
     </div>
   );
 };

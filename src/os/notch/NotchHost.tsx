@@ -102,3 +102,4 @@ export const NotchHost: React.FC<NotchHostProps> = ({ platform }) => {
     </div>
   );
 };
+

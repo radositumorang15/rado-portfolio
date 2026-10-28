@@ -19,6 +19,7 @@ import { AppId } from '../../../lib/constants';
 interface HomeProps {
   onOpenApp: (id: AppId) => void;
   onOpenSearch: () => void;
+  onOpenRecents?: () => void;
 }
 
 const APPS: { id: AppId; label: string; icon: LucideIcon }[] = [
@@ -34,7 +35,7 @@ const APPS: { id: AppId; label: string; icon: LucideIcon }[] = [
 
 const FAVORITES: AppId[] = ['about', 'projects', 'resume', 'contact'];
 
-export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch }) => {
+export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecents }) => {
   return (
     <div className="flex-1 flex flex-col justify-between px-5 pt-3 pb-6 text-white overflow-y-auto">
       {/* Top: At-a-glance & Profile Widget */}
@@ -130,8 +131,11 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch }) => {
         </div>
 
         {/* Gesture Pill */}
-        <div className="flex justify-center pt-2">
-          <div className="w-28 h-1 rounded-full bg-white/40" />
+        <div
+          className="flex justify-center pt-2 cursor-pointer"
+          onClick={onOpenRecents}
+        >
+          <div className="w-28 h-1 rounded-full bg-white/40 hover:bg-white/70 transition-colors" />
         </div>
       </div>
     </div>

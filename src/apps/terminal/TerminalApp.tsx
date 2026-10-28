@@ -152,3 +152,4 @@ Education: ${profileData.education.institution} (GPA ${profileData.education.gpa
     />
   );
 };
+

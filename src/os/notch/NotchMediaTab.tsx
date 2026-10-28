@@ -3,10 +3,16 @@
 import React from 'react';
 import { Play, Pause, Music, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 import { useNotchStore } from './notchStore';
+import { toggleAmbientAudio } from '../../lib/audio';
 
 export const NotchMediaTab: React.FC = () => {
   const isPlaying = useNotchStore((s) => s.isPlaying);
   const togglePlayback = useNotchStore((s) => s.togglePlayback);
+
+  const handleToggle = () => {
+    toggleAmbientAudio(!isPlaying);
+    togglePlayback();
+  };
 
   return (
     <div className="w-full flex flex-col gap-2.5 px-4 py-2">
@@ -28,7 +34,7 @@ export const NotchMediaTab: React.FC = () => {
           <SkipBack size={14} />
         </button>
         <button
-          onClick={togglePlayback}
+          onClick={handleToggle}
           className="nx-btn p-2 rounded-full bg-white text-black hover:bg-white/90"
           aria-label={isPlaying ? 'Pause' : 'Play'}
         >
@@ -41,3 +47,4 @@ export const NotchMediaTab: React.FC = () => {
     </div>
   );
 };
+

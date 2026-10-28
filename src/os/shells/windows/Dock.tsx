@@ -163,3 +163,4 @@ export const Dock: React.FC<DockProps> = ({ onToggleStart, onToggleSearch }) => 
     </div>
   );
 };
+

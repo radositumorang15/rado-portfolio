@@ -5,6 +5,7 @@ import { StatusBar } from './StatusBar';
 import { Home } from './Home';
 import { AppScaffold } from './AppScaffold';
 import { QuickShade } from './QuickShade';
+import { Recents } from './Recents';
 import { Palette } from '../windows/Palette';
 import { useWindowsStore } from '../../../store/windows';
 import { AppId } from '../../../lib/constants';
@@ -36,6 +37,7 @@ export const AndroidShell: React.FC = () => {
 
   const [isShadeOpen, setIsShadeOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isRecentsOpen, setIsRecentsOpen] = useState(false);
 
   const renderAppContent = (id: AppId) => {
     switch (id) {
@@ -62,6 +64,7 @@ export const AndroidShell: React.FC = () => {
       <Home
         onOpenApp={(id) => openWindow(id)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenRecents={() => setIsRecentsOpen(true)}
       />
 
       {/* Active App View in Stack */}
@@ -74,6 +77,12 @@ export const AndroidShell: React.FC = () => {
           {renderAppContent(activeId)}
         </AppScaffold>
       )}
+
+      {/* Recents Carousel */}
+      <Recents
+        isOpen={isRecentsOpen}
+        onClose={() => setIsRecentsOpen(false)}
+      />
 
       {/* Quick Settings Notification Shade */}
       <QuickShade
@@ -89,3 +98,4 @@ export const AndroidShell: React.FC = () => {
     </div>
   );
 };
+

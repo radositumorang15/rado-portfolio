@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { ExternalLink, Github, Layers } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, Github, Layers, X, Info } from 'lucide-react';
 import { Project } from '../../data/types';
 
 interface ProjectsViewProps {
@@ -19,6 +19,8 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   onFilterChange,
   onOpenProject,
 }) => {
+  const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
+
   const filtered = filterCategory === 'all'
     ? projects
     : projects.filter((p) => p.category === filterCategory);
@@ -86,33 +88,117 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 pt-3 border-t border-[var(--rn-border)]">
-              {proj.links.live && (
-                <a
-                  href={proj.links.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--rn-radius-control)] bg-[var(--rn-accent)] text-[var(--rn-on-accent)] text-xs font-medium hover:opacity-90 transition-opacity"
-                >
-                  <ExternalLink size={12} />
-                  <span>Demo</span>
-                </a>
-              )}
-              {proj.links.source && (
-                <a
-                  href={proj.links.source}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--rn-radius-control)] bg-[var(--rn-surface)] border border-[var(--rn-border)] text-xs font-medium hover:bg-[var(--rn-accent-soft)] transition-colors"
-                >
-                  <Github size={12} />
-                  <span>Source</span>
-                </a>
-              )}
+            <div className="flex items-center justify-between pt-3 border-t border-[var(--rn-border)]">
+              <div className="flex items-center gap-2">
+                {proj.links.live && (
+                  <a
+                    href={proj.links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--rn-radius-control)] bg-[var(--rn-accent)] text-[var(--rn-on-accent)] text-xs font-medium hover:opacity-90 transition-opacity"
+                  >
+                    <ExternalLink size={12} />
+                    <span>Demo</span>
+                  </a>
+                )}
+                {proj.links.source && (
+                  <a
+                    href={proj.links.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--rn-radius-control)] bg-[var(--rn-surface)] border border-[var(--rn-border)] text-xs font-medium hover:bg-[var(--rn-accent-soft)] transition-colors"
+                  >
+                    <Github size={12} />
+                    <span>Source</span>
+                  </a>
+                )}
+              </div>
+              <button
+                onClick={() => setActiveModalProject(proj)}
+                className="p-1.5 rounded-[var(--rn-radius-control)] hover:bg-[var(--rn-accent-soft)] text-[var(--rn-text-muted)] hover:text-[var(--rn-text)] transition-colors"
+                title="View Details"
+              >
+                <Info size={14} />
+              </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Detail Modal */}
+      {activeModalProject && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setActiveModalProject(null)}
+        >
+          <div
+            className="w-full max-w-lg p-6 rounded-2xl bg-[var(--rn-surface)] border border-[var(--rn-border)] text-[var(--rn-text)] flex flex-col gap-4 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--rn-border)]">
+              <span className="text-xs font-semibold uppercase text-[var(--rn-accent)]">
+                {activeModalProject.category}
+              </span>
+              <button
+                onClick={() => setActiveModalProject(null)}
+                className="p-1 rounded-full hover:bg-[var(--rn-surface-alt)]"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-bold">{activeModalProject.title}</h2>
+              {activeModalProject.role && (
+                <p className="text-xs text-[var(--rn-text-muted)] mt-0.5">{activeModalProject.role[lang]}</p>
+              )}
+            </div>
+
+            <p className="text-xs leading-relaxed text-[var(--rn-text)]">
+              {activeModalProject.description[lang]}
+            </p>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-[var(--rn-text-muted)]">Technologies Used:</span>
+              <div className="flex flex-wrap gap-1.5">
+                {activeModalProject.stack.map((s) => (
+                  <span
+                    key={s}
+                    className="px-2.5 py-1 rounded text-xs font-mono bg-[var(--rn-surface-alt)] border border-[var(--rn-border)]"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-3 border-t border-[var(--rn-border)] mt-2">
+              {activeModalProject.links.live && (
+                <a
+                  href={activeModalProject.links.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--rn-accent)] text-[var(--rn-on-accent)] text-xs font-semibold hover:opacity-90"
+                >
+                  <ExternalLink size={13} />
+                  <span>Open Live Demo</span>
+                </a>
+              )}
+              {activeModalProject.links.source && (
+                <a
+                  href={activeModalProject.links.source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--rn-surface-alt)] border border-[var(--rn-border)] text-xs font-semibold hover:bg-[var(--rn-accent-soft)]"
+                >
+                  <Github size={13} />
+                  <span>View Repository</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

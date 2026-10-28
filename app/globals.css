@@ -25,3 +25,4 @@ html, body {
 .animate-indeterminate {
   animation: indeterminate 1.5s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
 }
+

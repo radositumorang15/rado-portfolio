@@ -40,3 +40,4 @@ export const StartLogo: React.FC<StartLogoProps> = ({
     </svg>
   );
 };
+

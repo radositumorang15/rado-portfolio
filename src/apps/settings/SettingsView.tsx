@@ -7,11 +7,13 @@ interface SettingsViewProps {
   theme: 'system' | 'light' | 'dark';
   shell: 'auto' | 'windows' | 'android';
   language: 'en' | 'id';
+  accent?: string;
   reduceMotion: boolean;
   dockAutoHide: boolean;
   onThemeChange?: (t: 'system' | 'light' | 'dark') => void;
   onShellChange?: (s: 'auto' | 'windows' | 'android') => void;
   onLanguageChange?: (l: 'en' | 'id') => void;
+  onAccentChange?: (a: string) => void;
   onReduceMotionChange?: (rm: boolean) => void;
   onDockAutoHideChange?: (ah: boolean) => void;
 }
@@ -20,11 +22,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   theme,
   shell,
   language,
+  accent = 'blue',
   reduceMotion,
   dockAutoHide,
   onThemeChange,
   onShellChange,
   onLanguageChange,
+  onAccentChange,
   onReduceMotionChange,
   onDockAutoHideChange,
 }) => {
@@ -51,6 +55,34 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             >
               {t === 'light' ? <Sun size={14} /> : t === 'dark' ? <Moon size={14} /> : <Monitor size={14} />}
               <span>{t}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Accent Color Palette */}
+      <div className="p-4 rounded-[var(--rn-radius-card)] bg-[var(--rn-surface-alt)] border border-[var(--rn-border)] flex flex-col gap-3">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--rn-text-muted)]">Accent Color (Dynamic Tokens)</h2>
+        <div className="flex flex-wrap gap-2.5">
+          {[
+            { id: 'blue', color: '#0B57D0', label: 'Blue' },
+            { id: 'emerald', color: '#10B981', label: 'Emerald' },
+            { id: 'purple', color: '#7C3AED', label: 'Violet' },
+            { id: 'amber', color: '#D97706', label: 'Amber' },
+            { id: 'rose', color: '#E11D48', label: 'Rose' },
+            { id: 'cyan', color: '#0891B2', label: 'Cyan' },
+          ].map((c) => (
+            <button
+              key={c.id}
+              onClick={() => onAccentChange?.(c.id)}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                accent === c.id
+                  ? 'border-white ring-2 ring-white/30 bg-white/10'
+                  : 'border-white/10 hover:bg-white/5'
+              }`}
+            >
+              <span className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: c.color }} />
+              <span>{c.label}</span>
             </button>
           ))}
         </div>

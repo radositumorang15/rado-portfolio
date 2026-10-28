@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Briefcase, Calendar, MapPin } from 'lucide-react';
+import { Briefcase, Calendar, MapPin, Clock } from 'lucide-react';
 import { Experience } from '../../data/types';
+import { formatDuration } from '../../lib/date';
 
 interface ExperienceViewProps {
   experiences: Experience[];
@@ -62,7 +63,10 @@ export const ExperienceView: React.FC<ExperienceViewProps> = ({
               <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--rn-text-muted)] mt-1">
                 <div className="flex items-center gap-1">
                   <Calendar size={13} />
-                  <span>{activeExp.start} – {activeExp.end}</span>
+                  <span>{activeExp.start} – {activeExp.end === 'present' ? (lang === 'id' ? 'Sekarang' : 'Present') : activeExp.end}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--rn-accent-soft)] text-[var(--rn-accent)] font-medium">
+                    {formatDuration(activeExp.start, activeExp.end)}
+                  </span>
                 </div>
                 {activeExp.location && (
                   <div className="flex items-center gap-1">

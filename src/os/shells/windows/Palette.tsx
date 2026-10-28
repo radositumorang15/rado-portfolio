@@ -157,3 +157,4 @@ export const Palette: React.FC<PaletteProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
+

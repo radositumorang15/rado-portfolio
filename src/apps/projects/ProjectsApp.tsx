@@ -18,3 +18,4 @@ export const ProjectsApp: React.FC = () => {
     />
   );
 };
+

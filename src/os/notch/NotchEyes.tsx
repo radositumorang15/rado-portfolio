@@ -111,3 +111,4 @@ export const NotchEyes = memo(function NotchEyes({ mood }: EyesProps) {
     </div>
   );
 });
+

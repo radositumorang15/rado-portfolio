@@ -14,6 +14,7 @@ export const TrayPill: React.FC = () => {
   const [timeStr, setTimeStr] = useState<string>('');
   const [dateStr, setDateStr] = useState<string>('');
   const [showSettingsFlyout, setShowSettingsFlyout] = useState(false);
+  const [showCalendarFlyout, setShowCalendarFlyout] = useState(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -141,7 +142,13 @@ export const TrayPill: React.FC = () => {
         <div className="w-[1px] h-4 bg-white/20" />
 
         {/* Clock & Date */}
-        <div className="flex flex-col items-end leading-none cursor-pointer">
+        <div
+          onClick={() => {
+            setShowCalendarFlyout((prev) => !prev);
+            setShowSettingsFlyout(false);
+          }}
+          className="flex flex-col items-end leading-none cursor-pointer hover:text-blue-400 transition-colors"
+        >
           <span className="font-medium text-[11px] min-w-[34px] text-right">
             {timeStr || '12:00'}
           </span>
@@ -150,6 +157,50 @@ export const TrayPill: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Calendar Flyout */}
+      {showCalendarFlyout && (
+        <div className="glass-flyout absolute bottom-12 right-0 w-72 p-4 text-white flex flex-col gap-3 z-[1000] animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <div className="flex items-center justify-between pb-2 border-b border-white/10 text-xs font-semibold">
+            <span>{new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}</span>
+            <button
+              onClick={() => setShowCalendarFlyout(false)}
+              className="text-white/50 hover:text-white"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-white/50 font-medium">
+            <span>Min</span>
+            <span>Sen</span>
+            <span>Sel</span>
+            <span>Rab</span>
+            <span>Kam</span>
+            <span>Jum</span>
+            <span>Sab</span>
+          </div>
+
+          <div className="grid grid-cols-7 gap-1 text-center text-xs">
+            {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
+              const isToday = day === 28;
+              return (
+                <div
+                  key={day}
+                  className={`h-7 flex items-center justify-center rounded-full text-xs ${
+                    isToday
+                      ? 'bg-blue-600 text-white font-bold shadow-md'
+                      : 'hover:bg-white/10 text-white/80'
+                  }`}
+                >
+                  {day}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+

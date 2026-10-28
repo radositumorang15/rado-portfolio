@@ -29,3 +29,4 @@ export const ResumeApp: React.FC = () => {
     />
   );
 };
+

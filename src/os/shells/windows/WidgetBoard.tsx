@@ -113,3 +113,4 @@ export const WidgetBoard: React.FC<WidgetBoardProps> = ({ isOpen, onClose }) => 
     </div>
   );
 };
+
