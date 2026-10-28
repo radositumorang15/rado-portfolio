@@ -1,15 +1,9 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-  User,
-  Briefcase,
-  LayoutGrid,
-  Cpu,
-  Terminal as TermIcon,
-  FileText,
-  Mail,
-  Settings as SettingsIcon,
+  User, Briefcase, LayoutGrid, Cpu, Terminal as TermIcon, FileText, Mail,
+  Settings as SettingsIcon, Activity
 } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
 import { Window } from './Window';
@@ -19,8 +13,10 @@ import { WidgetBoard } from './WidgetBoard';
 import { Palette } from './Palette';
 import { ContextMenu } from './ContextMenu';
 import { WindowsWallpaper } from './WindowsWallpaper';
+import { NotificationToast } from './NotificationToast';
 import { NotchHost } from '../../notch/NotchHost';
 import { AppId } from '../../../lib/constants';
+import { playWindowsSound } from '../../../lib/audio';
 
 import { AboutApp } from '../../../apps/about';
 import { ExperienceApp } from '../../../apps/experience';
@@ -30,6 +26,7 @@ import { TerminalApp } from '../../../apps/terminal';
 import { ResumeApp } from '../../../apps/resume';
 import { ContactApp } from '../../../apps/contact';
 import { SettingsApp } from '../../../apps/settings';
+import { TaskManagerApp } from '../../../apps/taskmanager';
 
 const DESKTOP_ICONS: { id: AppId | 'recycle'; label: string; iconSrc: string }[] = [
   { id: 'about', label: 'This PC', iconSrc: '/icons/win11/thispc.png' },
@@ -50,27 +47,26 @@ export const WindowsShell: React.FC = () => {
   const [isStartOpen, setIsStartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isWidgetsOpen, setIsWidgetsOpen] = useState(false);
-  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; isOpen: boolean }>({
-    x: 0,
-    y: 0,
-    isOpen: false,
-  });
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; isOpen: boolean }>({ x: 0, y: 0, isOpen: false });
 
-  // Marquee selection rectangle
-  const [marquee, setMarquee] = useState<{ x1: number; y1: number; x2: number; y2: number; active: boolean }>({
-    x1: 0,
-    y1: 0,
-    x2: 0,
-    y2: 0,
-    active: false,
-  });
+  const [marquee, setMarquee] = useState({ x1: 0, y1: 0, x2: 0, y2: 0, active: false });
   const isDraggingMarquee = useRef(false);
+
+  // Ctrl + Shift + Esc -> Task Manager
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'Escape' || e.code === 'Escape')) {
+        e.preventDefault();
+        openWindow('taskmanager');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [openWindow]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('.desktop-icon') || (e.target as HTMLElement).closest('footer') || (e.target as HTMLElement).closest('.window-frame')) {
-      return;
-    }
+    if ((e.target as HTMLElement).closest('.desktop-icon') || (e.target as HTMLElement).closest('footer') || (e.target as HTMLElement).closest('.window-frame')) return;
     setSelectedIcon(null);
     setIsStartOpen(false);
     setIsWidgetsOpen(false);
@@ -90,36 +86,27 @@ export const WindowsShell: React.FC = () => {
     }
   };
 
-  const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setContextMenu({ x: e.clientX, y: e.clientY, isOpen: true });
-  };
-
   const handleIconClick = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedIcon(id);
-    if (e.detail === 2) {
-      if (id !== 'recycle') {
-        openWindow(id as AppId);
-      }
+    playWindowsSound('click');
+    if (e.detail === 2 && id !== 'recycle') {
+      playWindowsSound('open');
+      openWindow(id as AppId);
     }
   };
 
   return (
     <div
-      onContextMenu={handleContextMenu}
+      onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY, isOpen: true }); }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       className="relative w-screen h-screen overflow-hidden select-none text-white font-sans"
     >
-      {/* Windows 11 Dark Bloom Wallpaper */}
       <WindowsWallpaper />
-
-      {/* Rado Notch (Kept at Top Center) */}
       <NotchHost platform="windows" />
 
-      {/* Selection Marquee Box (vovacodes style) */}
       {marquee.active && (
         <div
           className="fixed pointer-events-none z-30 border border-[#0078D4] bg-[#0078D4]/25"
@@ -132,31 +119,22 @@ export const WindowsShell: React.FC = () => {
         />
       )}
 
-      {/* Windows 11 Desktop Icons (3D Fluent Icons with 76px x 86px grid) */}
+      {/* Windows 11 Desktop Icons (76px x 86px) */}
       <div className="absolute top-12 left-3 z-10 flex flex-col gap-1">
-        {DESKTOP_ICONS.map((item) => {
-          const isSelected = selectedIcon === item.id;
-          return (
-            <div
-              key={item.id}
-              onClick={(e) => handleIconClick(item.id, e)}
-              className={`desktop-icon flex flex-col items-center justify-center w-[76px] h-[86px] p-1 rounded-[4px] cursor-pointer transition-colors ${
-                isSelected
-                  ? 'bg-white/[0.12] border border-white/[0.15]'
-                  : 'border border-transparent hover:bg-white/[0.06] active:bg-white/[0.10]'
-              }`}
-            >
-              <img
-                src={item.iconSrc}
-                alt={item.label}
-                className="w-11 h-11 object-contain pointer-events-none drop-shadow-md"
-              />
-              <span className="text-[11px] font-normal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[72px] text-center mt-1">
-                {item.label}
-              </span>
-            </div>
-          );
-        })}
+        {DESKTOP_ICONS.map((item) => (
+          <div
+            key={item.id}
+            onClick={(e) => handleIconClick(item.id, e)}
+            className={`desktop-icon flex flex-col items-center justify-center w-[76px] h-[86px] p-1 rounded-[4px] cursor-pointer transition-colors ${
+              selectedIcon === item.id ? 'bg-white/[0.12] border border-white/[0.15]' : 'border border-transparent hover:bg-white/[0.06] active:bg-white/[0.10]'
+            }`}
+          >
+            <img src={item.iconSrc} alt={item.label} className="w-11 h-11 object-contain pointer-events-none drop-shadow-md" />
+            <span className="text-[11px] font-normal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[72px] text-center mt-1">
+              {item.label}
+            </span>
+          </div>
+        ))}
       </div>
 
       {/* Floating Windows Area */}
@@ -169,36 +147,25 @@ export const WindowsShell: React.FC = () => {
         <Window win={windows.resume} icon={FileText}><ResumeApp /></Window>
         <Window win={windows.contact} icon={Mail}><ContactApp /></Window>
         <Window win={windows.settings} icon={SettingsIcon}><SettingsApp /></Window>
+        <Window win={windows.taskmanager} icon={Activity}><TaskManagerApp /></Window>
       </div>
 
-      {/* Start Menu */}
-      <StartMenu
-        isOpen={isStartOpen}
-        onClose={() => setIsStartOpen(false)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
-
-      {/* Command Palette */}
+      <StartMenu isOpen={isStartOpen} onClose={() => setIsStartOpen(false)} onOpenSearch={() => setIsSearchOpen(true)} />
       <Palette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-
-      {/* Widget Board */}
       <WidgetBoard isOpen={isWidgetsOpen} onClose={() => setIsWidgetsOpen(false)} />
-
-      {/* Windows 11 Full-width Taskbar */}
       <Dock
-        onToggleStart={() => setIsStartOpen((prev) => !prev)}
-        onToggleSearch={() => setIsSearchOpen((prev) => !prev)}
-        onToggleWidgets={() => setIsWidgetsOpen((prev) => !prev)}
+        onToggleStart={() => setIsStartOpen((p) => !p)}
+        onToggleSearch={() => setIsSearchOpen((p) => !p)}
+        onToggleWidgets={() => setIsWidgetsOpen((p) => !p)}
       />
-
-      {/* Context Menu */}
       <ContextMenu
         x={contextMenu.x}
         y={contextMenu.y}
         isOpen={contextMenu.isOpen}
-        onClose={() => setContextMenu((prev) => ({ ...prev, isOpen: false }))}
+        onClose={() => setContextMenu((p) => ({ ...p, isOpen: false }))}
         onOpenSearch={() => setIsSearchOpen(true)}
       />
+      <NotificationToast />
     </div>
   );
 };

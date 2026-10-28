@@ -104,23 +104,32 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
 
   updateResponsiveShell: () => {
     if (typeof window === 'undefined') return;
-    const { shell, resolvedShell } = get();
-    if (shell !== 'auto') return;
-
     const isDesktop = window.innerWidth >= 1024;
     const nextResolved: 'windows' | 'android' = isDesktop ? 'windows' : 'android';
+    const { resolvedShell, shell } = get();
 
-    if (nextResolved !== resolvedShell) {
-      document.documentElement.setAttribute('data-shell', nextResolved);
-      set({ resolvedShell: nextResolved });
+    if (shell === 'auto' || (isDesktop && resolvedShell === 'android') || (!isDesktop && resolvedShell === 'windows')) {
+      if (nextResolved !== resolvedShell) {
+        document.documentElement.setAttribute('data-shell', nextResolved);
+        set({ resolvedShell: nextResolved, shell: 'auto' });
+      }
     }
   },
 
   syncFromDOM: () => {
     if (typeof window === 'undefined') return;
     const domTheme = document.documentElement.getAttribute('data-theme') as 'light' | 'dark' | null;
-    const domShell = document.documentElement.getAttribute('data-shell') as 'windows' | 'android' | null;
-    const savedShell = (localStorage.getItem('rn_shell') as Shell | null) || 'auto';
+    const isDesktop = window.innerWidth >= 1024;
+    let savedShell = localStorage.getItem('rn_shell') as Shell | null;
+
+    if (!savedShell || savedShell === 'auto' || (isDesktop && savedShell === 'android') || (!isDesktop && savedShell === 'windows')) {
+      savedShell = 'auto';
+      localStorage.setItem('rn_shell', 'auto');
+    }
+
+    const effectiveShell = savedShell === 'auto' ? (isDesktop ? 'windows' : 'android') : savedShell;
+    document.documentElement.setAttribute('data-shell', effectiveShell);
+
     const savedLang = localStorage.getItem('rn_lang') as Language | null;
     const savedMotion = localStorage.getItem('rn_motion') === 'true';
     const savedAccent = localStorage.getItem('rn_accent');
@@ -130,11 +139,6 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
         applyAccentColor(savedAccent);
       });
     }
-
-    const isDesktop = window.innerWidth >= 1024;
-    const effectiveShell = savedShell === 'auto' ? (isDesktop ? 'windows' : 'android') : savedShell;
-
-    document.documentElement.setAttribute('data-shell', effectiveShell);
 
     set({
       shell: savedShell,

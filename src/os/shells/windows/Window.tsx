@@ -4,6 +4,7 @@ import React from 'react';
 import { Rnd } from 'react-rnd';
 import { LucideIcon } from 'lucide-react';
 import { useWindowsStore, WindowState } from '../../../store/windows';
+import { playWindowsSound } from '../../../lib/audio';
 
 interface WindowProps {
   win: WindowState;
@@ -47,7 +48,10 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
       {/* Windows 11 Official Caption Controls */}
       <div className="flex items-center h-full">
         <button
-          onClick={() => minimizeWindow(win.id)}
+          onClick={() => {
+            playWindowsSound('minimize');
+            minimizeWindow(win.id);
+          }}
           className="w-[46px] h-full flex items-center justify-center hover:bg-white/10 active:bg-white/5 text-[var(--win-text-primary)] transition-colors"
           aria-label="Minimize"
           title="Minimize"
@@ -57,7 +61,10 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
           </svg>
         </button>
         <button
-          onClick={() => toggleMaximizeWindow(win.id)}
+          onClick={() => {
+            playWindowsSound('click');
+            toggleMaximizeWindow(win.id);
+          }}
           className="w-[46px] h-full flex items-center justify-center hover:bg-white/10 active:bg-white/5 text-[var(--win-text-primary)] transition-colors"
           aria-label={win.isMaximized ? 'Restore' : 'Maximize'}
           title={win.isMaximized ? 'Restore' : 'Maximize'}
@@ -74,7 +81,10 @@ export const Window: React.FC<WindowProps> = ({ win, icon: Icon, children }) => 
           )}
         </button>
         <button
-          onClick={() => closeWindow(win.id)}
+          onClick={() => {
+            playWindowsSound('click');
+            closeWindow(win.id);
+          }}
           className="w-[46px] h-full flex items-center justify-center hover:bg-[#C42B1C] hover:text-white text-[var(--win-text-primary)] transition-colors"
           aria-label="Close"
           title="Close"

@@ -23,6 +23,7 @@ const DEFAULT_BOUNDS: Record<AppId, { w: number; h: number }> = {
   resume: { w: 880, h: 700 },
   contact: { w: 580, h: 580 },
   settings: { w: 860, h: 580 },
+  taskmanager: { w: 820, h: 540 },
 };
 
 interface WindowsStore {
@@ -47,6 +48,7 @@ const initialWindows: Record<AppId, WindowState> = {
   resume: { id: 'resume', title: 'Resume', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 230, y: 60, ...DEFAULT_BOUNDS.resume },
   contact: { id: 'contact', title: 'Contact', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 260, y: 80, ...DEFAULT_BOUNDS.contact },
   settings: { id: 'settings', title: 'Settings', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 290, y: 100, ...DEFAULT_BOUNDS.settings },
+  taskmanager: { id: 'taskmanager', title: 'Task Manager', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 200, y: 120, ...DEFAULT_BOUNDS.taskmanager },
 };
 
 export const useWindowsStore = create<WindowsStore>((set, get) => ({

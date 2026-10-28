@@ -62,9 +62,11 @@ export default function RootLayout({
                   if (!t || t === 'system') {
                     t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
                   }
+                  var isDesktop = window.innerWidth >= 1024;
                   var s = localStorage.getItem('rn_shell');
-                  if (!s || s === 'auto') {
-                    s = window.innerWidth >= 1024 ? 'windows' : 'android';
+                  if (!s || s === 'auto' || (isDesktop && s === 'android') || (!isDesktop && s === 'windows')) {
+                    s = isDesktop ? 'windows' : 'android';
+                    localStorage.setItem('rn_shell', 'auto');
                   }
                   var l = localStorage.getItem('rn_lang') || 'en';
                   document.documentElement.setAttribute('data-theme', t);

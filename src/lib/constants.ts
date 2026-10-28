@@ -28,6 +28,7 @@ export const APP_IDS = [
   'resume',
   'contact',
   'settings',
+  'taskmanager',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];

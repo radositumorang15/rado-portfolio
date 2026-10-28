@@ -5,6 +5,8 @@ import { usePrefsStore } from '../store/prefs';
 import { useWindowsStore } from '../store/windows';
 import { WindowsShell } from './shells/windows';
 import { AndroidShell } from './shells/android';
+import { WindowsLockScreen } from './shells/windows/WindowsLockScreen';
+import { AndroidLockScreen } from './shells/android/AndroidLockScreen';
 import { AppId, APP_IDS } from '../lib/constants';
 import { notch } from './notch';
 
@@ -15,6 +17,7 @@ export const OSRoot: React.FC = () => {
   const openWindow = useWindowsStore((s) => s.openWindow);
 
   const [isBooting, setIsBooting] = useState<boolean>(true);
+  const [isLocked, setIsLocked] = useState<boolean>(false);
 
   // Responsive shell auto-detection on resize
   useEffect(() => {
@@ -38,24 +41,33 @@ export const OSRoot: React.FC = () => {
     };
   }, [syncFromDOM, updateResponsiveShell]);
 
-  // Check session boot status
+  // Session boot & lock state check
   useEffect(() => {
     const hasBooted = sessionStorage.getItem('rn_booted');
+    const hasUnlocked = sessionStorage.getItem('rn_unlocked');
+
     if (hasBooted) {
       setIsBooting(false);
+      setIsLocked(!hasUnlocked);
     } else {
       const timer = setTimeout(() => {
         setIsBooting(false);
+        setIsLocked(true);
         sessionStorage.setItem('rn_booted', 'true');
-        notch.show({
-          title: 'Welcome to RadoOS',
-          subtitle: 'Double click icons or open Start Menu to explore',
-          duration: 3500,
-        });
-      }, 1100);
+      }, 1200);
       return () => clearTimeout(timer);
     }
   }, []);
+
+  const handleUnlock = () => {
+    setIsLocked(false);
+    sessionStorage.setItem('rn_unlocked', 'true');
+    notch.show({
+      title: 'Welcome to RadoOS',
+      subtitle: 'Double click icons or open Start Menu to explore',
+      duration: 3500,
+    });
+  };
 
   // Handle Hash deep linking
   useEffect(() => {
@@ -75,25 +87,59 @@ export const OSRoot: React.FC = () => {
   if (isBooting) {
     return (
       <div
-        onClick={() => setIsBooting(false)}
-        className="fixed inset-0 z-[2000] bg-neutral-950 flex flex-col items-center justify-center text-white cursor-pointer select-none"
+        onClick={() => {
+          setIsBooting(false);
+          setIsLocked(false);
+          sessionStorage.setItem('rn_booted', 'true');
+          sessionStorage.setItem('rn_unlocked', 'true');
+        }}
+        className="fixed inset-0 z-[2000] bg-black flex flex-col items-center justify-center text-white cursor-pointer select-none font-sans"
       >
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-2xl font-bold shadow-[0_0_30px_rgba(37,99,235,0.4)] animate-pulse">
-          RN
-        </div>
-        <div className="mt-6 flex flex-col items-center gap-1.5">
-          <h1 className="text-sm font-semibold tracking-wide">RadoOS</h1>
-          <div className="w-24 h-1 rounded-full bg-white/10 overflow-hidden">
-            <div className="h-full bg-blue-500 rounded-full animate-indeterminate" />
+        {resolvedShell === 'windows' ? (
+          // Windows 11 Signature Boot: 4-square blue logo + spinning ring dots
+          <div className="flex flex-col items-center gap-12">
+            <div className="grid grid-cols-2 gap-1.5 w-16 h-16">
+              <div className="bg-[#0078D4] rounded-xs shadow-sm" />
+              <div className="bg-[#0078D4] rounded-xs shadow-sm" />
+              <div className="bg-[#0078D4] rounded-xs shadow-sm" />
+              <div className="bg-[#0078D4] rounded-xs shadow-sm" />
+            </div>
+            {/* Windows 11 Spinning Ring Dots */}
+            <div className="relative w-9 h-9 animate-spin">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white" />
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/70" />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/50" />
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/30" />
+            </div>
           </div>
-          <span className="text-[10px] text-white/40 mt-1">Starting user session... (click to skip)</span>
-        </div>
+        ) : (
+          // Android 16 Pixel Boot: Google G / RN + multi-color pulse
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-[#1F1F1F] border border-white/10 flex items-center justify-center text-2xl font-bold text-[#A8C7FA] shadow-lg animate-pulse">
+              RN
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#4285F4] animate-bounce" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#EA4335] animate-bounce [animation-delay:0.15s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#FBBC05] animate-bounce [animation-delay:0.3s]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#34A853] animate-bounce [animation-delay:0.45s]" />
+            </div>
+          </div>
+        )}
+        <span className="text-[11px] text-white/30 mt-8">Click anywhere to skip</span>
       </div>
     );
   }
 
   return (
     <main className="w-full h-full transition-opacity duration-200">
+      {isLocked && (
+        resolvedShell === 'windows' ? (
+          <WindowsLockScreen onUnlock={handleUnlock} />
+        ) : (
+          <AndroidLockScreen onUnlock={handleUnlock} />
+        )
+      )}
       {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
     </main>
   );

@@ -21,6 +21,7 @@ import { TerminalApp } from '../../../apps/terminal';
 import { ResumeApp } from '../../../apps/resume';
 import { ContactApp } from '../../../apps/contact';
 import { SettingsApp } from '../../../apps/settings';
+import { TaskManagerApp } from '../../../apps/taskmanager';
 
 const APP_TITLES: Record<AppId, string> = {
   about: 'About Me',
@@ -31,6 +32,7 @@ const APP_TITLES: Record<AppId, string> = {
   resume: 'Curriculum Vitae',
   contact: 'Contact Rado',
   settings: 'Wallpaper & Style',
+  taskmanager: 'Task Manager',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -53,6 +55,7 @@ export const AndroidShell: React.FC = () => {
       case 'resume': return <ResumeApp />;
       case 'contact': return <ContactApp />;
       case 'settings': return <SettingsApp />;
+      case 'taskmanager': return <TaskManagerApp />;
     }
   };
 
