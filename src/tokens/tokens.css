@@ -80,39 +80,40 @@
   --win-duration-slow: 333ms;
 
   /* ==========================================================================
-     2. ANDROID 15/16 MATERIAL 3 EXPRESSIVE TOKENS (DARK DEFAULT)
+     2. ANDROID 15/16 MATERIAL 3 EXPRESSIVE TOKENS (DARK DEFAULT - OBSIDIAN / BAY BLUE)
      ========================================================================== */
-  --m3-font-family: 'Google Sans Flex', 'Roboto Flex', 'Plus Jakarta Sans', system-ui, sans-serif;
+  --m3-font-family: 'Plus Jakarta Sans', 'Google Sans Flex', 'Roboto Flex', system-ui, sans-serif;
 
   /* Tonal Surface Palette */
-  --m3-surface-dim: #141218;
-  --m3-surface: #141218;
+  --m3-bg: #0E141B;
+  --m3-surface-dim: #0E141B;
+  --m3-surface: #0E141B;
   --m3-surface-bright: #3B383E;
-  --m3-surface-container-lowest: #0F0D13;
-  --m3-surface-container-low: #1D1B20;
-  --m3-surface-container: #211F26;
-  --m3-surface-container-high: #2B2930;
-  --m3-surface-container-highest: #36343B;
-  --m3-shade-scrim-blur: rgba(20, 18, 24, 0.72);
+  --m3-surface-container-lowest: #0B0F14;
+  --m3-surface-container-low: #171C22;
+  --m3-surface-container: #1B2027;
+  --m3-surface-container-high: #252B33;
+  --m3-surface-container-highest: #333942;
+  --m3-shade-scrim-blur: rgba(14, 20, 27, 0.78);
 
-  /* Dynamic Accent Roles */
-  --m3-primary: #D0BCFF;
-  --m3-on-primary: #381E72;
-  --m3-primary-container: #4F378B;
-  --m3-on-primary-container: #EADDFF;
-  --m3-secondary: #CCC2DC;
-  --m3-on-secondary: #332D41;
-  --m3-secondary-container: #4A4458;
-  --m3-on-secondary-container: #E8DEF8;
+  /* Dynamic Accent Roles (Monet Pixel Tonal Palette) */
+  --m3-primary: #A8C7FA;
+  --m3-on-primary: #062E6F;
+  --m3-primary-container: #0842A0;
+  --m3-on-primary-container: #D3E3FD;
+  --m3-secondary: #C2E7FF;
+  --m3-on-secondary: #003355;
+  --m3-secondary-container: #33445B;
+  --m3-on-secondary-container: #C2E7FF;
   --m3-tertiary: #EFB8C8;
   --m3-on-tertiary: #492532;
-  --m3-tertiary-container: #633B48;
-  --m3-on-tertiary-container: #FFD8E4;
+  --m3-tertiary-container: #4F378B;
+  --m3-on-tertiary-container: #EADDFF;
 
-  --m3-on-surface: #E6E0E9;
-  --m3-on-surface-variant: #CAC4D0;
-  --m3-outline: #938F99;
-  --m3-outline-variant: #49454F;
+  --m3-on-surface: #E2E2E9;
+  --m3-on-surface-variant: #C4C6D0;
+  --m3-outline: #8E9199;
+  --m3-outline-variant: #43474E;
 
   /* Expressive Geometry */
   --m3-radius-xs: 4px;
@@ -194,34 +195,35 @@
   --win-shadow-window-inactive: 0 16px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
   --win-shadow-flyout: 0 8px 16px rgba(0, 0, 0, 0.14);
 
-  /* Android 16 M3 Expressive Light Mode */
+  /* Android 16 M3 Expressive Light Mode (Porcelain / Sky Blue) */
+  --m3-bg: #F8F9FF;
   --m3-surface-dim: #DED8E1;
-  --m3-surface: #FEF7FF;
+  --m3-surface: #F8F9FF;
   --m3-surface-bright: #FEF7FF;
   --m3-surface-container-lowest: #FFFFFF;
-  --m3-surface-container-low: #F7F2FA;
-  --m3-surface-container: #F3EDF7;
-  --m3-surface-container-high: #ECE6F0;
-  --m3-surface-container-highest: #E6E0E9;
-  --m3-shade-scrim-blur: rgba(254, 247, 255, 0.75);
+  --m3-surface-container-low: #F1F3FC;
+  --m3-surface-container: #EBEEF7;
+  --m3-surface-container-high: #E5E8F1;
+  --m3-surface-container-highest: #DFE2EA;
+  --m3-shade-scrim-blur: rgba(248, 249, 255, 0.78);
 
-  --m3-primary: #6750A4;
+  --m3-primary: #0B57D0;
   --m3-on-primary: #FFFFFF;
-  --m3-primary-container: #EADDFF;
-  --m3-on-primary-container: #21005D;
-  --m3-secondary: #625B71;
+  --m3-primary-container: #D3E3FD;
+  --m3-on-primary-container: #041E49;
+  --m3-secondary: #00639B;
   --m3-on-secondary: #FFFFFF;
-  --m3-secondary-container: #E8DEF8;
-  --m3-on-secondary-container: #1D192B;
+  --m3-secondary-container: #D3E3FD;
+  --m3-on-secondary-container: #041E49;
   --m3-tertiary: #7D5260;
   --m3-on-tertiary: #FFFFFF;
   --m3-tertiary-container: #FFD8E4;
   --m3-on-tertiary-container: #31111D;
 
-  --m3-on-surface: #1D1B20;
-  --m3-on-surface-variant: #49454F;
-  --m3-outline: #79747E;
-  --m3-outline-variant: #CAC4D0;
+  --m3-on-surface: #191C20;
+  --m3-on-surface-variant: #44474E;
+  --m3-outline: #74777F;
+  --m3-outline-variant: #C4C6D0;
 }
 
 /* ==========================================================================

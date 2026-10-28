@@ -7,6 +7,7 @@ import { Home } from './Home';
 import { AppScaffold } from './AppScaffold';
 import { QuickShade } from './QuickShade';
 import { Recents } from './Recents';
+import { PixelWallpaper } from './PixelWallpaper';
 import { Palette } from '../windows/Palette';
 import { useWindowsStore } from '../../../store/windows';
 import { usePrefsStore } from '../../../store/prefs';
@@ -29,7 +30,7 @@ const APP_TITLES: Record<AppId, string> = {
   terminal: 'Terminal',
   resume: 'Curriculum Vitae',
   contact: 'Contact Rado',
-  settings: 'Settings',
+  settings: 'Wallpaper & Style',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -56,16 +57,16 @@ export const AndroidShell: React.FC = () => {
   };
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[#0a0a0f] flex flex-col items-center justify-center select-none text-white">
-      {/* Ambient Material You Wallpaper Backdrop */}
-      <div className="absolute inset-0 bg-radial from-blue-900/30 via-neutral-950/80 to-black z-0 pointer-events-none" />
+    <div className="relative w-screen h-screen overflow-hidden bg-[#070b10] flex flex-col items-center justify-center select-none text-[var(--m3-on-surface)]">
+      {/* Outer Desktop Canvas Backdrop */}
+      <div className="absolute inset-0 bg-radial from-[#132034]/40 via-[#070b10] to-[#040608] z-0 pointer-events-none" />
 
       {/* Top Banner on Large Desktop Screens */}
-      <header className="hidden md:flex items-center justify-between w-full max-w-4xl px-6 py-2.5 z-10 text-xs text-white/70">
+      <header className="hidden md:flex items-center justify-between w-full max-w-4xl px-6 py-2 z-10 text-xs text-white/70">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-semibold text-white/90">Android 17 Material 3 Shell</span>
-          <span className="text-white/40">| Mobile Emulation</span>
+          <span className="w-2 h-2 rounded-full bg-[#81C995] animate-pulse" />
+          <span className="font-semibold text-white/95">Google Pixel Launcher</span>
+          <span className="text-white/40">| Android 16 Material 3 Expressive</span>
         </div>
         <button
           onClick={() => setShell('windows')}
@@ -77,11 +78,14 @@ export const AndroidShell: React.FC = () => {
       </header>
 
       {/* Phone Mockup Frame (Desktop) / Native Viewport (Mobile) */}
-      <main className="relative z-10 w-full h-full md:w-[390px] md:h-[820px] md:max-h-[92vh] md:rounded-[46px] md:border-[7px] md:border-neutral-800 md:shadow-[0_25px_80px_rgba(0,0,0,0.9)] md:ring-1 md:ring-white/10 bg-neutral-950 flex flex-col overflow-hidden">
-        {/* Android Status Bar */}
+      <main className="relative z-10 w-full h-full md:w-[390px] md:h-[820px] md:max-h-[92vh] md:rounded-[46px] md:border-[7px] md:border-neutral-800 md:shadow-[0_25px_80px_rgba(0,0,0,0.9)] md:ring-1 md:ring-white/10 flex flex-col overflow-hidden bg-transparent">
+        {/* Pixel Fluid Dynamic Wallpaper */}
+        <PixelWallpaper />
+
+        {/* Pixel Punch-Hole Status Bar */}
         <StatusBar onPullDownShade={() => setIsShadeOpen(true)} />
 
-        {/* Main Android Home Launcher */}
+        {/* Pixel Home Screen */}
         <Home
           onOpenApp={(id) => openWindow(id)}
           onOpenSearch={() => setIsSearchOpen(true)}
