@@ -1,0 +1,98 @@
+{
+  "system": {
+    "openToWork": "Open to work",
+    "location": "Surakarta, ID",
+    "booting": "Starting RadoOS...",
+    "welcome": "Welcome to RadoOS",
+    "cvDownloaded": "CV downloaded successfully",
+    "themeChanged": "Theme updated",
+    "languageChanged": "Language changed to English",
+    "openingLink": "Opening external link...",
+    "messageSent": "Message sent successfully!",
+    "messageFailed": "Failed to send message. Please use direct email.",
+    "copySuccess": "Copied to clipboard"
+  },
+  "nav": {
+    "start": "Start",
+    "search": "Search (Ctrl+K)",
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "terminal": "Terminal",
+    "resume": "Resume",
+    "contact": "Contact",
+    "settings": "Settings",
+    "classicView": "Classic View"
+  },
+  "apps": {
+    "about": {
+      "title": "About Me",
+      "deviceSpecs": "Device Specifications",
+      "copySpecs": "Copy Specs",
+      "education": "Education",
+      "socials": "Social Profiles",
+      "summary": "Professional Summary"
+    },
+    "experience": {
+      "title": "Experience & Career",
+      "filterAll": "All",
+      "filterWork": "Work & Internships",
+      "filterEvents": "Leadership & Events",
+      "present": "Present"
+    },
+    "projects": {
+      "title": "Projects",
+      "filterAll": "All Projects",
+      "filterWeb": "Web Apps",
+      "filterMobile": "Mobile Apps",
+      "viewDemo": "Live Demo",
+      "viewSource": "Source Code",
+      "details": "Project Details"
+    },
+    "skills": {
+      "title": "Skills & Competencies",
+      "competent": "Competent",
+      "novice": "Novice / In Progress",
+      "tools": "Design & Productivity Tools",
+      "relatedTo": "Associated Projects & Experience"
+    },
+    "terminal": {
+      "title": "Terminal",
+      "prompt": "guest@rado-os:~$",
+      "welcome": "RadoOS Shell v1.0.0. Type 'help' to see available commands."
+    },
+    "resume": {
+      "title": "Curriculum Vitae",
+      "download": "Download CV (PDF)",
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "viewOnline": "Open in Tab"
+    },
+    "contact": {
+      "title": "Contact Rado",
+      "nameLabel": "Your Name",
+      "emailLabel": "Your Email",
+      "messageLabel": "Your Message",
+      "sendButton": "Send Message",
+      "sending": "Sending...",
+      "directLinks": "Direct Channels"
+    },
+    "settings": {
+      "title": "Settings",
+      "appearance": "Appearance & Theme",
+      "themeLabel": "Color Theme",
+      "themeSystem": "System Default",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "shellLabel": "Shell Interface",
+      "shellAuto": "Auto (Responsive)",
+      "shellWindows": "Windows 11",
+      "shellAndroid": "Android 17",
+      "languageLabel": "Display Language",
+      "reduceMotion": "Reduce Motion",
+      "dockAutoHide": "Auto-hide Dock on Maximize",
+      "classic": "Switch to Classic View"
+    }
+  }
+}

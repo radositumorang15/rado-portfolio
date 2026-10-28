@@ -1,0 +1,98 @@
+{
+  "system": {
+    "openToWork": "Tersedia untuk bekerja",
+    "location": "Surakarta, ID",
+    "booting": "Memulai RadoOS...",
+    "welcome": "Selamat datang di RadoOS",
+    "cvDownloaded": "CV berhasil diunduh",
+    "themeChanged": "Tema diperbarui",
+    "languageChanged": "Bahasa diubah ke Bahasa Indonesia",
+    "openingLink": "Membuka tautan eksternal...",
+    "messageSent": "Pesan berhasil dikirim!",
+    "messageFailed": "Gagal mengirim pesan. Silakan gunakan email langsung.",
+    "copySuccess": "Berhasil disalin ke papan klip"
+  },
+  "nav": {
+    "start": "Mulai",
+    "search": "Cari (Ctrl+K)",
+    "about": "Tentang",
+    "experience": "Pengalaman",
+    "projects": "Proyek",
+    "skills": "Keahlian",
+    "terminal": "Terminal",
+    "resume": "Resume",
+    "contact": "Kontak",
+    "settings": "Pengaturan",
+    "classicView": "Tampilan Klasik"
+  },
+  "apps": {
+    "about": {
+      "title": "Tentang Saya",
+      "deviceSpecs": "Spesifikasi Perangkat",
+      "copySpecs": "Salin Spek",
+      "education": "Pendidikan",
+      "socials": "Profil Sosial",
+      "summary": "Ringkasan Profesional"
+    },
+    "experience": {
+      "title": "Pengalaman & Karir",
+      "filterAll": "Semua",
+      "filterWork": "Pekerjaan & Magang",
+      "filterEvents": "Organisasi & Event",
+      "present": "Sekarang"
+    },
+    "projects": {
+      "title": "Proyek",
+      "filterAll": "Semua Proyek",
+      "filterWeb": "Aplikasi Web",
+      "filterMobile": "Aplikasi Mobile",
+      "viewDemo": "Demo Langsung",
+      "viewSource": "Kode Sumber",
+      "details": "Detail Proyek"
+    },
+    "skills": {
+      "title": "Keahlian & Kompetensi",
+      "competent": "Kompeten",
+      "novice": "Pemula / Belajar",
+      "tools": "Alat Desain & Produktivitas",
+      "relatedTo": "Terkait Proyek & Pengalaman"
+    },
+    "terminal": {
+      "title": "Terminal",
+      "prompt": "tamu@rado-os:~$",
+      "welcome": "RadoOS Shell v1.0.0. Ketik 'help' untuk daftar perintah."
+    },
+    "resume": {
+      "title": "Curriculum Vitae",
+      "download": "Unduh CV (PDF)",
+      "zoomIn": "Perbesar",
+      "zoomOut": "Perkecil",
+      "viewOnline": "Buka di Tab"
+    },
+    "contact": {
+      "title": "Hubungi Rado",
+      "nameLabel": "Nama Anda",
+      "emailLabel": "Email Anda",
+      "messageLabel": "Pesan Anda",
+      "sendButton": "Kirim Pesan",
+      "sending": "Mengirim...",
+      "directLinks": "Kanal Langsung"
+    },
+    "settings": {
+      "title": "Pengaturan",
+      "appearance": "Tampilan & Tema",
+      "themeLabel": "Tema Warna",
+      "themeSystem": "Ikuti Sistem",
+      "themeLight": "Terang",
+      "themeDark": "Gelap",
+      "shellLabel": "Antarmuka Shell",
+      "shellAuto": "Otomatis (Responsif)",
+      "shellWindows": "Windows 11",
+      "shellAndroid": "Android 17",
+      "languageLabel": "Bahasa Tampilan",
+      "reduceMotion": "Kurangi Animasi (Reduce Motion)",
+      "dockAutoHide": "Sembunyikan Dock saat Jendela Maksimal",
+      "classic": "Beralih ke Tampilan Klasik"
+    }
+  }
+}

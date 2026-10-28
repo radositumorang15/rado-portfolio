@@ -1,0 +1,60 @@
+[data-shell="windows"] {
+  --fl-radius-sm: 2px;
+  --fl-radius-control: 4px;
+  --fl-radius-overlay: 8px;
+  --fl-radius-dock: 20px;
+  --shell-radius-card: 8px;
+  --shell-radius-control: 4px;
+
+  /* Shadows */
+  --shadow-2: 0 0 2px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.14);
+  --shadow-8: 0 0 2px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.14);
+  --shadow-16: 0 0 2px rgba(0,0,0,.12), 0 8px 16px rgba(0,0,0,.14);
+  --shadow-dock: 0 8px 32px rgba(0,0,0,.28), 0 0 0 1px var(--acrylic-border);
+  --shadow-window-active: 0 0 8px rgba(0,0,0,.20), 0 32px 64px rgba(0,0,0,.30);
+  --shadow-window-inactive: 0 0 4px rgba(0,0,0,.10), 0 16px 32px rgba(0,0,0,.18);
+}
+
+[data-shell="windows"][data-theme="light"] {
+  --shell-bg:           #F3F3F3;
+  --shell-surface:      #FFFFFF;
+  --shell-surface-alt:  rgba(255,255,255,.70);
+  --shell-text:         #1A1A1A;
+  --shell-text-muted:   #5C5C5C;
+  --shell-text-disabled:rgba(0,0,0,.36);
+  --shell-border:       rgba(0,0,0,.058);
+  --shell-border-strong:rgba(117,117,117,.40);
+  --shell-accent:       #0B57D0;
+  --shell-on-accent:    #FFFFFF;
+  --shell-accent-soft:  rgba(11,87,208,.10);
+  --shell-success:      #0F7B0F;
+  --shell-danger:       #C42B1C;
+  --shell-focus:        #000000;
+  --acrylic-bg:         rgba(252,252,252,.75);
+  --acrylic-border:     rgba(0,0,0,.08);
+  --control-fill:       rgba(255,255,255,.70);
+  --control-fill-hover: rgba(240,240,240,.60);
+  --control-fill-press: rgba(230,230,230,.50);
+}
+
+[data-shell="windows"][data-theme="dark"] {
+  --shell-bg:           #202020;
+  --shell-surface:      #2B2B2B;
+  --shell-surface-alt:  rgba(255,255,255,.051);
+  --shell-text:         #FFFFFF;
+  --shell-text-muted:   rgba(255,255,255,.787);
+  --shell-text-disabled:rgba(255,255,255,.363);
+  --shell-border:       rgba(255,255,255,.070);
+  --shell-border-strong:rgba(117,117,117,.40);
+  --shell-accent:       #A8C7FA;
+  --shell-on-accent:    #000000;
+  --shell-accent-soft:  rgba(168,199,250,.16);
+  --shell-success:      #6CCB5F;
+  --shell-danger:       #FF99A4;
+  --shell-focus:        #FFFFFF;
+  --acrylic-bg:         rgba(32,32,32,.75);
+  --acrylic-border:     rgba(255,255,255,.08);
+  --control-fill:       rgba(255,255,255,.061);
+  --control-fill-hover: rgba(255,255,255,.084);
+  --control-fill-press: rgba(255,255,255,.033);
+}

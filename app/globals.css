@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@import "../src/tokens/tokens.css";
+@import "../src/tokens/fluent.css";
+@import "../src/tokens/m3.css";
+@import "../src/tokens/dock.css";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Variable", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--shell-bg, #18181b);
+  color: var(--shell-text, #ffffff);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-indeterminate {
+  animation: indeterminate 1.5s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}

@@ -1,0 +1,126 @@
+.nx-root {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 1300;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+.nx-island {
+  pointer-events: auto;
+  position: relative;
+  background: #000000;
+  color: #ffffff;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: width 260ms cubic-bezier(0.32, 0.72, 0, 1),
+              height 260ms cubic-bezier(0.32, 0.72, 0, 1),
+              border-radius 260ms cubic-bezier(0.32, 0.72, 0, 1),
+              padding 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: width, height;
+}
+
+.nx-island.expanded {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: none;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+}
+
+.nx-fade {
+  animation: nx-in 260ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes nx-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+.nx-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nx-card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.nx-btn {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  transition: transform 140ms ease, background 160ms ease;
+}
+
+.nx-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.nx-btn:active {
+  transform: scale(0.94);
+}
+
+.nx-btn-accent {
+  background: var(--rn-accent, #0b57d0);
+  color: #ffffff;
+}
+
+.nx-z {
+  position: absolute;
+  left: calc(100% + 6px);
+  top: -6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--rn-accent, #0b57d0);
+  opacity: 0;
+  animation: nx-float 3.6s ease-in-out infinite;
+}
+
+@keyframes nx-float {
+  0% { opacity: 0; transform: translate(0, 3px) scale(0.7); }
+  30% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(6px, -9px) scale(1.1); }
+}
+
+@keyframes nx-breathe {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-fade,
+  .nx-island * {
+    animation: none !important;
+  }
+  .nx-island {
+    transition: none !important;
+  }
+}

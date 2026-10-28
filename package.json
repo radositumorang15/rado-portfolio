@@ -10,22 +10,35 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "dev:next": "next dev",
+    "build:next": "next build",
+    "start:next": "next start",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@material/material-color-utilities": "^0.4.0",
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.0.0",
     "@react-three/rapier": "^2.1.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.0.7",
+    "@types/node": "^26.6.5",
+    "cmdk": "^1.1.1",
     "emailjs-com": "^3.2.0",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.475.0",
     "meshline": "^3.3.1",
+    "next": "^16.4.3",
+    "postcss": "^8.5.32",
     "react": "^19.1.0",
     "react-bits": "^1.0.5",
     "react-dom": "^19.1.0",
+    "react-rnd": "^10.5.3",
     "tailwindcss": "^4.0.7",
-    "three": "^0.175.0"
+    "three": "^0.175.0",
+    "typescript": "^7.0.2",
+    "zustand": "^5.0.16"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
