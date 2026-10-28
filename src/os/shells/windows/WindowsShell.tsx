@@ -10,8 +10,6 @@ import {
   FileText,
   Mail,
   Settings as SettingsIcon,
-  Trash2,
-  LucideIcon,
 } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
 import { Window } from './Window';
@@ -33,15 +31,15 @@ import { ResumeApp } from '../../../apps/resume';
 import { ContactApp } from '../../../apps/contact';
 import { SettingsApp } from '../../../apps/settings';
 
-const DESKTOP_ICONS: { id: AppId | 'recycle'; label: string; icon: LucideIcon }[] = [
-  { id: 'about', label: 'This PC', icon: User },
-  { id: 'projects', label: 'Projects', icon: LayoutGrid },
-  { id: 'experience', label: 'Experience', icon: Briefcase },
-  { id: 'skills', label: 'Skills', icon: Cpu },
-  { id: 'terminal', label: 'Terminal', icon: TermIcon },
-  { id: 'resume', label: 'Resume.pdf', icon: FileText },
-  { id: 'contact', label: 'Contact', icon: Mail },
-  { id: 'recycle', label: 'Recycle Bin', icon: Trash2 },
+const DESKTOP_ICONS: { id: AppId | 'recycle'; label: string; iconSrc: string }[] = [
+  { id: 'about', label: 'This PC', iconSrc: '/icons/win11/thispc.png' },
+  { id: 'projects', label: 'Projects', iconSrc: '/icons/win11/explorer.png' },
+  { id: 'experience', label: 'Experience', iconSrc: '/icons/win11/folder.png' },
+  { id: 'skills', label: 'Settings', iconSrc: '/icons/win11/settings.png' },
+  { id: 'terminal', label: 'Terminal', iconSrc: '/icons/win11/terminal.png' },
+  { id: 'resume', label: 'Resume.pdf', iconSrc: '/icons/win11/notepad.png' },
+  { id: 'contact', label: 'Contact', iconSrc: '/icons/win11/mail.png' },
+  { id: 'recycle', label: 'Recycle Bin', iconSrc: '/icons/win11/bin0.png' },
 ];
 
 export const WindowsShell: React.FC = () => {
@@ -113,18 +111,18 @@ export const WindowsShell: React.FC = () => {
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      className="relative w-screen h-screen overflow-hidden select-none text-white"
+      className="relative w-screen h-screen overflow-hidden select-none text-white font-sans"
     >
       {/* Windows 11 Dark Bloom Wallpaper */}
       <WindowsWallpaper />
 
-      {/* Rado Notch (Top Center) */}
+      {/* Rado Notch (Kept at Top Center) */}
       <NotchHost platform="windows" />
 
-      {/* Selection Marquee Box */}
+      {/* Selection Marquee Box (vovacodes style) */}
       {marquee.active && (
         <div
-          className="fixed pointer-events-none z-30 border border-blue-400/80 bg-blue-500/20"
+          className="fixed pointer-events-none z-30 border border-[#0078D4] bg-[#0078D4]/25"
           style={{
             left: Math.min(marquee.x1, marquee.x2),
             top: Math.min(marquee.y1, marquee.y2),
@@ -134,25 +132,26 @@ export const WindowsShell: React.FC = () => {
         />
       )}
 
-      {/* Windows 11 Desktop Icons */}
-      <div className="absolute top-12 left-3 z-10 flex flex-col gap-1.5">
+      {/* Windows 11 Desktop Icons (3D Fluent Icons with 76px x 86px grid) */}
+      <div className="absolute top-12 left-3 z-10 flex flex-col gap-1">
         {DESKTOP_ICONS.map((item) => {
-          const Icon = item.icon;
           const isSelected = selectedIcon === item.id;
           return (
             <div
               key={item.id}
               onClick={(e) => handleIconClick(item.id, e)}
-              className={`desktop-icon flex flex-col items-center justify-center w-[76px] py-1.5 px-1 rounded-sm border cursor-pointer transition-colors ${
+              className={`desktop-icon flex flex-col items-center justify-center w-[76px] h-[86px] p-1 rounded-[4px] cursor-pointer transition-colors ${
                 isSelected
-                  ? 'bg-[#0078d4]/30 border-[#0078d4]/60'
-                  : 'border-transparent hover:bg-white/10 active:bg-white/20'
+                  ? 'bg-white/[0.12] border border-white/[0.15]'
+                  : 'border border-transparent hover:bg-white/[0.06] active:bg-white/[0.10]'
               }`}
             >
-              <div className="w-10 h-10 flex items-center justify-center text-blue-300 drop-shadow-md">
-                <Icon size={28} />
-              </div>
-              <span className="text-[11px] font-normal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[72px] text-center mt-0.5">
+              <img
+                src={item.iconSrc}
+                alt={item.label}
+                className="w-11 h-11 object-contain pointer-events-none drop-shadow-md"
+              />
+              <span className="text-[11px] font-normal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[72px] text-center mt-1">
                 {item.label}
               </span>
             </div>

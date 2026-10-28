@@ -7,7 +7,8 @@ import { AppId } from '../../../lib/constants';
 interface DockItemProps {
   id: AppId | 'start' | 'search' | 'widgets';
   label: string;
-  icon: LucideIcon | React.ComponentType<{ size?: number; className?: string }>;
+  icon?: LucideIcon | React.ComponentType<{ size?: number; className?: string }>;
+  iconSrc?: string;
   isOpen?: boolean;
   isActive?: boolean;
   onClick: () => void;
@@ -17,6 +18,7 @@ export const DockItem: React.FC<DockItemProps> = ({
   id,
   label,
   icon: Icon,
+  iconSrc,
   isOpen = false,
   isActive = false,
   onClick,
@@ -34,8 +36,8 @@ export const DockItem: React.FC<DockItemProps> = ({
     <div
       className={`relative flex items-center justify-center w-10 h-10 rounded-[var(--win-control-corner-radius)] transition-all cursor-pointer select-none group ${
         isActive
-          ? 'bg-white/15 shadow-xs'
-          : 'hover:bg-white/10 active:bg-white/5'
+          ? 'bg-white/15 shadow-inner'
+          : 'hover:bg-white/10 active:scale-90'
       } ${isBouncing ? 'animate-taskbar-bounce' : ''}`}
       onClick={handleClick}
       onMouseEnter={() => setShowTooltip(true)}
@@ -65,18 +67,22 @@ export const DockItem: React.FC<DockItemProps> = ({
         </div>
       )}
 
-      {/* App Icon */}
-      <div className="flex items-center justify-center text-white/90 group-hover:text-white transition-colors">
-        <Icon size={20} />
+      {/* App Icon: 3D Fluent Image or Fallback Component */}
+      <div className="flex items-center justify-center transition-transform duration-150 group-active:scale-75">
+        {iconSrc ? (
+          <img src={iconSrc} alt={label} className="w-6 h-6 object-contain pointer-events-none" />
+        ) : Icon ? (
+          <Icon size={20} className="text-white/90 group-hover:text-white" />
+        ) : null}
       </div>
 
-      {/* Windows 11 Running/Active Indicator Bar */}
+      {/* Windows 11 Running/Active Indicator Pill */}
       {isOpen && (
         <span
-          className={`absolute bottom-0.5 transition-all duration-200 ${
+          className={`absolute bottom-[2px] h-[3px] rounded-full transition-all duration-200 ${
             isActive
-              ? 'w-4 h-[3px] bg-[var(--win-accent-default)] rounded-full shadow-[0_0_6px_rgba(96,205,255,0.8)]'
-              : 'w-1.5 h-1.5 bg-white/60 rounded-full'
+              ? 'w-4 bg-[#60CDFF] shadow-[0_0_6px_rgba(96,205,255,0.8)]'
+              : 'w-1.5 bg-white/50'
           }`}
         />
       )}

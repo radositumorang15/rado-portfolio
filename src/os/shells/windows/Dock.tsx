@@ -1,23 +1,10 @@
 'use client';
 
 import React from 'react';
-import {
-  Search,
-  User,
-  Briefcase,
-  LayoutGrid,
-  Cpu,
-  Terminal,
-  FileText,
-  Mail,
-  Settings,
-  CloudSun,
-  Layers,
-} from 'lucide-react';
+import { CloudSun } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
 import { AppId } from '../../../lib/constants';
 import { DockItem } from './DockItem';
-import { StartLogo } from './StartLogo';
 import { TrayPill } from './TrayPill';
 
 interface DockProps {
@@ -68,70 +55,64 @@ export const Dock: React.FC<DockProps> = ({
       </div>
 
       {/* Center: Windows 11 Centered Taskbar Group */}
-      <div className="flex items-center gap-1">
-        {/* Start Button */}
+      <div className="flex items-center gap-1.5">
+        {/* Start Button with 3D Fluent Logo */}
         <DockItem
           id="start"
           label="Start Menu"
-          icon={StartLogo}
+          iconSrc="/icons/win11/home.png"
           onClick={onToggleStart}
         />
 
-        {/* Search */}
-        <DockItem
-          id="search"
-          label="Search (Ctrl+K)"
-          icon={Search}
+        {/* Windows 11 Search Pill */}
+        <div
           onClick={onToggleSearch}
-        />
-
-        {/* Task View */}
-        <DockItem
-          id="widgets"
-          label="Task View / Widgets"
-          icon={Layers}
-          onClick={onToggleWidgets || onToggleSearch}
-        />
+          className="flex items-center gap-2 h-8 px-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-xs text-white/70 transition-all select-none group"
+          title="Search (Ctrl+K)"
+        >
+          <img src="/icons/win11/search.png" alt="Search" className="w-4 h-4 object-contain" />
+          <span className="hidden xl:inline text-[11px] text-white/60">Search</span>
+        </div>
 
         <div className="w-[1px] h-5 bg-white/15 mx-1" />
 
-        {/* Pinned & Open Content Apps */}
+        {/* Pinned & Open 3D Fluent Apps */}
         <DockItem
           id="about"
-          label="About Me"
-          icon={User}
+          label="This PC (About)"
+          iconSrc="/icons/win11/thispc.png"
           isOpen={windows.about.isOpen}
           isActive={activeId === 'about' && !windows.about.isMinimized}
           onClick={() => handleAppClick('about')}
         />
         <DockItem
-          id="experience"
-          label="Experience"
-          icon={Briefcase}
-          isOpen={windows.experience.isOpen}
-          isActive={activeId === 'experience' && !windows.experience.isMinimized}
-          onClick={() => handleAppClick('experience')}
-        />
-        <DockItem
           id="projects"
-          label="Projects"
-          icon={LayoutGrid}
+          label="File Explorer (Projects)"
+          iconSrc="/icons/win11/explorer.png"
           isOpen={windows.projects.isOpen}
           isActive={activeId === 'projects' && !windows.projects.isMinimized}
           onClick={() => handleAppClick('projects')}
         />
         <DockItem
+          id="experience"
+          label="Experience"
+          iconSrc="/icons/win11/folder.png"
+          isOpen={windows.experience.isOpen}
+          isActive={activeId === 'experience' && !windows.experience.isMinimized}
+          onClick={() => handleAppClick('experience')}
+        />
+        <DockItem
           id="skills"
-          label="Skills"
-          icon={Cpu}
+          label="Skills & Capabilities"
+          iconSrc="/icons/win11/settings.png"
           isOpen={windows.skills.isOpen}
           isActive={activeId === 'skills' && !windows.skills.isMinimized}
           onClick={() => handleAppClick('skills')}
         />
         <DockItem
           id="terminal"
-          label="Terminal"
-          icon={Terminal}
+          label="Windows Terminal"
+          iconSrc="/icons/win11/terminal.png"
           isOpen={windows.terminal.isOpen}
           isActive={activeId === 'terminal' && !windows.terminal.isMinimized}
           onClick={() => handleAppClick('terminal')}
@@ -142,15 +123,15 @@ export const Dock: React.FC<DockProps> = ({
         <DockItem
           id="resume"
           label="Resume (CV)"
-          icon={FileText}
+          iconSrc="/icons/win11/notepad.png"
           isOpen={windows.resume.isOpen}
           isActive={activeId === 'resume' && !windows.resume.isMinimized}
           onClick={() => handleAppClick('resume')}
         />
         <DockItem
           id="contact"
-          label="Contact"
-          icon={Mail}
+          label="Mail / Contact"
+          iconSrc="/icons/win11/mail.png"
           isOpen={windows.contact.isOpen}
           isActive={activeId === 'contact' && !windows.contact.isMinimized}
           onClick={() => handleAppClick('contact')}
@@ -158,7 +139,7 @@ export const Dock: React.FC<DockProps> = ({
         <DockItem
           id="settings"
           label="Settings"
-          icon={Settings}
+          iconSrc="/icons/win11/settings.png"
           isOpen={windows.settings.isOpen}
           isActive={activeId === 'settings' && !windows.settings.isMinimized}
           onClick={() => handleAppClick('settings')}

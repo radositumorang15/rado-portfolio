@@ -52,3 +52,4 @@ export const PixelWallpaper: React.FC = () => {
     </div>
   );
 };
+
