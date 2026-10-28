@@ -11,14 +11,35 @@ import { notch } from './notch';
 export const OSRoot: React.FC = () => {
   const resolvedShell = usePrefsStore((s) => s.resolvedShell);
   const syncFromDOM = usePrefsStore((s) => s.syncFromDOM);
+  const updateResponsiveShell = usePrefsStore((s) => s.updateResponsiveShell);
   const openWindow = useWindowsStore((s) => s.openWindow);
 
   const [isBooting, setIsBooting] = useState<boolean>(true);
 
+  // Responsive shell auto-detection on resize
   useEffect(() => {
     syncFromDOM();
 
-    // Check session boot status
+    const handleResize = () => {
+      updateResponsiveShell();
+    };
+
+    const mediaQuery = window.matchMedia('(min-width: 1024px) and (pointer: fine)');
+    const handleMedia = () => {
+      updateResponsiveShell();
+    };
+
+    window.addEventListener('resize', handleResize);
+    mediaQuery.addEventListener('change', handleMedia);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      mediaQuery.removeEventListener('change', handleMedia);
+    };
+  }, [syncFromDOM, updateResponsiveShell]);
+
+  // Check session boot status
+  useEffect(() => {
     const hasBooted = sessionStorage.getItem('rn_booted');
     if (hasBooted) {
       setIsBooting(false);
@@ -34,7 +55,7 @@ export const OSRoot: React.FC = () => {
       }, 1100);
       return () => clearTimeout(timer);
     }
-  }, [syncFromDOM]);
+  }, []);
 
   // Handle Hash deep linking
   useEffect(() => {
@@ -72,9 +93,8 @@ export const OSRoot: React.FC = () => {
   }
 
   return (
-    <main className="w-full h-full">
+    <main className="w-full h-full transition-opacity duration-200">
       {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
     </main>
   );
 };
-

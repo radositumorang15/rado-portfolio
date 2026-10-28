@@ -21,6 +21,7 @@ interface PrefsState {
   setReduceMotion: (reduce: boolean) => void;
   setDockAutoHide: (autoHide: boolean) => void;
   setDynamicColor: (dynamic: boolean) => void;
+  updateResponsiveShell: () => void;
   syncFromDOM: () => void;
 }
 
@@ -101,10 +102,25 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     set({ dynamicColor });
   },
 
+  updateResponsiveShell: () => {
+    if (typeof window === 'undefined') return;
+    const { shell, resolvedShell } = get();
+    if (shell !== 'auto') return;
+
+    const isDesktop = window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches;
+    const nextResolved: 'windows' | 'android' = isDesktop ? 'windows' : 'android';
+
+    if (nextResolved !== resolvedShell) {
+      document.documentElement.setAttribute('data-shell', nextResolved);
+      set({ resolvedShell: nextResolved });
+    }
+  },
+
   syncFromDOM: () => {
     if (typeof window === 'undefined') return;
     const domTheme = document.documentElement.getAttribute('data-theme') as 'light' | 'dark' | null;
     const domShell = document.documentElement.getAttribute('data-shell') as 'windows' | 'android' | null;
+    const savedShell = (localStorage.getItem('rn_shell') as Shell | null) || 'auto';
     const savedLang = localStorage.getItem('rn_lang') as Language | null;
     const savedMotion = localStorage.getItem('rn_motion') === 'true';
     const savedAccent = localStorage.getItem('rn_accent');
@@ -115,9 +131,15 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
       });
     }
 
+    const isDesktop = window.innerWidth >= 1024 && window.matchMedia('(pointer: fine)').matches;
+    const effectiveShell = savedShell === 'auto' ? (isDesktop ? 'windows' : 'android') : savedShell;
+
+    document.documentElement.setAttribute('data-shell', effectiveShell);
+
     set({
+      shell: savedShell,
       resolvedTheme: domTheme || 'dark',
-      resolvedShell: domShell || (window.innerWidth >= 1024 ? 'windows' : 'android'),
+      resolvedShell: effectiveShell,
       language: savedLang || 'en',
       accent: savedAccent || 'blue',
       reduceMotion: savedMotion,
