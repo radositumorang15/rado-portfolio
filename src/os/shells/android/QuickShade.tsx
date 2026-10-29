@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Moon, Sun, Globe, Monitor, Zap, X, Bell } from 'lucide-react';
+import { Moon, Sun, Globe, Monitor, Zap, X, Bell, Palette } from 'lucide-react';
 import { usePrefsStore } from '../../../store/prefs';
 
 interface QuickShadeProps {
@@ -16,6 +16,8 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
   const setLanguage = usePrefsStore((s) => s.setLanguage);
   const reduceMotion = usePrefsStore((s) => s.reduceMotion);
   const setReduceMotion = usePrefsStore((s) => s.setReduceMotion);
+  const themedIcons = usePrefsStore((s) => s.themedIcons);
+  const setThemedIcons = usePrefsStore((s) => s.setThemedIcons);
   const setShell = usePrefsStore((s) => s.setShell);
 
   if (!isOpen) return null;
@@ -45,7 +47,7 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
               triggerHaptic();
               onClose();
             }}
-            className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+            className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -66,6 +68,22 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
             <div className="leading-tight">
               <p className="text-xs font-semibold">Dark Theme</p>
               <p className="text-[10px] opacity-75">{resolvedTheme === 'dark' ? 'Active' : 'Off'}</p>
+            </div>
+          </button>
+
+          {/* Themed Icons Tile */}
+          <button
+            data-active={themedIcons}
+            onClick={() => {
+              triggerHaptic();
+              setThemedIcons(!themedIcons);
+            }}
+            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
+          >
+            <Palette size={18} />
+            <div className="leading-tight">
+              <p className="text-xs font-semibold">Themed Icons</p>
+              <p className="text-[10px] opacity-75">{themedIcons ? 'Monochrome' : '2.5D Color'}</p>
             </div>
           </button>
 
@@ -109,12 +127,12 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
               triggerHaptic();
               setReduceMotion(!reduceMotion);
             }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
+            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer col-span-2"
           >
             <Zap size={18} />
             <div className="leading-tight">
-              <p className="text-xs font-semibold">Animations</p>
-              <p className="text-[10px] opacity-75">{reduceMotion ? 'Reduced' : 'Spring FX'}</p>
+              <p className="text-xs font-semibold">Animations & Physics</p>
+              <p className="text-[10px] opacity-75">{reduceMotion ? 'Reduced Motion' : 'M3 Spatial Spring Motion'}</p>
             </div>
           </button>
         </div>

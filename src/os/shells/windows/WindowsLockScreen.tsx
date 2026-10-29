@@ -63,7 +63,7 @@ export const WindowsLockScreen: React.FC<WindowsLockScreenProps> = ({ onUnlock }
         isSlidingUp ? '-translate-y-full opacity-90' : 'translate-y-0 opacity-100'
       }`}
       style={{
-        backgroundImage: "url('/icons/win11/windows_bloom_dark.png')",
+        backgroundImage: "url('/windowswall.png')",
         backgroundColor: '#0c0f17',
       }}
     >
@@ -90,20 +90,17 @@ export const WindowsLockScreen: React.FC<WindowsLockScreenProps> = ({ onUnlock }
           <p className="text-xs text-neutral-300 mt-0.5">Frontend & Android Developer</p>
         </div>
 
-        <div className="flex items-center gap-1.5 mt-2 text-xs text-neutral-300/80 animate-bounce">
+        <div className="flex items-center gap-1.5 text-xs text-neutral-400 mt-3 animate-bounce">
           <ChevronUp size={16} />
-          <span>Klik atau tekan tombol apa saja untuk masuk</span>
+          <span>Click or press any key to unlock</span>
         </div>
       </div>
 
-      {/* Bottom Right System Indicators */}
-      <div className="relative z-10 flex items-center justify-end gap-3 text-neutral-300">
+      {/* Bottom Right System Status */}
+      <div className="relative z-10 flex items-center justify-end gap-3 text-white/80">
         <Wifi size={16} />
         <Volume2 size={16} />
-        <div className="flex items-center gap-1">
-          <Battery size={16} />
-          <span className="text-xs font-medium">88%</span>
-        </div>
+        <Battery size={16} />
       </div>
     </div>
   );

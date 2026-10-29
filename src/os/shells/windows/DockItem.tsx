@@ -5,10 +5,11 @@ import { LucideIcon } from 'lucide-react';
 import { AppId } from '../../../lib/constants';
 
 interface DockItemProps {
-  id: AppId | 'start' | 'search' | 'widgets';
+  id: AppId | 'start' | 'search' | 'widgets' | 'github' | 'antigravity' | 'linkedin' | 'threads' | string;
   label: string;
   icon?: LucideIcon | React.ComponentType<{ size?: number; className?: string }>;
   iconSrc?: string;
+  children?: React.ReactNode;
   isOpen?: boolean;
   isActive?: boolean;
   onClick: () => void;
@@ -19,6 +20,7 @@ export const DockItem: React.FC<DockItemProps> = ({
   label,
   icon: Icon,
   iconSrc,
+  children,
   isOpen = false,
   isActive = false,
   onClick,
@@ -52,7 +54,7 @@ export const DockItem: React.FC<DockItemProps> = ({
         }
       }}
     >
-      {/* Windows 11 Official Tooltip (4px radius rule exception) */}
+      {/* Windows 11 Official Tooltip */}
       {showTooltip && (
         <div
           className="win-tooltip absolute -top-9 px-2.5 py-1 text-[11px] font-normal text-white pointer-events-none z-50 animate-in fade-in zoom-in-95 duration-100 whitespace-nowrap"
@@ -67,10 +69,12 @@ export const DockItem: React.FC<DockItemProps> = ({
         </div>
       )}
 
-      {/* App Icon: 3D Fluent Image or Fallback Component */}
+      {/* App Icon: Custom Children, 3D Fluent Image, or Component */}
       <div className="flex items-center justify-center transition-transform duration-150 group-active:scale-75">
-        {iconSrc ? (
-          <img src={iconSrc} alt={label} className="w-6 h-6 object-contain pointer-events-none" />
+        {children ? (
+          children
+        ) : iconSrc ? (
+          <img src={iconSrc} alt={label} className="w-7 h-7 object-contain pointer-events-none drop-shadow-md" />
         ) : Icon ? (
           <Icon size={20} className="text-white/90 group-hover:text-white" />
         ) : null}

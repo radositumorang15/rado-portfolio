@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefsStore } from '../store/prefs';
 import { useWindowsStore } from '../store/windows';
 import { WindowsShell } from './shells/windows';
@@ -19,12 +20,16 @@ export const OSRoot: React.FC = () => {
   const [isBooting, setIsBooting] = useState<boolean>(true);
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
-  // Responsive shell auto-detection on resize
+  // Debounced responsive shell auto-detection on resize
   useEffect(() => {
     syncFromDOM();
 
+    let resizeTimer: NodeJS.Timeout;
     const handleResize = () => {
-      updateResponsiveShell();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        updateResponsiveShell();
+      }, 120);
     };
 
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
@@ -36,6 +41,7 @@ export const OSRoot: React.FC = () => {
     mediaQuery.addEventListener('change', handleMedia);
 
     return () => {
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', handleResize);
       mediaQuery.removeEventListener('change', handleMedia);
     };
@@ -131,8 +137,11 @@ export const OSRoot: React.FC = () => {
     );
   }
 
+  const direction = resolvedShell === 'windows' ? 'to-windows' : 'to-android';
+
   return (
-    <main className="w-full h-full transition-opacity duration-200">
+    <main className="relative w-screen h-screen overflow-hidden bg-black [perspective:1400px]">
+      {/* Lockscreen layer */}
       {isLocked && (
         resolvedShell === 'windows' ? (
           <WindowsLockScreen onUnlock={handleUnlock} />
@@ -140,7 +149,42 @@ export const OSRoot: React.FC = () => {
           <AndroidLockScreen onUnlock={handleUnlock} />
         )
       )}
-      {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
+
+      {/* 3D Holographic Perspective Shell Transition */}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={resolvedShell}
+          custom={direction}
+          initial={{
+            opacity: 0,
+            scale: 0.9,
+            rotateY: direction === 'to-windows' ? -18 : 18,
+            z: -120,
+            filter: 'blur(6px)',
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            rotateY: 0,
+            z: 0,
+            filter: 'blur(0px)',
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.9,
+            rotateY: direction === 'to-windows' ? 18 : -18,
+            z: -120,
+            filter: 'blur(6px)',
+          }}
+          transition={{
+            duration: 0.55,
+            ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier spring curve
+          }}
+          className="w-full h-full [transform-style:preserve-3d]"
+        >
+          {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
+        </motion.div>
+      </AnimatePresence>
     </main>
   );
 };

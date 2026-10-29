@@ -3,7 +3,9 @@
 import React from 'react';
 import { X, Layers } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
+import { usePrefsStore } from '../../../store/prefs';
 import { AppId, APP_IDS } from '../../../lib/constants';
+import { PixelAdaptiveIcon } from './PixelAdaptiveIcon';
 
 interface RecentsProps {
   isOpen: boolean;
@@ -14,6 +16,7 @@ export const Recents: React.FC<RecentsProps> = ({ isOpen, onClose }) => {
   const windows = useWindowsStore((s) => s.windows);
   const openWindow = useWindowsStore((s) => s.openWindow);
   const closeWindow = useWindowsStore((s) => s.closeWindow);
+  const themedIcons = usePrefsStore((s) => s.themedIcons);
 
   if (!isOpen) return null;
 
@@ -53,12 +56,15 @@ export const Recents: React.FC<RecentsProps> = ({ isOpen, onClose }) => {
                   openWindow(id);
                   onClose();
                 }}
-                className="w-56 h-80 rounded-3xl bg-neutral-900 border border-white/10 shadow-2xl flex flex-col overflow-hidden shrink-0 snap-center cursor-pointer hover:border-blue-500/50 transition-all group"
+                className="w-56 h-80 rounded-3xl bg-[var(--m3-surface-container)] border border-white/10 shadow-2xl flex flex-col overflow-hidden shrink-0 snap-center cursor-pointer hover:border-blue-500/50 transition-all group"
               >
-                <div className="h-10 px-4 flex items-center justify-between bg-neutral-800/80 border-b border-white/5">
-                  <span className="text-xs font-semibold capitalize text-white truncate">
-                    {win.title}
-                  </span>
+                <div className="h-12 px-4 flex items-center justify-between bg-[var(--m3-surface-container-high)] border-b border-white/5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <PixelAdaptiveIcon id={id} themed={themedIcons} size={24} />
+                    <span className="text-xs font-semibold capitalize text-white truncate">
+                      {win.title}
+                    </span>
+                  </div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -66,14 +72,12 @@ export const Recents: React.FC<RecentsProps> = ({ isOpen, onClose }) => {
                     }}
                     className="p-1 rounded-full hover:bg-white/10 text-white/50 hover:text-white"
                   >
-                    <X size={12} />
+                    <X size={14} />
                   </button>
                 </div>
-                <div className="flex-1 p-4 flex flex-col items-center justify-center gap-2 bg-neutral-950/60">
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                    <Layers size={22} />
-                  </div>
-                  <span className="text-[11px] text-white/60 capitalize">Tap to switch</span>
+                <div className="flex-1 p-4 flex flex-col items-center justify-center gap-3 bg-[var(--m3-bg)]">
+                  <PixelAdaptiveIcon id={id} themed={themedIcons} size={64} />
+                  <span className="text-xs font-medium text-white/70 capitalize">Tap to resume</span>
                 </div>
               </div>
             );
@@ -88,4 +92,3 @@ export const Recents: React.FC<RecentsProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
-

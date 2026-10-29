@@ -1,0 +1,8 @@
+export { PixelAboutView } from './PixelAboutView';
+export { PixelSkillsView } from './PixelSkillsView';
+export { PixelProjectsView } from './PixelProjectsView';
+export { PixelExperienceView } from './PixelExperienceView';
+export { PixelContactView } from './PixelContactView';
+export { PixelResumeView } from './PixelResumeView';
+export { PixelSettingsView } from './PixelSettingsView';
+

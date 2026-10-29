@@ -14,6 +14,7 @@ interface PrefsState {
   reduceMotion: boolean;
   dockAutoHide: boolean;
   dynamicColor: boolean;
+  themedIcons: boolean;
   setTheme: (theme: Theme) => void;
   setShell: (shell: Shell) => void;
   setLanguage: (lang: Language) => void;
@@ -21,6 +22,7 @@ interface PrefsState {
   setReduceMotion: (reduce: boolean) => void;
   setDockAutoHide: (autoHide: boolean) => void;
   setDynamicColor: (dynamic: boolean) => void;
+  setThemedIcons: (themed: boolean) => void;
   updateResponsiveShell: () => void;
   syncFromDOM: () => void;
 }
@@ -35,6 +37,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
   reduceMotion: false,
   dockAutoHide: true,
   dynamicColor: true,
+  themedIcons: false,
 
   setTheme: (theme) => {
     let resolved: 'light' | 'dark' = 'dark';
@@ -102,6 +105,13 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     set({ dynamicColor });
   },
 
+  setThemedIcons: (themedIcons) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('rn_themed_icons', String(themedIcons));
+    }
+    set({ themedIcons });
+  },
+
   updateResponsiveShell: () => {
     if (typeof window === 'undefined') return;
     const isDesktop = window.innerWidth >= 1024;
@@ -133,6 +143,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
     const savedLang = localStorage.getItem('rn_lang') as Language | null;
     const savedMotion = localStorage.getItem('rn_motion') === 'true';
     const savedAccent = localStorage.getItem('rn_accent');
+    const savedThemedIcons = localStorage.getItem('rn_themed_icons') === 'true';
 
     if (savedAccent) {
       import('../lib/colors').then(({ applyAccentColor }) => {
@@ -147,7 +158,7 @@ export const usePrefsStore = create<PrefsState>((set, get) => ({
       language: savedLang || 'en',
       accent: savedAccent || 'blue',
       reduceMotion: savedMotion,
+      themedIcons: savedThemedIcons,
     });
   },
 }));
-

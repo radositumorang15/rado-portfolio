@@ -6,6 +6,9 @@ import { useWindowsStore } from '../../../store/windows';
 import { AppId } from '../../../lib/constants';
 import { DockItem } from './DockItem';
 import { TrayPill } from './TrayPill';
+import { profileData } from '../../../data/profile';
+import { notch } from '../../notch';
+import { playWindowsSound } from '../../../lib/audio';
 
 interface DockProps {
   onToggleStart: () => void;
@@ -37,13 +40,35 @@ export const Dock: React.FC<DockProps> = ({
     }
   };
 
+  const handleOpenLink = (url: string, title: string) => {
+    playWindowsSound('click');
+    notch.show({
+      title: `Opening ${title}`,
+      subtitle: url,
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleAntigravityClick = () => {
+    playWindowsSound('click');
+    notch.show({
+      title: 'Antigravity IDE 2.0',
+      subtitle: 'Google Deepmind Agentic Workspace Active',
+    });
+    if (!windows.terminal.isOpen) {
+      openWindow('terminal');
+    } else {
+      focusWindow('terminal');
+    }
+  };
+
   return (
     <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#1c1c1c]/85 backdrop-blur-2xl border-t border-white/10 z-[1000] flex items-center justify-between px-3 select-none text-white shadow-2xl">
       {/* Left: Weather Widget */}
       <div className="flex items-center min-w-[140px]">
         <button
           onClick={onToggleWidgets}
-          className="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group"
+          className="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group cursor-pointer"
           title="Widgets & Weather"
         >
           <CloudSun size={18} className="text-amber-400 group-hover:scale-105 transition-transform" />
@@ -54,9 +79,9 @@ export const Dock: React.FC<DockProps> = ({
         </button>
       </div>
 
-      {/* Center: Windows 11 Centered Taskbar Group */}
-      <div className="flex items-center gap-1.5">
-        {/* Start Button with 3D Fluent Logo */}
+      {/* Center: Windows 11 Taskbar Group (Arrangement and Real 3D Icons from floatdock) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1">
+        {/* 1. START & SEARCH */}
         <DockItem
           id="start"
           label="Start Menu"
@@ -64,7 +89,6 @@ export const Dock: React.FC<DockProps> = ({
           onClick={onToggleStart}
         />
 
-        {/* Windows 11 Search Pill */}
         <div
           onClick={onToggleSearch}
           className="flex items-center gap-2 h-8 px-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-xs text-white/70 transition-all select-none group"
@@ -74,17 +98,9 @@ export const Dock: React.FC<DockProps> = ({
           <span className="hidden xl:inline text-[11px] text-white/60">Search</span>
         </div>
 
-        <div className="w-[1px] h-5 bg-white/15 mx-1" />
+        <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
 
-        {/* Pinned & Open 3D Fluent Apps */}
-        <DockItem
-          id="about"
-          label="This PC (About)"
-          iconSrc="/icons/win11/thispc.png"
-          isOpen={windows.about.isOpen}
-          isActive={activeId === 'about' && !windows.about.isMinimized}
-          onClick={() => handleAppClick('about')}
-        />
+        {/* 2. SYSTEM & PORTFOLIO APPS */}
         <DockItem
           id="projects"
           label="File Explorer (Projects)"
@@ -93,22 +109,16 @@ export const Dock: React.FC<DockProps> = ({
           isActive={activeId === 'projects' && !windows.projects.isMinimized}
           onClick={() => handleAppClick('projects')}
         />
+
         <DockItem
-          id="experience"
-          label="Experience"
-          iconSrc="/icons/win11/folder.png"
-          isOpen={windows.experience.isOpen}
-          isActive={activeId === 'experience' && !windows.experience.isMinimized}
-          onClick={() => handleAppClick('experience')}
+          id="about"
+          label="This PC (About)"
+          iconSrc="/icons/win11/thispc.png"
+          isOpen={windows.about.isOpen}
+          isActive={activeId === 'about' && !windows.about.isMinimized}
+          onClick={() => handleAppClick('about')}
         />
-        <DockItem
-          id="skills"
-          label="Skills & Capabilities"
-          iconSrc="/icons/win11/settings.png"
-          isOpen={windows.skills.isOpen}
-          isActive={activeId === 'skills' && !windows.skills.isMinimized}
-          onClick={() => handleAppClick('skills')}
-        />
+
         <DockItem
           id="terminal"
           label="Windows Terminal"
@@ -118,16 +128,72 @@ export const Dock: React.FC<DockProps> = ({
           onClick={() => handleAppClick('terminal')}
         />
 
-        <div className="w-[1px] h-5 bg-white/15 mx-1" />
+        <DockItem
+          id="skills"
+          label="Skills & Stack"
+          iconSrc="/icons/win11/skills.svg"
+          isOpen={windows.skills.isOpen}
+          isActive={activeId === 'skills' && !windows.skills.isMinimized}
+          onClick={() => handleAppClick('skills')}
+        />
+
+        <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
+
+        {/* 3. DEVELOPER TOOLS: REAL 3D ICONS (FIGMA, CHROME, ANTIGRAVITY, VSCODE, GITHUB) */}
+        <DockItem
+          id="figma"
+          label="Figma"
+          iconSrc="/icons/win11/figma.png"
+          onClick={() => handleOpenLink('https://www.figma.com', 'Figma Design')}
+        />
 
         <DockItem
-          id="resume"
-          label="Resume (CV)"
-          iconSrc="/icons/win11/notepad.png"
-          isOpen={windows.resume.isOpen}
-          isActive={activeId === 'resume' && !windows.resume.isMinimized}
-          onClick={() => handleAppClick('resume')}
+          id="chrome"
+          label="Google Chrome"
+          iconSrc="/icons/win11/chrome.png"
+          onClick={() => handleOpenLink('https://www.google.com', 'Google Chrome')}
         />
+
+        <DockItem
+          id="antigravity"
+          label="Antigravity IDE 2.0"
+          iconSrc="/icons/win11/antigravity.png"
+          onClick={handleAntigravityClick}
+        />
+
+        <DockItem
+          id="vscode"
+          label="Visual Studio Code"
+          iconSrc="/icons/win11/vscode.png"
+          onClick={() => handleOpenLink('https://github.dev/radositumorang15/rado-portfolio', 'VS Code Web')}
+        />
+
+        <DockItem
+          id="github"
+          label="GitHub / radositumorang15"
+          iconSrc="/icons/win11/github.png"
+          onClick={() => handleOpenLink(profileData.github, 'GitHub Desktop')}
+        />
+
+        <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
+
+        {/* 4. CONNECTIVITY & SETTINGS */}
+        <DockItem
+          id="experience"
+          label="Experience & Career"
+          iconSrc="/icons/win11/folder.png"
+          isOpen={windows.experience.isOpen}
+          isActive={activeId === 'experience' && !windows.experience.isMinimized}
+          onClick={() => handleAppClick('experience')}
+        />
+
+        <DockItem
+          id="linkedin"
+          label="LinkedIn / radositumorang"
+          iconSrc="/icons/win11/linkedin.svg"
+          onClick={() => handleOpenLink(profileData.linkedin, 'LinkedIn')}
+        />
+
         <DockItem
           id="contact"
           label="Mail / Contact"
@@ -136,6 +202,7 @@ export const Dock: React.FC<DockProps> = ({
           isActive={activeId === 'contact' && !windows.contact.isMinimized}
           onClick={() => handleAppClick('contact')}
         />
+
         <DockItem
           id="settings"
           label="Settings"

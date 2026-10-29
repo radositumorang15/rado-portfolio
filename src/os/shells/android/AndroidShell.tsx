@@ -13,26 +13,28 @@ import { useWindowsStore } from '../../../store/windows';
 import { usePrefsStore } from '../../../store/prefs';
 import { AppId } from '../../../lib/constants';
 
-import { AboutApp } from '../../../apps/about';
-import { ExperienceApp } from '../../../apps/experience';
-import { ProjectsApp } from '../../../apps/projects';
-import { SkillsApp } from '../../../apps/skills';
+import {
+  PixelAboutView,
+  PixelSkillsView,
+  PixelProjectsView,
+  PixelExperienceView,
+  PixelContactView,
+  PixelResumeView,
+  PixelSettingsView,
+} from './apps';
 import { TerminalApp } from '../../../apps/terminal';
-import { ResumeApp } from '../../../apps/resume';
-import { ContactApp } from '../../../apps/contact';
-import { SettingsApp } from '../../../apps/settings';
 import { TaskManagerApp } from '../../../apps/taskmanager';
 
 const APP_TITLES: Record<AppId, string> = {
-  about: 'About Me',
+  about: 'About Device',
   experience: 'Work Experience',
-  projects: 'Projects Showcase',
-  skills: 'Technical Skills',
-  terminal: 'Terminal',
+  projects: 'Files & Projects',
+  skills: 'Skills & Tech',
+  terminal: 'Linux Terminal',
   resume: 'Curriculum Vitae',
-  contact: 'Contact Rado',
+  contact: 'Contact & Messages',
   settings: 'Wallpaper & Style',
-  taskmanager: 'Task Manager',
+  taskmanager: 'System Activity',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -47,14 +49,14 @@ export const AndroidShell: React.FC = () => {
 
   const renderAppContent = (id: AppId) => {
     switch (id) {
-      case 'about': return <AboutApp />;
-      case 'experience': return <ExperienceApp />;
-      case 'projects': return <ProjectsApp />;
-      case 'skills': return <SkillsApp />;
+      case 'about': return <PixelAboutView />;
+      case 'experience': return <PixelExperienceView />;
+      case 'projects': return <PixelProjectsView />;
+      case 'skills': return <PixelSkillsView />;
       case 'terminal': return <TerminalApp />;
-      case 'resume': return <ResumeApp />;
-      case 'contact': return <ContactApp />;
-      case 'settings': return <SettingsApp />;
+      case 'resume': return <PixelResumeView />;
+      case 'contact': return <PixelContactView />;
+      case 'settings': return <PixelSettingsView />;
       case 'taskmanager': return <TaskManagerApp />;
     }
   };
@@ -73,7 +75,7 @@ export const AndroidShell: React.FC = () => {
         </div>
         <button
           onClick={() => setShell('windows')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-blue-200 font-medium transition-colors shadow-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 text-blue-200 font-medium transition-colors shadow-sm cursor-pointer"
         >
           <Monitor size={14} />
           <span>Switch to Windows 11</span>

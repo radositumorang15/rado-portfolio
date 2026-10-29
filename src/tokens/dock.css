@@ -40,3 +40,48 @@
   transition: width 180ms ease, background-color 180ms ease;
 }
 
+/* Unified Squircle Icon Tiles (from rust-floatdock) */
+.squircle-icon-tile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  user-select: none;
+  will-change: transform;
+}
+
+/* 1px Specular Highlight at top edge */
+.squircle-icon-tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0.15) 100%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 8-10% Subtle Inner Depth Gradient */
+.squircle-icon-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.02) 42%, rgba(0, 0, 0, 0.12) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.icon-glyph-parallax {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}

@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { AppId } from '../../../lib/constants';
+import { PixelAdaptiveIcon } from './PixelAdaptiveIcon';
+import { usePrefsStore } from '../../../store/prefs';
 
 interface HomeProps {
   onOpenApp: (id: AppId) => void;
@@ -12,28 +14,29 @@ interface HomeProps {
 interface AppItem {
   id: AppId;
   label: string;
-  icon: string;
 }
 
 const MAIN_APPS: AppItem[] = [
-  { id: 'about', label: 'About', icon: 'person' },
-  { id: 'projects', label: 'Projects', icon: 'grid_view' },
-  { id: 'experience', label: 'Experience', icon: 'work' },
-  { id: 'skills', label: 'Skills', icon: 'memory' },
-  { id: 'terminal', label: 'Terminal', icon: 'terminal' },
-  { id: 'resume', label: 'Resume', icon: 'description' },
-  { id: 'contact', label: 'Contact', icon: 'mail' },
-  { id: 'settings', label: 'Settings', icon: 'palette' },
+  { id: 'about', label: 'About' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'terminal', label: 'Terminal' },
+  { id: 'resume', label: 'Resume' },
+  { id: 'contact', label: 'Contact' },
+  { id: 'settings', label: 'Settings' },
 ];
 
 const DOCK_APPS: AppItem[] = [
-  { id: 'contact', label: 'Contact', icon: 'mail' },
-  { id: 'projects', label: 'Projects', icon: 'grid_view' },
-  { id: 'terminal', label: 'Terminal', icon: 'terminal' },
-  { id: 'settings', label: 'Settings', icon: 'settings' },
+  { id: 'contact', label: 'Contact' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'terminal', label: 'Terminal' },
+  { id: 'settings', label: 'Settings' },
 ];
 
 export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecents }) => {
+  const themedIcons = usePrefsStore((s) => s.themedIcons);
+
   const triggerHaptic = () => {
     if (typeof window !== 'undefined' && 'vibrate' in navigator) {
       navigator.vibrate?.(10);
@@ -113,9 +116,9 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
         </div>
       </div>
 
-      {/* 2. BOTTOM AREA: THEMED ICONS GRID + DOCK + PIXEL SEARCH BAR */}
+      {/* 2. BOTTOM AREA: THEMED/2.5D ICONS GRID + DOCK + PIXEL SEARCH BAR */}
       <div className="flex flex-col gap-4 mt-auto pt-3">
-        {/* 4x2 Pixel Themed App Icons (Full Circles, Monochromatic Tonal, No Border) */}
+        {/* 4x2 Pixel App Icons (2.5D Adaptive or Monochrome Themed) */}
         <div className="grid grid-cols-4 gap-y-3.5 gap-x-2 justify-items-center">
           {MAIN_APPS.map((app) => (
             <button
@@ -123,11 +126,7 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
               onClick={() => handleLaunch(app.id)}
               className="group flex flex-col items-center gap-1 focus:outline-none"
             >
-              <div className="w-[54px] h-[54px] rounded-full bg-[var(--m3-secondary-container)] text-[var(--m3-on-secondary-container)] flex items-center justify-center shadow-sm group-active:scale-90 group-active:rounded-[18px] transition-all duration-200">
-                <span className="material-symbols-rounded text-[26px]">
-                  {app.icon}
-                </span>
-              </div>
+              <PixelAdaptiveIcon id={app.id} themed={themedIcons} size={54} />
               <span className="text-[11px] font-medium text-[var(--m3-on-surface)] tracking-tight truncate max-w-[68px]">
                 {app.label}
               </span>
@@ -141,12 +140,10 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
             <button
               key={app.id}
               onClick={() => handleLaunch(app.id)}
-              className="w-[54px] h-[54px] rounded-full bg-[var(--m3-secondary-container)] text-[var(--m3-on-secondary-container)] flex items-center justify-center shadow-sm active:scale-90 active:rounded-[18px] transition-all duration-200"
+              className="group focus:outline-none"
               aria-label={app.label}
             >
-              <span className="material-symbols-rounded text-[26px]">
-                {app.icon}
-              </span>
+              <PixelAdaptiveIcon id={app.id} themed={themedIcons} size={54} />
             </button>
           ))}
         </div>

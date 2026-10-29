@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- 3D Outer Elevation Shadow -->
+    <filter id="shadow3dTh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+
+    <!-- Emblem 3D Depth Shadow -->
+    <filter id="emblemShadowTh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.55" />
+    </filter>
+
+    <!-- 3D Fluent Onyx Gradient -->
+    <linearGradient id="bodyGradTh" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3c3c45" />
+      <stop offset="45%" stop-color="#18181c" />
+      <stop offset="100%" stop-color="#08080a" />
+    </linearGradient>
+
+    <!-- Top Rim Specular Gloss -->
+    <linearGradient id="glossGradTh" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
+    </linearGradient>
+
+    <!-- Bottom Bevel Shadow -->
+    <linearGradient id="bottomBevelTh" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- 3D Base Tile -->
+  <g filter="url(#shadow3dTh)">
+    <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#bodyGradTh)" />
+    <!-- Bottom Bevel Thickness -->
+    <path d="M 12 88 C 12 104 24 116 40 116 L 88 116 C 104 116 116 104 116 88 L 116 82 C 116 98 104 110 88 110 L 40 110 C 24 110 12 98 12 82 Z" fill="url(#bottomBevelTh)" />
+    <!-- Top Highlight Rim -->
+    <rect x="13.5" y="13.5" width="101" height="50" rx="24.5" fill="url(#glossGradTh)" />
+    <!-- Top Inner Border -->
+    <rect x="12.5" y="12.5" width="103" height="103" rx="25.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" />
+  </g>
+
+  <!-- 3D Threads White Glyph Emblem -->
+  <g filter="url(#emblemShadowTh)" fill="#FFFFFF" transform="translate(24, 24) scale(0.416)">
+    <path d="M141.537 88.9883C140.71 88.5919 139.87 88.2104 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.3729 71.8105C80.8986 63.4279 89.2891 60.3697 97.2248 60.3697C97.3038 60.3697 97.3828 60.3697 97.4611 60.3704C106.634 60.4284 117.818 64.9125 120.916 82.0125C113.626 80.5052 105.748 80.0094 97.4439 80.5284C69.3175 82.2884 52.4111 96.7909 53.6493 116.632C54.3418 127.728 60.7788 136.963 71.054 141.529C80.3792 145.674 91.733 145.717 101.446 141.651C112.548 137.003 119.789 128.528 123.473 118.847C129.809 127.085 137.946 132.846 148.096 133.454C164.717 134.455 177.307 122.257 177.307 104.793C177.307 72.8471 154.515 50.1132 120.354 46.1367L118.995 61.6444C145.892 64.8878 161.683 81.3323 161.683 104.793C161.683 113.916 155.857 118.989 147.241 118.472C138.832 117.968 131.782 111.458 127.327 100.122C133.568 95.8454 138.324 90.8719 141.537 88.9883ZM108.971 126.968C103.543 129.243 96.0694 129.828 89.285 126.809C83.7437 124.342 79.5165 119.263 79.0346 111.54C78.4357 101.944 87.8935 95.2758 103.003 94.3304C108.384 93.9936 113.882 94.2759 119.141 95.1432C116.815 114.739 113.067 125.251 108.971 126.968Z" />
+  </g>
+</svg>
