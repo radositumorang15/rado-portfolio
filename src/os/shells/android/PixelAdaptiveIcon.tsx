@@ -26,6 +26,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
       contact: 'mail',
       settings: 'settings',
       taskmanager: 'monitoring',
+      androidstudio: 'developer_mode',
     };
     return (
       <div
@@ -169,6 +170,14 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
               <path d="M30 56 L42 56 L48 40 L56 68 L64 50 L70 56 L78 56" stroke="#38BDF8" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
               <circle cx="56" cy="68" r="3" fill="#818CF8" />
             </g>
+          </>
+        )}
+
+        {/* 10. ANDROID STUDIO — Mobile IDE 3D */}
+        {id === 'androidstudio' && (
+          <>
+            <rect width="108" height="108" fill="#FFFFFF" />
+            <image href="/icons/win11/androidstudio.png" x="14" y="14" width="80" height="80" />
           </>
         )}
       </svg>

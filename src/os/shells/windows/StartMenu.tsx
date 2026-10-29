@@ -111,13 +111,13 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
                 <span className="text-xs text-white/80 group-hover:text-white truncate max-w-[90px]">Antigravity</span>
               </button>
 
-              {/* Visual Studio Code (True 3D) */}
+              {/* Android Studio (True 3D Official) */}
               <button
-                onClick={() => handleOpenLink('https://github.dev/radositumorang15/rado-portfolio', 'VS Code Web')}
+                onClick={() => { openWindow('androidstudio'); onClose(); }}
                 className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-white/10 transition-transform active:scale-95 group"
               >
-                <img src="/icons/win11/vscode.png" alt="VS Code" className="w-10 h-10 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
-                <span className="text-xs text-white/80 group-hover:text-white truncate max-w-[90px]">VS Code</span>
+                <img src="/icons/win11/androidstudio.png" alt="Android Studio" className="w-10 h-10 object-contain drop-shadow-md group-hover:scale-105 transition-transform" />
+                <span className="text-xs text-white/80 group-hover:text-white truncate max-w-[90px]">Android Studio</span>
               </button>
 
               {/* GitHub Desktop (True 3D) */}
@@ -243,9 +243,11 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
         {/* 4. FOOTER USER PROFILE */}
         <div className="flex items-center justify-between pt-4 border-t border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-bold text-white text-sm shadow-md">
-              RN
-            </div>
+            <img
+              src="/profile.jpeg"
+              alt={profileData.name}
+              className="w-9 h-9 rounded-full object-cover border border-white/20 shadow-md shrink-0"
+            />
             <div className="leading-tight">
               <p className="text-xs font-semibold text-white">{profileData.name}</p>
               <p className="text-[10px] text-white/60">Frontend & Android Developer</p>

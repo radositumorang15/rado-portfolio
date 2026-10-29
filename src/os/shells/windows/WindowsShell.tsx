@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   User, Briefcase, LayoutGrid, Cpu, Terminal as TermIcon, FileText, Mail,
-  Settings as SettingsIcon, Activity
+  Settings as SettingsIcon, Activity, Smartphone
 } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
 import { Window } from './Window';
@@ -27,12 +27,14 @@ import { ResumeApp } from '../../../apps/resume';
 import { ContactApp } from '../../../apps/contact';
 import { SettingsApp } from '../../../apps/settings';
 import { TaskManagerApp } from '../../../apps/taskmanager';
+import { AndroidStudioApp } from '../../../apps/androidstudio';
+import '../../../apps/projects/folder3d.css';
 
 const DESKTOP_ICONS: { id: AppId | 'recycle'; label: string; iconSrc: string }[] = [
   { id: 'about', label: 'This PC', iconSrc: '/icons/win11/thispc.png' },
   { id: 'projects', label: 'Projects', iconSrc: '/icons/win11/explorer.png' },
   { id: 'experience', label: 'Experience', iconSrc: '/icons/win11/folder.png' },
-  { id: 'skills', label: 'Settings', iconSrc: '/icons/win11/settings.png' },
+  { id: 'skills', label: 'Skills', iconSrc: '/icons/win11/skills.svg' },
   { id: 'terminal', label: 'Terminal', iconSrc: '/icons/win11/terminal.png' },
   { id: 'resume', label: 'Resume.pdf', iconSrc: '/icons/win11/notepad.png' },
   { id: 'contact', label: 'Contact', iconSrc: '/icons/win11/mail.png' },
@@ -66,7 +68,7 @@ export const WindowsShell: React.FC = () => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('.desktop-icon') || (e.target as HTMLElement).closest('footer') || (e.target as HTMLElement).closest('.window-frame')) return;
+    if ((e.target as HTMLElement).closest('.desktop-icon') || (e.target as HTMLElement).closest('footer') || (e.target as HTMLElement).closest('.window-frame') || (e.target as HTMLElement).closest('.react-draggable') || (e.target as HTMLElement).closest('[role="dialog"]')) return;
     setSelectedIcon(null);
     setIsStartOpen(false);
     setIsWidgetsOpen(false);
@@ -129,7 +131,18 @@ export const WindowsShell: React.FC = () => {
               selectedIcon === item.id ? 'bg-white/[0.12] border border-white/[0.15]' : 'border border-transparent hover:bg-white/[0.06] active:bg-white/[0.10]'
             }`}
           >
-            <img src={item.iconSrc} alt={item.label} className="w-11 h-11 object-contain pointer-events-none drop-shadow-md" />
+            {item.id === 'projects' ? (
+              <div className="folder-3d-wrap my-0.5" style={{ '--h': 45 } as React.CSSProperties}>
+                <div className="folder-3d scale-[0.42] -my-4 origin-center">
+                  <i className="fb" />
+                  <i className="fp p1" />
+                  <i className="fp p2" />
+                  <i className="ff" />
+                </div>
+              </div>
+            ) : (
+              <img src={item.iconSrc} alt={item.label} className="w-11 h-11 object-contain pointer-events-none drop-shadow-md" />
+            )}
             <span className="text-[11px] font-normal text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] truncate max-w-[72px] text-center mt-1">
               {item.label}
             </span>
@@ -148,6 +161,7 @@ export const WindowsShell: React.FC = () => {
         <Window win={windows.contact} icon={Mail}><ContactApp /></Window>
         <Window win={windows.settings} icon={SettingsIcon}><SettingsApp /></Window>
         <Window win={windows.taskmanager} icon={Activity}><TaskManagerApp /></Window>
+        <Window win={windows.androidstudio} icon={Smartphone}><AndroidStudioApp /></Window>
       </div>
 
       <StartMenu isOpen={isStartOpen} onClose={() => setIsStartOpen(false)} onOpenSearch={() => setIsSearchOpen(true)} />
@@ -157,6 +171,11 @@ export const WindowsShell: React.FC = () => {
         onToggleStart={() => setIsStartOpen((p) => !p)}
         onToggleSearch={() => setIsSearchOpen((p) => !p)}
         onToggleWidgets={() => setIsWidgetsOpen((p) => !p)}
+        onCloseFlyouts={() => {
+          setIsStartOpen(false);
+          setIsSearchOpen(false);
+          setIsWidgetsOpen(false);
+        }}
       />
       <ContextMenu
         x={contextMenu.x}

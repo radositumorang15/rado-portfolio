@@ -43,9 +43,11 @@ export const WidgetBoard: React.FC<WidgetBoardProps> = ({ isOpen, onClose }) => 
         {/* Profile Card */}
         <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-bold text-lg text-white">
-              RN
-            </div>
+            <img
+              src="/profile.jpeg"
+              alt={profileData.name}
+              className="w-12 h-12 rounded-full object-cover border border-white/20 shadow-md shrink-0"
+            />
             <div className="min-w-0">
               <h3 className="text-sm font-semibold truncate">{profileData.name}</h3>
               <p className="text-xs text-blue-400 truncate">{profileData.tagline.en}</p>
@@ -113,4 +115,3 @@ export const WidgetBoard: React.FC<WidgetBoardProps> = ({ isOpen, onClose }) => 
     </div>
   );
 };
-

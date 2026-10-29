@@ -10,10 +10,10 @@ export const Z_INDEX = {
   DESKTOP_ICONS: 10,
   WINDOWS_BASE: 100,
   WINDOWS_MAX: 899,
-  DOCK: 900,
+  DOCK: 1200,
   FLYOUTS: 1000,
-  CONTEXT_MENU: 1100,
-  TOOLTIP: 1200,
+  CONTEXT_MENU: 1250,
+  TOOLTIP: 1280,
   NOTCH: 1300,
   TOAST: 1350,
   BOOT_SCREEN: 2000,
@@ -29,6 +29,7 @@ export const APP_IDS = [
   'contact',
   'settings',
   'taskmanager',
+  'androidstudio',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];

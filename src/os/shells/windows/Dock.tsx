@@ -14,12 +14,14 @@ interface DockProps {
   onToggleStart: () => void;
   onToggleSearch: () => void;
   onToggleWidgets?: () => void;
+  onCloseFlyouts?: () => void;
 }
 
 export const Dock: React.FC<DockProps> = ({
   onToggleStart,
   onToggleSearch,
   onToggleWidgets,
+  onCloseFlyouts,
 }) => {
   const windows = useWindowsStore((s) => s.windows);
   const activeId = useWindowsStore((s) => s.activeId);
@@ -28,6 +30,7 @@ export const Dock: React.FC<DockProps> = ({
   const minimizeWindow = useWindowsStore((s) => s.minimizeWindow);
 
   const handleAppClick = (id: AppId) => {
+    onCloseFlyouts?.();
     const win = windows[id];
     if (!win.isOpen) {
       openWindow(id);
@@ -41,6 +44,7 @@ export const Dock: React.FC<DockProps> = ({
   };
 
   const handleOpenLink = (url: string, title: string) => {
+    onCloseFlyouts?.();
     playWindowsSound('click');
     notch.show({
       title: `Opening ${title}`,
@@ -50,6 +54,7 @@ export const Dock: React.FC<DockProps> = ({
   };
 
   const handleAntigravityClick = () => {
+    onCloseFlyouts?.();
     playWindowsSound('click');
     notch.show({
       title: 'Antigravity IDE 2.0',
@@ -63,16 +68,19 @@ export const Dock: React.FC<DockProps> = ({
   };
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#1c1c1c]/85 backdrop-blur-2xl border-t border-white/10 z-[1000] flex items-center justify-between px-3 select-none text-white shadow-2xl">
+    <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#1c1c1c]/85 backdrop-blur-2xl border-t border-white/10 z-[1200] flex items-center justify-between px-2 sm:px-3 select-none text-white shadow-2xl pointer-events-auto">
       {/* Left: Weather Widget */}
-      <div className="flex items-center min-w-[140px]">
+      <div className="flex items-center min-w-[50px] sm:min-w-[130px] shrink-0">
         <button
-          onClick={onToggleWidgets}
-          className="flex items-center gap-2 px-2.5 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleWidgets?.();
+          }}
+          className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group cursor-pointer"
           title="Widgets & Weather"
         >
-          <CloudSun size={18} className="text-amber-400 group-hover:scale-105 transition-transform" />
-          <div className="flex flex-col text-left leading-none">
+          <CloudSun size={18} className="text-amber-400 group-hover:scale-105 transition-transform shrink-0" />
+          <div className="hidden sm:flex flex-col text-left leading-none">
             <span className="text-[11px] font-semibold text-white/95">29°C</span>
             <span className="text-[10px] text-white/60">Partly sunny</span>
           </div>
@@ -80,7 +88,7 @@ export const Dock: React.FC<DockProps> = ({
       </div>
 
       {/* Center: Windows 11 Taskbar Group (Arrangement and Real 3D Icons from floatdock) */}
-      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1">
+      <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-1 px-1 justify-start md:justify-center min-w-0 max-w-full pointer-events-auto">
         {/* 1. START & SEARCH */}
         <DockItem
           id="start"
@@ -90,12 +98,16 @@ export const Dock: React.FC<DockProps> = ({
         />
 
         <div
-          onClick={onToggleSearch}
-          className="flex items-center gap-2 h-8 px-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-xs text-white/70 transition-all select-none group"
+          onClick={(e) => {
+            e.stopPropagation();
+            onCloseFlyouts?.();
+            onToggleSearch();
+          }}
+          className="flex items-center gap-2 h-8 px-2.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 cursor-pointer text-xs text-white/70 transition-all select-none group shrink-0 pointer-events-auto"
           title="Search (Ctrl+K)"
         >
-          <img src="/icons/win11/search.png" alt="Search" className="w-4 h-4 object-contain" />
-          <span className="hidden xl:inline text-[11px] text-white/60">Search</span>
+          <img src="/icons/win11/search.png" alt="Search" className="w-4 h-4 object-contain pointer-events-none" />
+          <span className="hidden xl:inline text-[11px] text-white/60 pointer-events-none">Search</span>
         </div>
 
         <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
@@ -162,10 +174,12 @@ export const Dock: React.FC<DockProps> = ({
         />
 
         <DockItem
-          id="vscode"
-          label="Visual Studio Code"
-          iconSrc="/icons/win11/vscode.png"
-          onClick={() => handleOpenLink('https://github.dev/radositumorang15/rado-portfolio', 'VS Code Web')}
+          id="androidstudio"
+          label="Android Studio (Mobile Projects)"
+          iconSrc="/icons/win11/androidstudio.png"
+          isOpen={windows.androidstudio?.isOpen}
+          isActive={activeId === 'androidstudio' && !windows.androidstudio?.isMinimized}
+          onClick={() => handleAppClick('androidstudio')}
         />
 
         <DockItem
@@ -214,7 +228,7 @@ export const Dock: React.FC<DockProps> = ({
       </div>
 
       {/* Right: Windows 11 System Tray */}
-      <div className="flex items-center justify-end min-w-[140px] h-full">
+      <div className="flex items-center justify-end min-w-[50px] sm:min-w-[130px] shrink-0 h-full">
         <TrayPill />
       </div>
     </footer>

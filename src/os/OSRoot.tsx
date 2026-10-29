@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrefsStore } from '../store/prefs';
 import { useWindowsStore } from '../store/windows';
@@ -19,6 +19,15 @@ export const OSRoot: React.FC = () => {
 
   const [isBooting, setIsBooting] = useState<boolean>(true);
   const [isLocked, setIsLocked] = useState<boolean>(false);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const prevShellRef = useRef(resolvedShell);
+
+  useEffect(() => {
+    if (prevShellRef.current !== resolvedShell) {
+      prevShellRef.current = resolvedShell;
+      setIsTransitioning(true);
+    }
+  }, [resolvedShell]);
 
   // Debounced responsive shell auto-detection on resize
   useEffect(() => {
@@ -140,7 +149,7 @@ export const OSRoot: React.FC = () => {
   const direction = resolvedShell === 'windows' ? 'to-windows' : 'to-android';
 
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-black [perspective:1400px]">
+    <main className={`relative w-screen h-screen overflow-hidden bg-black ${isTransitioning ? '[perspective:1400px]' : ''}`}>
       {/* Lockscreen layer */}
       {isLocked && (
         resolvedShell === 'windows' ? (
@@ -157,10 +166,10 @@ export const OSRoot: React.FC = () => {
           custom={direction}
           initial={{
             opacity: 0,
-            scale: 0.9,
+            scale: 0.92,
             rotateY: direction === 'to-windows' ? -18 : 18,
-            z: -120,
-            filter: 'blur(6px)',
+            z: -100,
+            filter: 'blur(4px)',
           }}
           animate={{
             opacity: 1,
@@ -168,19 +177,26 @@ export const OSRoot: React.FC = () => {
             rotateY: 0,
             z: 0,
             filter: 'blur(0px)',
+            transitionEnd: {
+              transform: 'none',
+              filter: 'none',
+            },
           }}
           exit={{
             opacity: 0,
-            scale: 0.9,
+            scale: 0.92,
             rotateY: direction === 'to-windows' ? 18 : -18,
-            z: -120,
-            filter: 'blur(6px)',
+            z: -100,
+            filter: 'blur(4px)',
           }}
           transition={{
-            duration: 0.55,
+            duration: 0.5,
             ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier spring curve
           }}
-          className="w-full h-full [transform-style:preserve-3d]"
+          onAnimationComplete={() => {
+            setIsTransitioning(false);
+          }}
+          className={`w-full h-full ${isTransitioning ? '[transform-style:preserve-3d]' : ''}`}
         >
           {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
         </motion.div>

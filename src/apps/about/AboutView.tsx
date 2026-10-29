@@ -25,9 +25,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
       <aside className="w-56 p-3 flex flex-col gap-1 shrink-0 bg-[var(--win-mica-active-bg)] border-r border-[var(--win-card-stroke-default)] hidden sm:flex">
         {/* User Account Mini Banner */}
         <div className="flex items-center gap-2.5 p-2 mb-2 rounded-[6px] hover:bg-white/[0.06] cursor-pointer transition-colors">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0078D4] to-[#004E8C] flex items-center justify-center text-xs font-bold text-white shadow-md shrink-0">
-            RN
-          </div>
+          <img src="/profile.jpeg" alt={profile.name} className="w-9 h-9 rounded-full object-cover border border-white/20 shadow-md shrink-0" />
           <div className="min-w-0">
             <p className="text-xs font-semibold truncate leading-tight">{profile.name}</p>
             <p className="text-[11px] text-white/50 truncate">radositumorang@gmail.com</p>
@@ -80,9 +78,9 @@ export const AboutView: React.FC<AboutViewProps> = ({
         <div className="flex items-center justify-between p-4 mb-4 rounded-[6px] bg-[#323232]/80 border border-white/[0.05]">
           <div className="flex items-center gap-3.5">
             <img
-              src="/icons/win11/thispc.png"
-              alt="This PC"
-              className="w-12 h-12 object-contain drop-shadow-md"
+              src="/profile.jpeg"
+              alt={profile.name}
+              className="w-14 h-14 rounded-full object-cover border-2 border-white/20 shadow-md ring-2 ring-white/10 shrink-0"
             />
             <div>
               <h2 className="text-base font-semibold">{profile.deviceSpecs.deviceName}</h2>

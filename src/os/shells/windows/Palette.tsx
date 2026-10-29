@@ -92,6 +92,12 @@ export const Palette: React.FC<PaletteProps> = ({ isOpen, onClose }) => {
               >
                 <span>RadoOS Terminal</span>
               </Command.Item>
+              <Command.Item
+                onSelect={() => handleSelectApp('androidstudio')}
+                className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 cursor-pointer"
+              >
+                <span>Android Studio (Mobile Projects)</span>
+              </Command.Item>
             </Command.Group>
 
             <Command.Group heading="Projects" className="px-2 py-1 text-[11px] font-semibold text-white/40 mt-1">

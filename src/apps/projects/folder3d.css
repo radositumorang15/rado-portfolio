@@ -1,0 +1,203 @@
+/* 3D Folder & File Explorer Styles (from Portfolio OS: Folder 3D) */
+
+.folder-3d-wrap {
+  perspective: 520px;
+}
+
+.folder-3d {
+  position: relative;
+  width: 112px;
+  height: 84px;
+  transform: rotateX(-12deg) rotateY(-14deg);
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+  user-select: none;
+}
+
+.item-3d:hover .folder-3d,
+.folder-3d.active {
+  transform: rotateX(-6deg) rotateY(0deg);
+}
+
+.folder-3d i {
+  position: absolute;
+  display: block;
+}
+
+/* Back flap */
+.folder-3d .fb {
+  inset: 0;
+  border-radius: 8px;
+  background: hsl(var(--h, 205) 55% 34%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.folder-3d .fb:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -10px;
+  width: 46px;
+  height: 14px;
+  border-radius: 7px 7px 0 0;
+  background: inherit;
+}
+
+/* Document sheets inside */
+.folder-3d .fp {
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  bottom: 10px;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+}
+
+.folder-3d .p2 {
+  left: 14px;
+  right: 14px;
+  top: 12px;
+  background: #dfe8fb;
+}
+
+/* Front flap */
+.folder-3d .ff {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 66px;
+  border-radius: 6px 6px 9px 9px;
+  background: linear-gradient(hsl(var(--h, 205) 75% 64%), hsl(var(--h, 205) 68% 48%));
+  transform-origin: 50% 100%;
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.25, 1.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 10px 14px -6px rgba(0, 0, 0, 0.45);
+}
+
+/* Hover dynamic flap & sheet pop-out */
+.item-3d:hover .ff {
+  transform: rotateX(-38deg);
+}
+
+.item-3d:hover .p1 {
+  transform: translateY(-20px);
+}
+
+.item-3d:hover .p2 {
+  transform: translateY(-11px) rotate(2.5deg);
+}
+
+/* Ghost folder */
+.item-3d.ghost {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.item-3d.ghost .fb,
+.item-3d.ghost .ff {
+  filter: saturate(0.25);
+}
+
+/* 3D Detail Stage & Pocket */
+.stage-3d {
+  position: relative;
+  perspective: 1000px;
+  overflow: hidden;
+  background: radial-gradient(70% 60% at 50% 100%, hsl(var(--h, 205) 60% 50% / 0.24), transparent);
+}
+
+.sback-3d {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  width: min(380px, 86%);
+  height: 160px;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  background: hsl(var(--h, 205) 55% 32%);
+}
+
+.sback-3d:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -14px;
+  width: 90px;
+  height: 20px;
+  border-radius: 10px 10px 0 0;
+  background: inherit;
+}
+
+.pocket-3d {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 14px;
+  width: min(404px, 92%);
+  height: 104px;
+  transform: translateX(-50%);
+  border-radius: 14px;
+  background: linear-gradient(hsl(var(--h, 205) 75% 62%), hsl(var(--h, 205) 68% 44%));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 18px 30px rgba(0, 0, 0, 0.45);
+}
+
+.cards-3d {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.card-3d {
+  position: absolute;
+  left: 50%;
+  bottom: 92px;
+  width: 128px;
+  height: 168px;
+  margin-left: -64px;
+  border-radius: 10px;
+  background: #23272f;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.05), opacity 0.4s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.card-3d.on {
+  border-color: hsl(var(--h, 205) 75% 60%);
+  box-shadow: 0 0 0 2px hsl(var(--h, 205) 75% 60% / 0.5), 0 18px 34px rgba(0, 0, 0, 0.6);
+}
+
+.card-3d .badge-3d {
+  font: 700 22px/1 ui-monospace, Consolas, monospace;
+  color: hsl(var(--h, 205) 70% 55%);
+}
+
+/* Micro-preview thumbnail */
+.shot-preview {
+  height: 80px;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.shot-preview:after {
+  content: "";
+  position: absolute;
+  inset: 8px 8px auto;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 16px 0 -2px rgba(255, 255, 255, 0.25), 0 32px 0 -2px rgba(255, 255, 255, 0.15);
+}
+

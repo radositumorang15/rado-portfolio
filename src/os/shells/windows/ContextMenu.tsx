@@ -55,7 +55,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   return (
     <div
       style={{ top: posY, left: posX }}
-      className="fixed z-[1100] w-52 p-1.5 rounded-xl bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl text-xs text-white flex flex-col gap-0.5 select-none animate-in fade-in zoom-in-95 duration-100"
+      className="fixed z-[1250] w-52 p-1.5 rounded-xl bg-neutral-900/90 backdrop-blur-xl border border-white/10 shadow-2xl text-xs text-white flex flex-col gap-0.5 select-none animate-in fade-in zoom-in-95 duration-100"
       onClick={(e) => e.stopPropagation()}
     >
       <button

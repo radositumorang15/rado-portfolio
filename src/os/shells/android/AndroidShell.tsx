@@ -24,6 +24,7 @@ import {
 } from './apps';
 import { TerminalApp } from '../../../apps/terminal';
 import { TaskManagerApp } from '../../../apps/taskmanager';
+import { AndroidStudioApp } from '../../../apps/androidstudio';
 
 const APP_TITLES: Record<AppId, string> = {
   about: 'About Device',
@@ -35,6 +36,7 @@ const APP_TITLES: Record<AppId, string> = {
   contact: 'Contact & Messages',
   settings: 'Wallpaper & Style',
   taskmanager: 'System Activity',
+  androidstudio: 'Android Studio',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -58,6 +60,7 @@ export const AndroidShell: React.FC = () => {
       case 'contact': return <PixelContactView />;
       case 'settings': return <PixelSettingsView />;
       case 'taskmanager': return <TaskManagerApp />;
+      case 'androidstudio': return <AndroidStudioApp />;
     }
   };
 
