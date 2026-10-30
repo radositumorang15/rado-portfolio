@@ -56,7 +56,7 @@ const initialWindows: Record<AppId, WindowState> = {
 export const useWindowsStore = create<WindowsStore>((set, get) => ({
   windows: initialWindows,
   activeId: 'about',
-  historyStack: [],
+  historyStack: ['about'],
   topZ: Z_INDEX.WINDOWS_BASE,
 
   openWindow: (id, subRoute) => {
@@ -65,18 +65,16 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
     const win = windows[id];
 
     if (typeof window !== 'undefined') {
-      window.location.hash = subRoute ? `${id}/${subRoute}` : id;
+      const targetHash = subRoute ? `${id}/${subRoute}` : id;
+      if (window.location.hash.replace('#', '') !== targetHash) {
+        window.location.hash = targetHash;
+      }
     }
 
     set({
       windows: {
         ...windows,
-        [id]: {
-          ...win,
-          isOpen: true,
-          isMinimized: false,
-          z: nextZ,
-        },
+        [id]: { ...win, isOpen: true, isMinimized: false, z: nextZ },
       },
       activeId: id,
       topZ: nextZ,
@@ -85,22 +83,27 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
   },
 
   closeWindow: (id) => {
-    const { windows, activeId, historyStack } = get();
+    const { windows, historyStack } = get();
     const newStack = historyStack.filter((x) => x !== id);
-    const nextActive = newStack.length > 0 ? newStack[newStack.length - 1] : null;
+    const remaining = newStack.filter((x) => windows[x]?.isOpen && !windows[x]?.isMinimized && x !== id);
+    const nextActive = remaining.length > 0 ? remaining[remaining.length - 1] : null;
 
     if (typeof window !== 'undefined') {
-      window.location.hash = nextActive ? nextActive : '';
+      if (nextActive) {
+        if (window.location.hash.replace('#', '') !== nextActive) window.location.hash = nextActive;
+      } else if (window.location.hash) {
+        try {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        } catch {
+          window.location.hash = '';
+        }
+      }
     }
 
     set({
       windows: {
         ...windows,
-        [id]: {
-          ...windows[id],
-          isOpen: false,
-          isMinimized: false,
-        },
+        [id]: { ...windows[id], isOpen: false, isMinimized: false },
       },
       activeId: nextActive,
       historyStack: newStack,
@@ -113,17 +116,13 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
 
     const nextZ = Math.min(topZ + 1, Z_INDEX.WINDOWS_MAX);
     if (typeof window !== 'undefined') {
-      window.location.hash = id;
+      if (window.location.hash.replace('#', '') !== id) window.location.hash = id;
     }
 
     set({
       windows: {
         ...windows,
-        [id]: {
-          ...windows[id],
-          isMinimized: false,
-          z: nextZ,
-        },
+        [id]: { ...windows[id], isMinimized: false, z: nextZ },
       },
       activeId: id,
       topZ: nextZ,
@@ -134,15 +133,25 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
   minimizeWindow: (id) => {
     const { windows, historyStack } = get();
     const newStack = historyStack.filter((x) => x !== id);
-    const nextActive = newStack.length > 0 ? newStack[newStack.length - 1] : null;
+    const remaining = newStack.filter((x) => windows[x]?.isOpen && !windows[x]?.isMinimized && x !== id);
+    const nextActive = remaining.length > 0 ? remaining[remaining.length - 1] : null;
+
+    if (typeof window !== 'undefined') {
+      if (nextActive) {
+        if (window.location.hash.replace('#', '') !== nextActive) window.location.hash = nextActive;
+      } else if (window.location.hash) {
+        try {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        } catch {
+          window.location.hash = '';
+        }
+      }
+    }
 
     set({
       windows: {
         ...windows,
-        [id]: {
-          ...windows[id],
-          isMinimized: true,
-        },
+        [id]: { ...windows[id], isMinimized: true },
       },
       activeId: nextActive,
       historyStack: newStack,

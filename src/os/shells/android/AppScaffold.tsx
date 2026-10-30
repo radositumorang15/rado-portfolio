@@ -78,11 +78,11 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
 
       {/* Android Gesture Navigation Bar Area */}
       <footer
-        className="h-7 flex items-center justify-center shrink-0 cursor-pointer select-none bg-[var(--m3-bg)]"
+        className="h-8 flex items-center justify-center shrink-0 cursor-pointer select-none bg-[var(--m3-bg)] touch-manipulation z-30"
         onClick={handleBack}
         title="Back to Home Screen"
       >
-        <div className="w-28 h-1 rounded-full bg-[var(--m3-on-surface)]/40 hover:bg-[var(--m3-on-surface)]/70 transition-colors" />
+        <div className="w-28 h-1.5 rounded-full bg-[var(--m3-on-surface)]/40 hover:bg-[var(--m3-on-surface)]/70 active:bg-[var(--m3-on-surface)] transition-colors pointer-events-none" />
       </footer>
     </div>
   );

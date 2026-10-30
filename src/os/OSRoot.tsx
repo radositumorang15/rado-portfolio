@@ -16,6 +16,7 @@ export const OSRoot: React.FC = () => {
   const syncFromDOM = usePrefsStore((s) => s.syncFromDOM);
   const updateResponsiveShell = usePrefsStore((s) => s.updateResponsiveShell);
   const openWindow = useWindowsStore((s) => s.openWindow);
+  const closeWindow = useWindowsStore((s) => s.closeWindow);
 
   const [isBooting, setIsBooting] = useState<boolean>(true);
   const [isLocked, setIsLocked] = useState<boolean>(false);
@@ -32,23 +33,16 @@ export const OSRoot: React.FC = () => {
   // Debounced responsive shell auto-detection on resize
   useEffect(() => {
     syncFromDOM();
-
     let resizeTimer: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        updateResponsiveShell();
-      }, 120);
+      resizeTimer = setTimeout(() => updateResponsiveShell(), 120);
     };
-
     const mediaQuery = window.matchMedia('(min-width: 1024px)');
-    const handleMedia = () => {
-      updateResponsiveShell();
-    };
+    const handleMedia = () => updateResponsiveShell();
 
     window.addEventListener('resize', handleResize);
     mediaQuery.addEventListener('change', handleMedia);
-
     return () => {
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', handleResize);
@@ -60,7 +54,6 @@ export const OSRoot: React.FC = () => {
   useEffect(() => {
     const hasBooted = sessionStorage.getItem('rn_booted');
     const hasUnlocked = sessionStorage.getItem('rn_unlocked');
-
     if (hasBooted) {
       setIsBooting(false);
       setIsLocked(!hasUnlocked);
@@ -77,7 +70,6 @@ export const OSRoot: React.FC = () => {
   const handleUnlock = () => {
     setIsLocked(false);
     sessionStorage.setItem('rn_unlocked', 'true');
-    openWindow('about');
     notch.show({
       title: 'Welcome to RadoOS',
       subtitle: 'Double click icons or open Start Menu to explore',
@@ -85,22 +77,25 @@ export const OSRoot: React.FC = () => {
     });
   };
 
-  // Handle Hash deep linking
+  // Handle Hash deep linking & browser back/forward
   useEffect(() => {
+    let isInitialMount = true;
     const handleHash = () => {
       const raw = window.location.hash.replace('#', '');
       const [app, sub] = raw.split('/');
       if (app && APP_IDS.includes(app as AppId)) {
         openWindow(app as AppId, sub);
-      } else {
-        openWindow('about');
+      } else if (!raw && !isInitialMount) {
+        const cur = useWindowsStore.getState().activeId;
+        if (cur) closeWindow(cur);
       }
+      isInitialMount = false;
     };
 
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
-  }, [openWindow]);
+  }, [openWindow, closeWindow]);
 
   if (isBooting) {
     return (
@@ -110,12 +105,10 @@ export const OSRoot: React.FC = () => {
           setIsLocked(false);
           sessionStorage.setItem('rn_booted', 'true');
           sessionStorage.setItem('rn_unlocked', 'true');
-    openWindow('about');
         }}
         className="fixed inset-0 z-[2000] bg-black flex flex-col items-center justify-center text-white cursor-pointer select-none font-sans"
       >
         {resolvedShell === 'windows' ? (
-          // Windows 11 Signature Boot: 4-square blue logo + spinning ring dots
           <div className="flex flex-col items-center gap-12">
             <div className="grid grid-cols-2 gap-1.5 w-16 h-16">
               <div className="bg-[#0078D4] rounded-xs shadow-sm" />
@@ -123,54 +116,48 @@ export const OSRoot: React.FC = () => {
               <div className="bg-[#0078D4] rounded-xs shadow-sm" />
               <div className="bg-[#0078D4] rounded-xs shadow-sm" />
             </div>
-            {/* Windows 11 Spinning Ring Dots */}
             <div className="relative w-9 h-9 animate-spin">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white" />
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/70" />
               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/50" />
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white/30" />
             </div>
           </div>
         ) : (
-          // Android 16 Pixel Boot: Google G / RN + multi-color pulse
-          <div className="flex flex-col items-center gap-6">
-            <div className="w-16 h-16 rounded-full bg-[#1F1F1F] border border-white/10 flex items-center justify-center text-2xl font-bold text-[#A8C7FA] shadow-lg animate-pulse">
-              RN
+          <div className="flex flex-col items-center gap-8">
+            <div className="flex items-center gap-1.5">
+              <span className="w-4 h-4 rounded-full bg-[#EA4335] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-4 h-4 rounded-full bg-[#FBBC05] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-4 h-4 rounded-full bg-[#34A853] animate-bounce" style={{ animationDelay: '300ms' }} />
+              <span className="w-4 h-4 rounded-full bg-[#4285F4] animate-bounce" style={{ animationDelay: '450ms' }} />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#4285F4] animate-bounce" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#EA4335] animate-bounce [animation-delay:0.15s]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FBBC05] animate-bounce [animation-delay:0.3s]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#34A853] animate-bounce [animation-delay:0.45s]" />
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-xl font-medium tracking-tight text-white/90">Google Pixel</span>
+              <span className="text-xs text-white/40 font-mono tracking-widest uppercase">Powered by Android</span>
             </div>
           </div>
         )}
-        <span className="text-[11px] text-white/30 mt-8">Click anywhere to skip</span>
       </div>
+    );
+  }
+
+  if (isLocked) {
+    return resolvedShell === 'windows' ? (
+      <WindowsLockScreen onUnlock={handleUnlock} />
+    ) : (
+      <AndroidLockScreen onUnlock={handleUnlock} />
     );
   }
 
   const direction = resolvedShell === 'windows' ? 'to-windows' : 'to-android';
 
   return (
-    <main className={`relative w-screen h-screen overflow-hidden bg-black ${isTransitioning ? '[perspective:1400px]' : ''}`}>
-      {/* Lockscreen layer */}
-      {isLocked && (
-        resolvedShell === 'windows' ? (
-          <WindowsLockScreen onUnlock={handleUnlock} />
-        ) : (
-          <AndroidLockScreen onUnlock={handleUnlock} />
-        )
-      )}
-
-      {/* 3D Holographic Perspective Shell Transition */}
+    <main className="relative w-screen h-screen overflow-hidden bg-black [perspective:1200px]">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={resolvedShell}
-          custom={direction}
           initial={{
             opacity: 0,
-            scale: 0.92,
+            scale: 1.08,
             rotateY: direction === 'to-windows' ? -18 : 18,
             z: -100,
             filter: 'blur(4px)',
@@ -181,10 +168,7 @@ export const OSRoot: React.FC = () => {
             rotateY: 0,
             z: 0,
             filter: 'blur(0px)',
-            transitionEnd: {
-              transform: 'none',
-              filter: 'none',
-            },
+            transitionEnd: { transform: 'none', filter: 'none' },
           }}
           exit={{
             opacity: 0,
@@ -193,13 +177,8 @@ export const OSRoot: React.FC = () => {
             z: -100,
             filter: 'blur(4px)',
           }}
-          transition={{
-            duration: 0.5,
-            ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier spring curve
-          }}
-          onAnimationComplete={() => {
-            setIsTransitioning(false);
-          }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          onAnimationComplete={() => setIsTransitioning(false)}
           className={`w-full h-full ${isTransitioning ? '[transform-style:preserve-3d]' : ''}`}
         >
           {resolvedShell === 'windows' ? <WindowsShell /> : <AndroidShell />}
