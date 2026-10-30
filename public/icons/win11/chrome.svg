@@ -1,84 +1,54 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <!-- Outer Elevation Shadow -->
-    <filter id="shadowChrome" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.35" />
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.2" />
+    <filter id="chromeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.32" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.18" />
     </filter>
-
-    <!-- Inner Sphere Depth Shadow -->
-    <filter id="sphereShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3" />
-    </filter>
-
-    <!-- Squircle Tile Gradient -->
-    <linearGradient id="chromeBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="50%" stop-color="#F1F5F9" />
-      <stop offset="100%" stop-color="#E2E8F0" />
-    </linearGradient>
-
-    <!-- Top Highlight -->
-    <linearGradient id="chromeGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
-    </linearGradient>
-
-    <!-- Red pinwheel gradient with 3D curve -->
-    <linearGradient id="chromeRed" x1="0%" y1="0%" x2="100%" y2="50%">
+    <linearGradient id="cRed" x1="0%" y1="0%" x2="100%" y2="80%">
       <stop offset="0%" stop-color="#FF5252" />
       <stop offset="60%" stop-color="#EA4335" />
       <stop offset="100%" stop-color="#C5221F" />
     </linearGradient>
-
-    <!-- Yellow pinwheel gradient -->
-    <linearGradient id="chromeYellow" x1="50%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="cYellow" x1="50%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#FFD043" />
       <stop offset="60%" stop-color="#FBBC05" />
       <stop offset="100%" stop-color="#E37400" />
     </linearGradient>
-
-    <!-- Green pinwheel gradient -->
-    <linearGradient id="chromeGreen" x1="100%" y1="100%" x2="0%" y2="0%">
+    <linearGradient id="cGreen" x1="100%" y1="100%" x2="0%" y2="0%">
       <stop offset="0%" stop-color="#0D652D" />
       <stop offset="50%" stop-color="#34A853" />
       <stop offset="100%" stop-color="#5BB974" />
     </linearGradient>
-
-    <!-- Blue spherical center lens -->
-    <radialGradient id="chromeCenterBlue" cx="40%" cy="35%" r="65%">
+    <radialGradient id="cBlue" cx="38%" cy="36%" r="65%">
       <stop offset="0%" stop-color="#6BA5FF" />
-      <stop offset="60%" stop-color="#1A73E8" />
+      <stop offset="50%" stop-color="#1A73E8" />
       <stop offset="100%" stop-color="#1557B0" />
     </radialGradient>
+    <linearGradient id="cGlass" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
+    </linearGradient>
   </defs>
 
-  <!-- Squircle Base Tile -->
-  <g filter="url(#shadowChrome)">
-    <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#chromeBg)" />
-    <!-- Top Rim Gloss -->
-    <rect x="13.5" y="13.5" width="101" height="50" rx="24.5" fill="url(#chromeGloss)" />
-    <rect x="12.5" y="12.5" width="103" height="103" rx="25.5" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2" />
-  </g>
+  <g filter="url(#chromeShadow)">
+    <!-- Red Arc -->
+    <path d="M64 12 C78.8 12 92.1 17.8 101.8 27.2 L74.4 74.6 C71.6 71.8 67.9 70 64 70 C60.1 70 56.4 71.8 53.6 74.6 L26.2 27.2 C35.9 17.8 49.2 12 64 12 Z" fill="url(#cRed)" />
+    <!-- Yellow Arc -->
+    <path d="M101.8 27.2 C111.4 36.9 116 50.1 116 64 C116 84.8 104 102.7 86.8 111.2 L59.4 63.8 C62.2 61 64 57.3 64 53.4 C64 49.5 62.2 45.8 59.4 43 L101.8 27.2 Z" fill="url(#cYellow)" />
+    <!-- Green Arc -->
+    <path d="M26.2 27.2 L53.6 74.6 C50.8 77.4 49 81.1 49 85 C49 93.3 55.7 100 64 100 L41.2 111.2 C24 102.7 12 84.8 12 64 C12 50.1 16.6 36.9 26.2 27.2 Z" fill="url(#cGreen)" />
 
-  <!-- 3D Chrome Wheel with depth -->
-  <g filter="url(#sphereShadow)">
-    <g transform="translate(64, 64) scale(2.4) translate(-16, -16)">
-      <!-- Top Red Arc -->
-      <path d="M16 5C19.8 5 23.2 7 25 10.2L19.4 19.8C18.6 18.7 17.4 18 16 18H5.5C6.7 10.5 13.2 5 16 5Z" fill="url(#chromeRed)" />
-      <!-- Right Yellow Arc -->
-      <path d="M26.8 13.5C27.6 15.2 28 17 28 19C28 24.5 24.3 29.1 19.3 30.5L13.8 21C14.5 21.6 15.4 22 16.5 22C18.2 22 19.7 20.9 20.3 19.3L26.8 13.5Z" fill="url(#chromeYellow)" />
-      <!-- Bottom-Left Green Arc -->
-      <path d="M5.5 18H16.8L11.2 27.6C6.8 25.8 4 21.3 4 16C4 14.3 4.4 12.6 5.1 11L10.6 20.5C10.8 21.6 11.7 22.5 12.8 22.8L5.5 18Z" fill="url(#chromeGreen)" />
+    <!-- Pure Circle Divider -->
+    <g transform="translate(64, 64) scale(3.5) translate(-16, -16)">
+      <path d="M16 4 C20.3 4 24.1 6.2 26.2 9.7 L20.1 20.3 C19.2 19.3 17.7 18.6 16 18.6 H4.5 C5.8 10.3 12.8 4 16 4 Z" fill="url(#cRed)" />
+      <path d="M27.5 13 C28.2 14.8 28.6 16.7 28.6 18.7 C28.6 24.7 24.5 29.8 19 31.3 L12.9 20.7 C13.7 21.4 14.8 21.8 16 21.8 C17.9 21.8 19.5 20.6 20.1 18.8 L27.5 13 Z" fill="url(#cYellow)" />
+      <path d="M4.5 18.6 H17.1 L11 29.2 C6.2 27.2 3.1 22.2 3.1 16.4 C3.1 14.5 3.5 12.6 4.3 10.9 L10.4 21.4 C10.6 22.7 11.6 23.7 12.8 24 L4.5 18.6 Z" fill="url(#cGreen)" />
       
-      <!-- White Ring Divider with 3D specular edge -->
-      <circle cx="16" cy="16" r="6.2" fill="#FFFFFF" />
-      
-      <!-- Blue Inner Orb with Spherical Specular Light -->
-      <circle cx="16" cy="16" r="4.6" fill="url(#chromeCenterBlue)" />
-      <!-- Specular pinpoint on blue circle -->
-      <circle cx="14.5" cy="14.5" r="1.2" fill="#FFFFFF" opacity="0.6" />
+      <!-- White Ring -->
+      <circle cx="16" cy="16" r="6.8" fill="#FFFFFF" />
+      <!-- Center Blue Sphere -->
+      <circle cx="16" cy="16" r="5.2" fill="url(#cBlue)" />
+      <circle cx="14.4" cy="14.4" r="1.5" fill="#FFFFFF" opacity="0.6" />
     </g>
   </g>
 </svg>
-

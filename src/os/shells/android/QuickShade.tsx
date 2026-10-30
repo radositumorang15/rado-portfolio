@@ -151,7 +151,7 @@ export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
                 <span className="text-xs font-semibold text-[var(--m3-primary)]">Rado Situmorang • Status</span>
                 <span className="text-[10px] text-white/40">Now</span>
               </div>
-              <p className="text-xs text-[var(--m3-on-surface)]">Available for Frontend & Android Developer opportunities.</p>
+              <p className="text-xs text-[var(--m3-on-surface)]">Available for Mobile Developer opportunities.</p>
             </div>
 
             {/* Bottom Card */}

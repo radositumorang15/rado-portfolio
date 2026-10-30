@@ -250,7 +250,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onOpenSea
             />
             <div className="leading-tight">
               <p className="text-xs font-semibold text-white">{profileData.name}</p>
-              <p className="text-[10px] text-white/60">Frontend & Android Developer</p>
+              <p className="text-[10px] text-white/60">Mobile Developer</p>
             </div>
           </div>
 

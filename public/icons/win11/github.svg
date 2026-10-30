@@ -1,49 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <!-- 3D Outer Elevation Shadow -->
-    <filter id="shadow3d" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.45" />
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.30" />
+    <!-- Outer Elevation Drop Shadow -->
+    <filter id="ghShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5.5" flood-color="#3b0764" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.25" />
     </filter>
-
-    <!-- Emblem Inner Drop Shadow for 3D depth -->
+    <!-- Emblem Inner Drop Shadow -->
     <filter id="emblemShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.4" />
+      <feDropShadow dx="0" dy="2.5" stdDeviation="2" flood-color="#2e1065" flood-opacity="0.4" />
     </filter>
-
-    <!-- 3D Fluent Body Gradient -->
-    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#404752" />
-      <stop offset="45%" stop-color="#24292f" />
-      <stop offset="100%" stop-color="#14181e" />
+    <!-- Official GitHub Desktop Brand Purple Gradient -->
+    <linearGradient id="ghPurpleBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9333EA" />
+      <stop offset="45%" stop-color="#7E22CE" />
+      <stop offset="100%" stop-color="#581C87" />
     </linearGradient>
-
     <!-- Top Rim Specular Gloss -->
-    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <linearGradient id="ghGloss" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.45" />
       <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
     </linearGradient>
-
-    <!-- Bottom Bevel Shadow -->
-    <linearGradient id="bottomBevel" x1="0%" y1="0%" x2="0%" y2="100%">
+    <!-- Bottom Bevel Thickness -->
+    <linearGradient id="ghBottomBevel" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#000000" stop-opacity="0" />
-      <stop offset="100%" stop-color="#090b0e" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#240747" stop-opacity="0.8" />
     </linearGradient>
   </defs>
 
   <!-- 3D Base Tile with Elevation -->
-  <g filter="url(#shadow3d)">
-    <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#bodyGrad)" />
-    <!-- Bottom Bevel Thickness -->
-    <path d="M 12 88 C 12 104 24 116 40 116 L 88 116 C 104 116 116 104 116 88 L 116 82 C 116 98 104 110 88 110 L 40 110 C 24 110 12 98 12 82 Z" fill="url(#bottomBevel)" />
+  <g filter="url(#ghShadow)">
+    <rect x="14" y="14" width="100" height="100" rx="24" fill="url(#ghPurpleBg)" />
+    <!-- Bottom Bevel -->
+    <path d="M 14 88 C 14 102 26 114 40 114 L 88 114 C 102 114 114 102 114 88 L 114 84 C 114 98 102 110 88 110 L 40 110 C 26 110 14 98 14 84 Z" fill="url(#ghBottomBevel)" />
     <!-- Top Highlight Rim -->
-    <rect x="13.5" y="13.5" width="101" height="50" rx="24.5" fill="url(#glossGrad)" />
+    <rect x="15.5" y="15.5" width="97" height="48" rx="22.5" fill="url(#ghGloss)" />
     <!-- Top Inner Border -->
-    <rect x="12.5" y="12.5" width="103" height="103" rx="25.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" />
+    <rect x="14.5" y="14.5" width="99" height="99" rx="23.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.2" />
   </g>
 
-  <!-- 3D Octocat White Emblem -->
+  <!-- Crisp 3D Octocat White Emblem -->
   <g filter="url(#emblemShadow)" fill="#FFFFFF">
-    <path d="M64 26C42.99 26 26 42.99 26 64c0 16.81 10.9 31.02 26.01 36.05 1.9.33 2.61-.81 2.61-1.81 0-.9-.05-3.89-.05-7.08-9.56 1.76-12.03-2.33-12.8-4.47-.43-1.09-2.28-4.47-3.9-5.37-1.33-.71-3.23-2.47-.05-2.52 3-.05 5.14 2.76 5.85 3.9 3.42 5.75 8.89 4.14 11.08 3.14.33-2.47 1.33-4.14 2.42-5.09-8.46-.95-17.31-4.23-17.31-18.78 0-4.14 1.47-7.56 3.9-10.22-.38-.95-1.71-4.85.38-10.08 0 0 3.19-1 10.46 3.9 3.04-.86 6.28-1.28 9.51-1.28 3.23 0 6.47.43 9.51 1.28 7.27-4.94 10.46-3.9 10.46-3.9 2.09 5.23.76 9.13.38 10.08 2.43 2.66 3.9 6.04 3.9 10.22 0 14.6-8.9 17.82-17.36 18.78 1.38 1.19 2.57 3.47 2.57 7.04 0 5.09-.05 9.18-.05 10.46 0 1.05.71 2.19 2.62 1.81C91.1 95 102 80.76 102 64c0-21.01-16.99-38-38-38z" />
+    <path d="M64 28C44.11 28 28 44.11 28 64c0 15.91 10.32 29.36 24.62 34.12 1.8.31 2.47-.77 2.47-1.72 0-.85-.05-3.68-.05-6.7-9.05 1.67-11.39-2.2-12.12-4.23-.41-1.03-2.16-4.23-3.69-5.08-1.26-.67-3.06-2.34-.05-2.38 2.84-.05 4.86 2.61 5.54 3.69 3.24 5.44 8.41 3.92 10.49 2.97.31-2.34 1.26-3.92 2.29-4.82-8.01-.9-16.39-4-16.39-17.78 0-3.92 1.39-7.16 3.69-9.67-.36-.9-1.62-4.59.36-9.54 0 0 3.02-.95 9.9 3.69 2.88-.81 5.94-1.21 9-1.21 3.06 0 6.12.41 9 1.21 6.89-4.68 9.9-3.69 9.9-3.69 1.98 4.95.72 8.64.36 9.54 2.3 2.52 3.69 5.72 3.69 9.67 0 13.82-8.42 16.87-16.43 17.78 1.31 1.13 2.43 3.28 2.43 6.66 0 4.82-.05 8.69-.05 9.9 0 .99.67 2.07 2.48 1.71C89.68 93.36 100 79.91 100 64c0-19.89-16.09-36-36-36z" />
   </g>
 </svg>

@@ -2,8 +2,9 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ExternalLink, Github, Layers } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Github, Layers, CheckCircle2, Video } from 'lucide-react';
 import { projectsData } from '@/src/data/projects';
+import { ProjectReadmeViewer } from '@/src/apps/projects/ProjectReadmeViewer';
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -58,24 +59,8 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
           <p className="text-sm text-neutral-300 leading-relaxed">{project.description.en}</p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800 flex flex-col gap-4">
-          <h2 className="text-sm font-semibold flex items-center gap-2 text-blue-400">
-            <Layers size={16} />
-            <span>Technology Stack</span>
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {project.stack.map((s) => (
-              <span
-                key={s}
-                className="px-3 py-1 rounded-lg text-xs font-mono bg-neutral-800 text-neutral-200 border border-neutral-700"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
+        {/* Action Links */}
+        <div className="flex flex-wrap items-center gap-3">
           {project.links.live && (
             <a
               href={project.links.live}
@@ -98,9 +83,86 @@ export default async function ProjectDetailPage({ params }: ProjectPageProps) {
               <span>View Source Code</span>
             </a>
           )}
+          {project.links.video && (
+            <a
+              href={project.links.video}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-900/40 hover:bg-purple-900/60 text-xs font-semibold text-purple-200 border border-purple-700/50 transition-colors"
+            >
+              <Video size={14} />
+              <span>Watch Demo Video</span>
+            </a>
+          )}
         </div>
+
+        {/* Key Features */}
+        {project.features && project.features.length > 0 && (
+          <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800 flex flex-col gap-3">
+            <h2 className="text-sm font-semibold flex items-center gap-2 text-sky-400">
+              <CheckCircle2 size={16} />
+              <span>Key Capabilities & Architecture</span>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              {project.features.map((feat, idx) => (
+                <div key={idx} className="flex items-start gap-2 text-xs text-neutral-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0 mt-1.5" />
+                  <span>{feat.en}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Screenshots Showcase */}
+        {project.images.length > 0 && (
+          <div className="flex flex-col gap-3">
+            <h2 className="text-sm font-semibold text-neutral-300">Application Screenshots</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {project.images.map((img, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-xl overflow-hidden border border-neutral-800 bg-neutral-900"
+                >
+                  <img
+                    src={img}
+                    alt={`${project.title} screenshot ${idx + 1}`}
+                    className="w-full h-48 object-cover object-top hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Technology Stack */}
+        <div className="p-6 rounded-2xl bg-neutral-900 border border-neutral-800 flex flex-col gap-4">
+          <h2 className="text-sm font-semibold flex items-center gap-2 text-blue-400">
+            <Layers size={16} />
+            <span>Technology Stack</span>
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {project.stack.map((s) => (
+              <span
+                key={s}
+                className="px-3 py-1 rounded-lg text-xs font-mono bg-neutral-800 text-neutral-200 border border-neutral-700"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* README Documentation */}
+        {project.readme && (
+          <div className="p-6 rounded-2xl bg-neutral-900/60 border border-neutral-800 flex flex-col gap-4">
+            <h2 className="text-sm font-semibold text-neutral-200">README.md Specification</h2>
+            <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800">
+              <ProjectReadmeViewer content={project.readme.en} />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
 }
-

@@ -4,8 +4,8 @@ export const profileData: Profile = {
   name: 'Rado Nelson Dela Sadrak Situmorang',
   shortName: 'Rado Situmorang',
   tagline: {
-    en: 'Frontend & Android Developer',
-    id: 'Frontend & Android Developer',
+    en: 'Mobile Developer',
+    id: 'Mobile Developer',
   },
   location: {
     en: 'Surakarta, Central Java, Indonesia',
@@ -21,8 +21,8 @@ export const profileData: Profile = {
   portfolio: 'https://radositumorang.netlify.app/',
   email: 'radositumorang15@gmail.com',
   about: {
-    en: 'Final-year Informatics Engineering Education student with hands-on experience building high-performance Android and web applications. Works with Kotlin, ReactJS, and other web technologies. Looking for a challenging role to apply these skills on innovative projects.',
-    id: 'Mahasiswa tingkat akhir Pendidikan Teknik Informatika dengan pengalaman langsung membangun aplikasi Android dan web berkinerja tinggi. Terampil dalam Kotlin, ReactJS, dan teknologi web lainnya. Mencari peran menantang untuk menerapkan keterampilan ini pada proyek-proyek inovatif.',
+    en: 'As a passionate Mobile Developer, I thrive on bringing dynamic, intuitive, and high-performance mobile applications to life. My journey in tech is fueled by a continuous drive to innovate and build seamless cross-platform and native Android experiences. With a strong foundation in frontend architecture, my expertise lies in crafting responsive, accessible, and visually appealing mobile interfaces that enhance user engagement and satisfaction.',
+    id: 'Sebagai Mobile Developer yang berdedikasi, saya bersemangat dalam menghadirkan aplikasi mobile yang dinamis, intuitif, dan berkinerja tinggi. Perjalanan saya di dunia teknologi didorong oleh semangat berkelanjutan untuk berinovasi dan membangun pengalaman cross-platform yang mulus serta native Android. Dengan fondasi yang kuat dalam arsitektur frontend, keahlian saya terletak pada merancang antarmuka mobile yang responsif, aksesibel, dan memikat secara visual guna meningkatkan keterlibatan dan kepuasan pengguna.',
   },
   education: {
     institution: 'Universitas Sebelas Maret (UNS)',
@@ -31,13 +31,12 @@ export const profileData: Profile = {
       id: 'Pendidikan Teknik Informatika',
     },
     period: '2021 – Present',
-    gpa: '3.81 / 4.00',
+    gpa: '3.77 / 4.00',
   },
   deviceSpecs: {
     deviceName: 'Rado-Surakarta',
     processor: 'Informatics Engineering Education — UNS',
-    gpa: '3.81',
+    gpa: '3.77',
     languages: 'Indonesian, English',
   },
 };
-

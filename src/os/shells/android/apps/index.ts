@@ -5,4 +5,5 @@ export { PixelExperienceView } from './PixelExperienceView';
 export { PixelContactView } from './PixelContactView';
 export { PixelResumeView } from './PixelResumeView';
 export { PixelSettingsView } from './PixelSettingsView';
-
+export { PixelPlayStoreView } from './playstore';
+export { PixelChromeView } from './chrome';

@@ -18,10 +18,10 @@ interface AppItem {
 
 const MAIN_APPS: AppItem[] = [
   { id: 'about', label: 'About' },
-  { id: 'projects', label: 'Projects' },
+  { id: 'androidstudio', label: 'Play Store' },
   { id: 'experience', label: 'Experience' },
   { id: 'skills', label: 'Skills' },
-  { id: 'terminal', label: 'Terminal' },
+  { id: 'projects', label: 'Chrome' },
   { id: 'resume', label: 'Resume' },
   { id: 'contact', label: 'Contact' },
   { id: 'settings', label: 'Settings' },
@@ -29,8 +29,8 @@ const MAIN_APPS: AppItem[] = [
 
 const DOCK_APPS: AppItem[] = [
   { id: 'contact', label: 'Contact' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'terminal', label: 'Terminal' },
+  { id: 'androidstudio', label: 'Play Store' },
+  { id: 'projects', label: 'Chrome' },
   { id: 'settings', label: 'Settings' },
 ];
 
@@ -88,7 +88,7 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
                 Rado Nelson Dela Sadrak S.
               </h1>
               <p className="text-xs text-[var(--m3-primary)] font-medium mt-0.5 truncate">
-                Frontend & Android Developer
+                Mobile Developer
               </p>
               <p className="text-[11px] text-[var(--m3-on-surface-variant)] mt-0.5 truncate">
                 Informatics Engineering — UNS

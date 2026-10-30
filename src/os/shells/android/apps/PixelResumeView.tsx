@@ -58,7 +58,7 @@ export const PixelResumeView: React.FC = () => {
 
           <div className="p-4 rounded-[4px] bg-[var(--m3-surface-container)]">
             <p className="text-xs font-semibold text-[var(--m3-primary)] mb-1">Current Focus</p>
-            <p className="text-sm font-bold">Frontend & Android Development</p>
+            <p className="text-sm font-bold">Mobile Development</p>
             <p className="text-xs text-[var(--m3-on-surface-variant)] mt-0.5">
               Building scalable, beautiful web and mobile applications with Kotlin, React, Next.js, and TypeScript.
             </p>

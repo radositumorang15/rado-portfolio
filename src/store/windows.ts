@@ -41,7 +41,7 @@ interface WindowsStore {
 }
 
 const initialWindows: Record<AppId, WindowState> = {
-  about: { id: 'about', title: 'About', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 80, y: 50, ...DEFAULT_BOUNDS.about },
+  about: { id: 'about', title: 'About', isOpen: true, isMinimized: false, isMaximized: false, z: 101, x: 80, y: 50, ...DEFAULT_BOUNDS.about },
   experience: { id: 'experience', title: 'Experience', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 110, y: 70, ...DEFAULT_BOUNDS.experience },
   projects: { id: 'projects', title: 'Projects', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 140, y: 90, ...DEFAULT_BOUNDS.projects },
   skills: { id: 'skills', title: 'Skills', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 170, y: 110, ...DEFAULT_BOUNDS.skills },
@@ -55,7 +55,7 @@ const initialWindows: Record<AppId, WindowState> = {
 
 export const useWindowsStore = create<WindowsStore>((set, get) => ({
   windows: initialWindows,
-  activeId: null,
+  activeId: 'about',
   historyStack: [],
   topZ: Z_INDEX.WINDOWS_BASE,
 

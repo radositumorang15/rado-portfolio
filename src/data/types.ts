@@ -48,6 +48,8 @@ export interface Project {
   category: 'web' | 'mobile';
   summary: LocalizedString;
   description: LocalizedString;
+  readme?: LocalizedString;
+  features?: LocalizedString[];
   stack: string[];
   role?: LocalizedString;
   links: {

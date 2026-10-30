@@ -21,22 +21,23 @@ import {
   PixelContactView,
   PixelResumeView,
   PixelSettingsView,
+  PixelPlayStoreView,
+  PixelChromeView,
 } from './apps';
 import { TerminalApp } from '../../../apps/terminal';
 import { TaskManagerApp } from '../../../apps/taskmanager';
-import { AndroidStudioApp } from '../../../apps/androidstudio';
 
 const APP_TITLES: Record<AppId, string> = {
   about: 'About Device',
   experience: 'Work Experience',
-  projects: 'Files & Projects',
+  projects: 'Chrome',
   skills: 'Skills & Tech',
   terminal: 'Linux Terminal',
   resume: 'Curriculum Vitae',
   contact: 'Contact & Messages',
   settings: 'Wallpaper & Style',
   taskmanager: 'System Activity',
-  androidstudio: 'Android Studio',
+  androidstudio: 'Google Play',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -53,14 +54,14 @@ export const AndroidShell: React.FC = () => {
     switch (id) {
       case 'about': return <PixelAboutView />;
       case 'experience': return <PixelExperienceView />;
-      case 'projects': return <PixelProjectsView />;
+      case 'projects': return <PixelChromeView onExit={() => closeWindow('projects')} />;
       case 'skills': return <PixelSkillsView />;
       case 'terminal': return <TerminalApp />;
       case 'resume': return <PixelResumeView />;
       case 'contact': return <PixelContactView />;
       case 'settings': return <PixelSettingsView />;
       case 'taskmanager': return <TaskManagerApp />;
-      case 'androidstudio': return <AndroidStudioApp />;
+      case 'androidstudio': return <PixelPlayStoreView />;
     }
   };
 
@@ -105,6 +106,7 @@ export const AndroidShell: React.FC = () => {
           <AppScaffold
             appId={activeId}
             title={APP_TITLES[activeId]}
+            hideHeader={activeId === 'projects'}
             onBack={() => closeWindow(activeId)}
           >
             {renderAppContent(activeId)}

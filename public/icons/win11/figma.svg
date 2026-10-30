@@ -1,91 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <!-- Outer 3D Elevation Drop Shadow -->
-    <filter id="shadowFigma" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.45" />
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.25" />
+    <filter id="fgShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.35" />
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.2" />
     </filter>
-
-    <!-- Part 3D Depth Shadows -->
-    <filter id="partShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.35" />
-    </filter>
-
-    <!-- Tile Background Gradient -->
-    <linearGradient id="figmaBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2d2d35" />
-      <stop offset="50%" stop-color="#18181d" />
-      <stop offset="100%" stop-color="#0f0f13" />
-    </linearGradient>
-
-    <!-- Specular Highlight for Base Tile -->
-    <linearGradient id="figmaGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.3" />
-      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.0" />
-    </linearGradient>
-
-    <!-- 3D Component Gradients -->
-    <!-- Red pill -->
-    <linearGradient id="figmaRed" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="fgRed" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FF6B4A" />
-      <stop offset="100%" stop-color="#D9381E" />
-    </linearGradient>
-
-    <!-- Orange pill -->
-    <linearGradient id="figmaOrange" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF8A7A" />
       <stop offset="100%" stop-color="#F24E1E" />
     </linearGradient>
-
-    <!-- Purple pill -->
-    <linearGradient id="figmaPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="fgOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF8A7A" />
+      <stop offset="100%" stop-color="#FF7262" />
+    </linearGradient>
+    <linearGradient id="fgPurple" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#B877FF" />
-      <stop offset="100%" stop-color="#8435DE" />
+      <stop offset="100%" stop-color="#A259FF" />
     </linearGradient>
-
-    <!-- Blue circle -->
-    <radialGradient id="figmaBlue" cx="40%" cy="35%" r="65%">
+    <radialGradient id="fgBlue" cx="40%" cy="35%" r="65%">
       <stop offset="0%" stop-color="#4AD7FF" />
-      <stop offset="70%" stop-color="#0D99FF" />
-      <stop offset="100%" stop-color="#0077CC" />
+      <stop offset="70%" stop-color="#1ABCFE" />
+      <stop offset="100%" stop-color="#0D99FF" />
     </radialGradient>
-
-    <!-- Green teardrop -->
-    <linearGradient id="figmaGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="fgGreen" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#2CE098" />
-      <stop offset="100%" stop-color="#009E5C" />
-    </linearGradient>
-
-    <!-- Bevel shadow bottom -->
-    <linearGradient id="figmaBottom" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#000000" stop-opacity="0" />
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#0ACF83" />
     </linearGradient>
   </defs>
 
-  <!-- Base Squircle with 3D Depth -->
-  <g filter="url(#shadowFigma)">
-    <rect x="12" y="12" width="104" height="104" rx="26" fill="url(#figmaBgGrad)" />
-    <!-- Bottom Bevel -->
-    <path d="M 12 88 C 12 104 24 116 40 116 L 88 116 C 104 116 116 104 116 88 L 116 82 C 116 98 104 110 88 110 L 40 110 C 24 110 12 98 12 82 Z" fill="url(#figmaBottom)" />
-    <!-- Top Specular Gloss Rim -->
-    <rect x="13.5" y="13.5" width="101" height="50" rx="24.5" fill="url(#figmaGloss)" />
-    <!-- Inner Border Stroke -->
-    <rect x="12.5" y="12.5" width="103" height="103" rx="25.5" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" />
-  </g>
-
-  <!-- 3D Figma Geometry with Layered Shadows -->
-  <g filter="url(#partShadow)">
-    <!-- 1. Red top-left (left half rounded) -->
-    <path d="M42 26 H64 V48 H42 C35.925 48 31 43.075 31 37 C31 30.925 35.925 26 42 26 Z" fill="url(#figmaRed)" />
-    <!-- 2. Orange top-right (right half rounded) -->
-    <path d="M64 26 H86 C92.075 26 97 30.925 97 37 C97 43.075 92.075 48 86 48 H64 V26 Z" fill="url(#figmaOrange)" />
-    <!-- 3. Purple middle-left -->
-    <path d="M42 48 H64 V70 H42 C35.925 70 31 65.075 31 59 C31 52.925 35.925 48 42 48 Z" fill="url(#figmaPurple)" />
-    <!-- 4. Blue middle-right circle -->
-    <circle cx="75" cy="59" r="11" fill="url(#figmaBlue)" />
-    <!-- 5. Green bottom-left teardrop -->
-    <path d="M42 70 H64 V81 C64 87.075 59.075 92 53 92 C46.925 92 42 87.075 42 81 V70 Z" fill="url(#figmaGreen)" />
+  <g filter="url(#fgShadow)">
+    <!-- Red top-left -->
+    <path d="M40 16 H64 V44 H40 C32.27 44 26 37.73 26 30 C26 22.27 32.27 16 40 16 Z" fill="url(#fgRed)" />
+    <!-- Orange top-right -->
+    <path d="M64 16 H88 C95.73 16 102 22.27 102 30 C102 37.73 95.73 44 88 44 H64 V16 Z" fill="url(#fgOrange)" />
+    <!-- Purple middle-left -->
+    <path d="M40 44 H64 V72 H40 C32.27 72 26 65.73 26 58 C26 50.27 32.27 44 40 44 Z" fill="url(#fgPurple)" />
+    <!-- Blue middle-right circle -->
+    <circle cx="78" cy="58" r="14" fill="url(#fgBlue)" />
+    <!-- Green bottom-left teardrop -->
+    <path d="M40 72 H64 V86 C64 93.73 57.73 100 50 100 C42.27 100 36 93.73 36 86 V72 Z" fill="url(#fgGreen)" />
   </g>
 </svg>
-

@@ -53,20 +53,6 @@ export const Dock: React.FC<DockProps> = ({
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleAntigravityClick = () => {
-    onCloseFlyouts?.();
-    playWindowsSound('click');
-    notch.show({
-      title: 'Antigravity IDE 2.0',
-      subtitle: 'Google Deepmind Agentic Workspace Active',
-    });
-    if (!windows.terminal.isOpen) {
-      openWindow('terminal');
-    } else {
-      focusWindow('terminal');
-    }
-  };
-
   return (
     <footer className="fixed bottom-0 left-0 right-0 h-12 bg-[#1c1c1c]/85 backdrop-blur-2xl border-t border-white/10 z-[1200] flex items-center justify-between px-2 sm:px-3 select-none text-white shadow-2xl pointer-events-auto">
       {/* Left: Weather Widget */}
@@ -74,9 +60,10 @@ export const Dock: React.FC<DockProps> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            onCloseFlyouts?.();
             onToggleWidgets?.();
           }}
-          className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/10 text-white/80 hover:text-white transition-colors group cursor-pointer"
+          className="flex items-center gap-2 px-2.5 py-1 rounded-[6px] hover:bg-white/10 transition-colors cursor-pointer group"
           title="Widgets & Weather"
         >
           <CloudSun size={18} className="text-amber-400 group-hover:scale-105 transition-transform shrink-0" />
@@ -87,15 +74,10 @@ export const Dock: React.FC<DockProps> = ({
         </button>
       </div>
 
-      {/* Center: Windows 11 Taskbar Group (Arrangement and Real 3D Icons from floatdock) */}
+      {/* Center: Windows 11 Taskbar Group */}
       <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-1 px-1 justify-start md:justify-center min-w-0 max-w-full pointer-events-auto">
         {/* 1. START & SEARCH */}
-        <DockItem
-          id="start"
-          label="Start Menu"
-          iconSrc="/icons/win11/home.png"
-          onClick={onToggleStart}
-        />
+        <DockItem id="start" label="Start Menu" iconSrc="/icons/win11/home.png" onClick={onToggleStart} />
 
         <div
           onClick={(e) => {
@@ -151,7 +133,7 @@ export const Dock: React.FC<DockProps> = ({
 
         <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
 
-        {/* 3. DEVELOPER TOOLS: REAL 3D ICONS (FIGMA, CHROME, ANTIGRAVITY, VSCODE, GITHUB) */}
+        {/* 3. DEVELOPER TOOLS: 3D ICONS WITH TRANSPARENT CANVAS */}
         <DockItem
           id="figma"
           label="Figma"
@@ -167,13 +149,6 @@ export const Dock: React.FC<DockProps> = ({
         />
 
         <DockItem
-          id="antigravity"
-          label="Antigravity IDE 2.0"
-          iconSrc="/icons/win11/antigravity.png"
-          onClick={handleAntigravityClick}
-        />
-
-        <DockItem
           id="androidstudio"
           label="Android Studio (Mobile Projects)"
           iconSrc="/icons/win11/androidstudio.png"
@@ -184,7 +159,7 @@ export const Dock: React.FC<DockProps> = ({
 
         <DockItem
           id="github"
-          label="GitHub / radositumorang15"
+          label="GitHub Desktop"
           iconSrc="/icons/win11/github.png"
           onClick={() => handleOpenLink(profileData.github, 'GitHub Desktop')}
         />

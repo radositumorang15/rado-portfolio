@@ -1,119 +1,95 @@
 'use client';
 
-import React from 'react';
-import { Cpu, Code2, PenTool, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { INSTALLED_SKILLS, INSTALLING_SKILLS } from './data';
+import { SkillsInstalledTab } from './SkillsInstalledTab';
+import { SkillsConnectionsTab } from './SkillsConnectionsTab';
+import { SkillsQueueTab } from './SkillsQueueTab';
+import { Layers, Network, DownloadCloud } from 'lucide-react';
 import { Skill } from '../../data/types';
 
 interface SkillsViewProps {
-  skills: Skill[];
-  selectedSkill?: string | null;
-  onSelectSkill?: (skillName: string) => void;
+  skills?: Skill[];
+  onOpenProject?: (url: string, name: string) => void;
 }
 
-export const SkillsView: React.FC<SkillsViewProps> = ({
-  skills,
-  selectedSkill,
-  onSelectSkill,
-}) => {
-  const competent = skills.filter((s) => s.category === 'competent');
-  const novice = skills.filter((s) => s.category === 'novice');
-  const tools = skills.filter((s) => s.category === 'tool');
+type TabType = 'installed' | 'connections' | 'queue';
+
+export const SkillsView: React.FC<SkillsViewProps> = ({ onOpenProject }) => {
+  const [activeTab, setActiveTab] = useState<TabType>('installed');
 
   return (
-    <div className="p-6 max-w-5xl mx-auto flex flex-col gap-6 text-[var(--rn-text)]">
-      {/* Header */}
-      <div className="pb-4 border-b border-[var(--rn-border)] flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold">Skills & Technologies</h1>
-          <p className="text-xs text-[var(--rn-text-muted)]">Verified capabilities and development toolset</p>
+    <div className="flex flex-col h-full w-full select-none text-white font-sans bg-[#1f2227]/95">
+      {/* 1. Header (Windows 11 Settings > Apps > Installed apps style) */}
+      <div className="px-6 pt-5 pb-0 border-b border-white/10 shrink-0 bg-[#262930]/80 backdrop-blur-md">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold tracking-tight text-white m-0">
+              Skills: Installed Apps
+            </h1>
+            <p className="text-xs text-white/60 mt-1 m-0">
+              What I&apos;ve actually shipped with on GitHub, and what&apos;s still installing.
+            </p>
+          </div>
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-white/70">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="font-mono">{INSTALLED_SKILLS.length} Installed</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[var(--rn-accent)]" />
-          <span className="text-xs font-mono font-medium">{skills.length} Total Technologies</span>
+
+        {/* Navigation Tabs */}
+        <div className="flex gap-2 mt-4">
+          <button
+            onClick={() => setActiveTab('installed')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-xs font-semibold transition-all relative cursor-pointer ${
+              activeTab === 'installed'
+                ? 'text-white bg-white/10 border-t-2 border-t-blue-500'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Layers size={14} className={activeTab === 'installed' ? 'text-blue-400' : ''} />
+            <span>Installed</span>
+            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-white/10 text-[10px] font-mono">
+              {INSTALLED_SKILLS.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('connections')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-xs font-semibold transition-all relative cursor-pointer ${
+              activeTab === 'connections'
+                ? 'text-white bg-white/10 border-t-2 border-t-blue-500'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Network size={14} className={activeTab === 'connections' ? 'text-blue-400' : ''} />
+            <span>Connections</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('queue')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg text-xs font-semibold transition-all relative cursor-pointer ${
+              activeTab === 'queue'
+                ? 'text-white bg-white/10 border-t-2 border-t-blue-500'
+                : 'text-white/60 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <DownloadCloud size={14} className={activeTab === 'queue' ? 'text-blue-400' : ''} />
+            <span>Installing</span>
+            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-mono">
+              {INSTALLING_SKILLS.length}
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Competent Level */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--rn-text-muted)]">
-          <Code2 size={14} className="text-emerald-500" />
-          <span>Competent / Production Ready</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {competent.map((skill) => {
-            const isSelected = selectedSkill === skill.name;
-            return (
-              <div
-                key={skill.name}
-                onClick={() => onSelectSkill?.(skill.name)}
-                className={`p-3.5 rounded-[var(--rn-radius-card)] border cursor-pointer transition-all ${
-                  isSelected
-                    ? 'bg-[var(--rn-accent-soft)] border-[var(--rn-accent)] shadow-xs'
-                    : 'bg-[var(--rn-surface-alt)] border-[var(--rn-border)] hover:bg-[var(--rn-surface)]'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold">{skill.name}</span>
-                  <span className="text-[10px] uppercase font-bold text-emerald-500">Competent</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-full" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Novice / Learning */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--rn-text-muted)]">
-          <Sparkles size={14} className="text-blue-400" />
-          <span>Novice / In Progress</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {novice.map((skill) => {
-            const isSelected = selectedSkill === skill.name;
-            return (
-              <div
-                key={skill.name}
-                onClick={() => onSelectSkill?.(skill.name)}
-                className={`p-3.5 rounded-[var(--rn-radius-card)] border cursor-pointer transition-all ${
-                  isSelected
-                    ? 'bg-[var(--rn-accent-soft)] border-[var(--rn-accent)] shadow-xs'
-                    : 'bg-[var(--rn-surface-alt)] border-[var(--rn-border)] hover:bg-[var(--rn-surface)]'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold">{skill.name}</span>
-                  <span className="text-[10px] uppercase font-bold text-blue-400">Learning</span>
-                </div>
-                <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-blue-500 rounded-full w-3/5" />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Tools */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--rn-text-muted)]">
-          <PenTool size={14} className="text-amber-500" />
-          <span>Design & Tools</span>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {tools.map((skill) => (
-            <div
-              key={skill.name}
-              className="p-3.5 rounded-[var(--rn-radius-card)] bg-[var(--rn-surface-alt)] border border-[var(--rn-border)] flex items-center justify-between"
-            >
-              <span className="text-xs font-semibold">{skill.name}</span>
-              <span className="text-[10px] uppercase font-bold text-amber-500">Design Tool</span>
-            </div>
-          ))}
-        </div>
+      {/* 2. Scrollable Tab Pane */}
+      <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
+        {activeTab === 'installed' && (
+          <SkillsInstalledTab onOpenProject={onOpenProject} />
+        )}
+        {activeTab === 'connections' && <SkillsConnectionsTab />}
+        {activeTab === 'queue' && <SkillsQueueTab />}
       </div>
     </div>
   );

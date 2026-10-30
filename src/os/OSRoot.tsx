@@ -77,6 +77,7 @@ export const OSRoot: React.FC = () => {
   const handleUnlock = () => {
     setIsLocked(false);
     sessionStorage.setItem('rn_unlocked', 'true');
+    openWindow('about');
     notch.show({
       title: 'Welcome to RadoOS',
       subtitle: 'Double click icons or open Start Menu to explore',
@@ -91,6 +92,8 @@ export const OSRoot: React.FC = () => {
       const [app, sub] = raw.split('/');
       if (app && APP_IDS.includes(app as AppId)) {
         openWindow(app as AppId, sub);
+      } else {
+        openWindow('about');
       }
     };
 
@@ -107,6 +110,7 @@ export const OSRoot: React.FC = () => {
           setIsLocked(false);
           sessionStorage.setItem('rn_booted', 'true');
           sessionStorage.setItem('rn_unlocked', 'true');
+    openWindow('about');
         }}
         className="fixed inset-0 z-[2000] bg-black flex flex-col items-center justify-center text-white cursor-pointer select-none font-sans"
       >

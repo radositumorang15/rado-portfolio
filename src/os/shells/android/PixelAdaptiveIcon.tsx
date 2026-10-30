@@ -18,7 +18,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
   if (themed) {
     const symbolMap: Record<PixelAppId, string> = {
       about: 'person',
-      projects: 'folder_copy',
+      projects: 'public',
       experience: 'work',
       skills: 'auto_awesome',
       terminal: 'terminal',
@@ -26,7 +26,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
       contact: 'mail',
       settings: 'settings',
       taskmanager: 'monitoring',
-      androidstudio: 'developer_mode',
+      androidstudio: 'shopping_bag',
     };
     return (
       <div
@@ -68,15 +68,19 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 2. PROJECTS — Gaya Files by Google (4-Color Layered Folder) */}
+        {/* 2. CHROME — Google Chrome 2.5D Multi-color Pinwheel */}
         {id === 'projects' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
             <g filter={`url(#${filterId})`}>
-              <path d="M24 36 C24 31.5 27.5 28 32 28 H48 L56 36 H76 C80.5 36 84 39.5 84 44 V74 C84 78.5 80.5 82 76 82 H32 C27.5 82 24 78.5 24 74 Z" fill="#FBBC04" />
-              <rect x="30" y="42" width="48" height="28" rx="4" fill="#34A853" />
-              <rect x="36" y="47" width="36" height="24" rx="4" fill="#EA4335" />
-              <path d="M24 48 H84 V74 C84 78.5 80.5 82 76 82 H32 C27.5 82 24 78.5 24 74 Z" fill="#4285F4" />
+              <path d="M54 18 C67 18 78 24 85 34 L67 65 C64 61 60 58 54 58 C45 58 38 65 38 74 L19 41 C27 27 39 18 54 18 Z" fill="#EA4335" />
+              <path d="M85 34 C90 43 92 53 89 64 C86 76 78 86 68 91 L50 60 C53 58 56 55 58 51 C62 43 59 34 51 30 L85 34 Z" fill="#FBBC04" />
+              <path d="M68 91 C58 96 46 96 36 91 C23 85 14 73 14 59 L48 59 C48 64 51 68 55 70 C63 75 73 72 77 64 L68 91 Z" fill="#34A853" />
+              <circle cx="54" cy="54" r="20" fill="#FFFFFF" />
+              <circle cx="54" cy="54" r="15" fill="#1A73E8" />
+
+
+
             </g>
           </>
         )}
@@ -173,11 +177,16 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 10. ANDROID STUDIO — Mobile IDE 3D */}
+        {/* 10. GOOGLE PLAY STORE — 4-Color Authentic Triangle 2.5D */}
         {id === 'androidstudio' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
-            <image href="/icons/win11/androidstudio.png" x="14" y="14" width="80" height="80" />
+            <g filter={`url(#${filterId})`}>
+              <path d="M34 26 C31.5 28.5 30 32 30 36.5 V71.5 C30 76 31.5 79.5 34 82 L58 54 Z" fill="#0086F8" />
+              <path d="M72 44 L58 54 L34 26 C36.5 24.5 40.5 24.5 45.5 27 Z" fill="#00E676" />
+              <path d="M82 49 L72 44 L58 54 L72 64 L82 59 C86.5 56.5 86.5 51.5 82 49 Z" fill="#FFD600" />
+              <path d="M34 82 L58 54 L72 64 L45.5 81 C40.5 83.5 36.5 83.5 34 82 Z" fill="#FF334B" />
+            </g>
           </>
         )}
       </svg>

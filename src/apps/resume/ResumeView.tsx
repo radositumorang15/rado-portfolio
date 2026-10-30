@@ -56,7 +56,7 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
           <div>
             <h2 className="text-base font-bold">Curriculum Vitae — Rado Situmorang</h2>
             <p className="text-xs text-[var(--rn-text-muted)] mt-1">
-              Frontend & Android Developer • Final-Year PTIK Universitas Sebelas Maret
+              Mobile Developer • Final-Year PTIK Universitas Sebelas Maret
             </p>
           </div>
 
@@ -67,11 +67,11 @@ export const ResumeView: React.FC<ResumeViewProps> = ({
             </div>
             <div className="flex items-center gap-2 text-emerald-500 font-medium">
               <CheckCircle2 size={14} />
-              <span>siGizi, SmileShop & web applications included</span>
+              <span>siGizi, SmileShop &amp; web applications included</span>
             </div>
             <div className="flex items-center gap-2 text-emerald-500 font-medium">
               <CheckCircle2 size={14} />
-              <span>GPA 3.81 / 4.00 verified academic record</span>
+              <span>GPA 3.77 / 4.00 verified academic record</span>
             </div>
           </div>
 

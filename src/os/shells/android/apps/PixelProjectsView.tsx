@@ -5,6 +5,7 @@ import { projectsData } from '../../../../data/projects';
 import { Project } from '../../../../data/types';
 import { usePrefsStore } from '../../../../store/prefs';
 import { notch } from '../../../notch';
+import { PixelProjectDetailSheet } from './PixelProjectDetailSheet';
 
 export const PixelProjectsView: React.FC = () => {
   const language = usePrefsStore((s) => s.language);
@@ -31,7 +32,7 @@ export const PixelProjectsView: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4 pb-20 text-[var(--m3-on-surface)] font-sans">
-      {/* 1. M3 SEARCH BAR (Files by Google Style) */}
+      {/* 1. Search Bar */}
       <div className="flex items-center gap-2.5 h-11 px-3.5 rounded-full bg-[var(--m3-surface-container-high)] text-[var(--m3-on-surface)] shadow-xs">
         <span className="material-symbols-rounded text-[20px] text-[var(--m3-on-surface-variant)]">
           search
@@ -53,7 +54,7 @@ export const PixelProjectsView: React.FC = () => {
         )}
       </div>
 
-      {/* 2. M3 FILTER CHIPS */}
+      {/* 2. Filter Chips */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
         {(['all', 'mobile', 'web'] as const).map((cat) => {
           const isActive = filter === cat;
@@ -79,7 +80,7 @@ export const PixelProjectsView: React.FC = () => {
         </span>
       </div>
 
-      {/* 3. ASYMMETRIC GROUPED PROJECT CARDS */}
+      {/* 3. Grouped Project Cards */}
       <div className="flex flex-col gap-[3px]">
         {filtered.map((proj, idx, arr) => {
           const radiusClass =
@@ -98,7 +99,6 @@ export const PixelProjectsView: React.FC = () => {
               className={`p-3.5 bg-[var(--m3-surface-container)] hover:bg-[var(--m3-surface-container-high)] cursor-pointer transition-colors active:scale-99 flex flex-col gap-2.5 ${radiusClass}`}
             >
               <div className="flex items-start gap-3">
-                {/* App / File Icon with Optical Roundness (Outer 12px) */}
                 <div className="w-11 h-11 rounded-[12px] bg-[var(--m3-surface-container-highest)] text-[var(--m3-primary)] flex items-center justify-center shrink-0">
                   <span className="material-symbols-rounded text-[24px]">
                     {proj.category === 'mobile' ? 'android' : 'web'}
@@ -120,7 +120,6 @@ export const PixelProjectsView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Tech Stack Pills & Open Detail prompt */}
               <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/5">
                 <div className="flex items-center gap-1.5 overflow-hidden">
                   {proj.stack.slice(0, 3).map((st) => (
@@ -147,101 +146,15 @@ export const PixelProjectsView: React.FC = () => {
         })}
       </div>
 
-      {/* 4. M3 PROJECT DETAIL BOTTOM SHEET / MODAL */}
+      {/* 4. M3 Project Detail Bottom Sheet */}
       {selectedProject && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs flex flex-col justify-end p-3 animate-in fade-in duration-200"
-          onClick={() => setSelectedProject(null)}
-        >
-          <div
-            className="w-full max-w-md mx-auto max-h-[85vh] overflow-y-auto p-5 rounded-[28px] bg-[var(--m3-surface-container)] text-[var(--m3-on-surface)] shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom-8 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Sheet Handle */}
-            <div className="w-10 h-1 rounded-full bg-[var(--m3-on-surface-variant)]/40 mx-auto" />
-
-            {/* Header info */}
-            <div className="flex items-start gap-3.5">
-              <div className="w-14 h-14 rounded-[16px] bg-[var(--m3-primary-container)] text-[var(--m3-on-primary-container)] flex items-center justify-center shrink-0">
-                <span className="material-symbols-rounded text-[32px]">
-                  {selectedProject.category === 'mobile' ? 'android' : 'terminal'}
-                </span>
-              </div>
-              <div className="min-w-0 flex-1">
-                <span className="px-2 py-0.5 rounded-full bg-[var(--m3-secondary-container)] text-[var(--m3-on-secondary-container)] text-[10px] font-bold uppercase tracking-wider">
-                  {selectedProject.category} app
-                </span>
-                <h3 className="text-base font-bold leading-tight mt-1 text-[var(--m3-on-surface)]">
-                  {selectedProject.title}
-                </h3>
-                {selectedProject.role && (
-                  <p className="text-xs text-[var(--m3-primary)] mt-0.5">
-                    {selectedProject.role[language]}
-                  </p>
-                )}
-              </div>
-              <button
-                onClick={() => setSelectedProject(null)}
-                className="w-8 h-8 rounded-full bg-[var(--m3-surface-container-high)] flex items-center justify-center text-[var(--m3-on-surface)]"
-              >
-                <span className="material-symbols-rounded text-[18px]">close</span>
-              </button>
-            </div>
-
-            {/* Description Segmented Group */}
-            <div className="flex flex-col gap-[3px]">
-              <div className="p-3.5 rounded-t-[20px] rounded-b-[4px] bg-[var(--m3-surface-container-high)]">
-                <p className="text-xs font-semibold text-[var(--m3-primary)] mb-1 uppercase tracking-wider">
-                  Description
-                </p>
-                <p className="text-xs leading-relaxed text-[var(--m3-on-surface)]">
-                  {selectedProject.description[language]}
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-t-[4px] rounded-b-[20px] bg-[var(--m3-surface-container-high)]">
-                <p className="text-xs font-semibold text-[var(--m3-primary)] mb-1.5 uppercase tracking-wider">
-                  Tech Stack & Libraries
-                </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedProject.stack.map((item) => (
-                    <span
-                      key={item}
-                      className="px-2.5 py-1 rounded-full bg-[var(--m3-surface-container)] text-[var(--m3-on-surface)] text-xs font-medium"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons (Pill Buttons) */}
-            <div className="flex flex-col gap-2 pt-1">
-              {selectedProject.links.live && (
-                <button
-                  onClick={() => handleOpenLink(selectedProject.links.live!, 'Opening Live Demo')}
-                  className="w-full h-11 rounded-full bg-[var(--m3-primary)] text-[var(--m3-on-primary)] text-xs font-bold flex items-center justify-center gap-2 active:scale-98 transition-transform"
-                >
-                  <span className="material-symbols-rounded text-[18px]">open_in_new</span>
-                  <span>Launch Live Demo</span>
-                </button>
-              )}
-
-              {selectedProject.links.source && (
-                <button
-                  onClick={() => handleOpenLink(selectedProject.links.source!, 'Opening GitHub Source')}
-                  className="w-full h-11 rounded-full bg-[var(--m3-surface-container-high)] text-[var(--m3-on-surface)] text-xs font-semibold flex items-center justify-center gap-2 hover:bg-[var(--m3-surface-container-highest)] active:scale-98 transition-transform"
-                >
-                  <span className="material-symbols-rounded text-[18px]">code</span>
-                  <span>View Source on GitHub</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <PixelProjectDetailSheet
+          project={selectedProject}
+          language={language}
+          onClose={() => setSelectedProject(null)}
+          onOpenLink={handleOpenLink}
+        />
       )}
     </div>
   );
 };
-

@@ -87,7 +87,7 @@ export const WindowsLockScreen: React.FC<WindowsLockScreenProps> = ({ onUnlock }
         </div>
         <div className="text-center">
           <p className="text-sm font-semibold tracking-wide">Rado Nelson Dela Sadrak S.</p>
-          <p className="text-xs text-neutral-300 mt-0.5">Frontend & Android Developer</p>
+          <p className="text-xs text-neutral-300 mt-0.5">Mobile Developer</p>
         </div>
 
         <div className="flex items-center gap-1.5 text-xs text-neutral-400 mt-3 animate-bounce">

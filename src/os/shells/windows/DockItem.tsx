@@ -5,7 +5,7 @@ import { LucideIcon } from 'lucide-react';
 import { AppId } from '../../../lib/constants';
 
 interface DockItemProps {
-  id: AppId | 'start' | 'search' | 'widgets' | 'github' | 'antigravity' | 'linkedin' | 'threads' | string;
+  id: AppId | 'start' | 'search' | 'widgets' | 'github' | 'linkedin' | 'threads' | string;
   label: string;
   icon?: LucideIcon | React.ComponentType<{ size?: number; className?: string }>;
   iconSrc?: string;

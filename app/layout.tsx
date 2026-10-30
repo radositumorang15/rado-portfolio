@@ -2,14 +2,14 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Rado Situmorang — Frontend & Android Developer',
+  title: 'Rado Situmorang — Mobile Developer',
   description:
     'Interactive operating system portfolio of Rado Nelson Dela Sadrak Situmorang. Final-year Informatics Engineering Education student at Sebelas Maret University.',
-  keywords: ['Rado Situmorang', 'Frontend Developer', 'Android Developer', 'Kotlin', 'React', 'Next.js', 'Portfolio'],
+  keywords: ['Rado Situmorang', 'Mobile Developer', 'Android Developer', 'Flutter Developer', 'Kotlin', 'React', 'Next.js', 'Portfolio'],
   authors: [{ name: 'Rado Nelson Dela Sadrak Situmorang' }],
   metadataBase: new URL('https://radositumorang.netlify.app'),
   openGraph: {
-    title: 'Rado Situmorang — Frontend & Android Developer',
+    title: 'Rado Situmorang — Mobile Developer',
     description: 'Interactive operating system portfolio featuring Windows 11 & Android 17 shells.',
     url: 'https://radositumorang.netlify.app',
     siteName: 'RadoOS Portfolio',
@@ -26,7 +26,7 @@ const jsonLd = {
   '@type': 'Person',
   name: 'Rado Nelson Dela Sadrak Situmorang',
   alternateName: 'Rado Situmorang',
-  jobTitle: 'Frontend & Android Developer',
+  jobTitle: 'Mobile Developer',
   url: 'https://radositumorang.netlify.app',
   alumniOf: 'Universitas Sebelas Maret (UNS)',
   sameAs: [
