@@ -15,13 +15,13 @@ interface PixelChromeViewProps {
 
 export const PixelChromeView: React.FC<PixelChromeViewProps> = ({ onExit }) => {
   const [tabs, setTabs] = useState<string[]>(DEFAULT_TABS);
-  const [mode, setMode] = useState<SwitcherMode>('grid');
+  const [mode, setMode] = useState<SwitcherMode>('stack');
   const [cur, setCur] = useState<string | null>(null);
   const [closed, setClosed] = useState<{ id: string; i: number; title: string } | null>(null);
   const [toastMsg, setToastMsg] = useState<{ text: string; undo?: boolean } | null>(null);
   const [px, setPx] = useState(0);
-  const [scaleK, setScaleK] = useState(0.42);
-  const [cardHeight, setCardHeight] = useState('190px');
+  const [scaleK, setScaleK] = useState(0.85);
+  const [cardHeight, setCardHeight] = useState('230px');
 
   const containerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -39,17 +39,21 @@ export const PixelChromeView: React.FC<PixelChromeViewProps> = ({ onExit }) => {
 
   useEffect(() => {
     updateScale();
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma != null) setPx(Math.max(-1, Math.min(1, Number((e.gamma / 25).toFixed(2)))));
+    };
     window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
+    window.addEventListener('deviceorientation', onOrient);
+    return () => {
+      window.removeEventListener('resize', updateScale);
+      window.removeEventListener('deviceorientation', onOrient);
+    };
   }, [updateScale]);
 
   const showToast = (text: string, undo = false) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToastMsg({ text, undo });
-    toastTimerRef.current = setTimeout(() => {
-      setToastMsg(null);
-      setClosed(null);
-    }, 3500);
+    toastTimerRef.current = setTimeout(() => { setToastMsg(null); setClosed(null); }, 3500);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -115,11 +119,7 @@ export const PixelChromeView: React.FC<PixelChromeViewProps> = ({ onExit }) => {
 
   const handleUndo = () => {
     if (!closed) return;
-    setTabs((prev) => {
-      const copy = [...prev];
-      copy.splice(closed.i, 0, closed.id);
-      return copy;
-    });
+    setTabs((p) => { const c = [...p]; c.splice(closed.i, 0, closed.id); return c; });
     setClosed(null);
     setToastMsg(null);
   };
