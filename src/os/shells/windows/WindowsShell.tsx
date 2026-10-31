@@ -66,6 +66,14 @@ export const WindowsShell: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [openWindow]);
 
+  // Di Windows desktop, otomatis buka window About jika belum ada window lain yang terbuka
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.location.hash) {
+      const hasAny = Object.values(useWindowsStore.getState().windows).some((w) => w.isOpen);
+      if (!hasAny) openWindow('about');
+    }
+  }, [openWindow]);
+
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     if ((e.target as HTMLElement).closest('.desktop-icon') || (e.target as HTMLElement).closest('footer') || (e.target as HTMLElement).closest('.window-frame') || (e.target as HTMLElement).closest('.react-draggable') || (e.target as HTMLElement).closest('[role="dialog"]')) return;
