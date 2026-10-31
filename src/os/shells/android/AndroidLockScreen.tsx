@@ -1,41 +1,36 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { playAndroidTapSound } from '../../../lib/audio';
+import { usePrefsStore } from '../../../store/prefs';
 
 interface AndroidLockScreenProps {
   onUnlock: () => void;
 }
 
 export const AndroidLockScreen: React.FC<AndroidLockScreenProps> = ({ onUnlock }) => {
-  const [hourStr, setHourStr] = useState<string>('17');
-  const [minStr, setMinStr] = useState<string>('34');
+  const language = usePrefsStore((s) => s.language);
+  const [timeStr, setTimeStr] = useState<string>('17:34');
   const [dateStr, setDateStr] = useState<string>('');
   const [isSlidingUp, setIsSlidingUp] = useState<boolean>(false);
+  const [dragOffset, setDragOffset] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setHourStr(
-        now.toLocaleTimeString('id-ID', {
-          timeZone: 'Asia/Jakarta',
+      setTimeStr(
+        now.toLocaleTimeString(language === 'id' ? 'id-ID' : 'en-US', {
           hour: '2-digit',
-          hour12: false,
-        })
-      );
-      setMinStr(
-        now.toLocaleTimeString('id-ID', {
-          timeZone: 'Asia/Jakarta',
           minute: '2-digit',
           hour12: false,
         })
       );
       setDateStr(
-        now.toLocaleDateString('id-ID', {
-          timeZone: 'Asia/Jakarta',
-          weekday: 'short',
+        now.toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+          weekday: 'long',
           day: 'numeric',
-          month: 'short',
+          month: 'long',
         })
       );
     };
@@ -43,79 +38,122 @@ export const AndroidLockScreen: React.FC<AndroidLockScreenProps> = ({ onUnlock }
     updateTime();
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [language]);
 
   const handleUnlock = () => {
     if (isSlidingUp) return;
     setIsSlidingUp(true);
+    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+      navigator.vibrate?.(12);
+    }
     playAndroidTapSound();
     setTimeout(() => {
       onUnlock();
-    }, 400);
+    }, 350);
   };
+
+  // Touch and pointer swipe up gesture
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let startY = 0;
+    let currentDy = 0;
+
+    const onPointerDown = (e: PointerEvent) => {
+      startY = e.clientY;
+      currentDy = 0;
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp, { once: true });
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      const dy = startY - e.clientY; // positive = dragged up
+      if (dy > 0) {
+        currentDy = dy;
+        setDragOffset(dy);
+      }
+    };
+
+    const onPointerUp = () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      if (currentDy > 90) {
+        handleUnlock();
+      } else {
+        setDragOffset(0);
+      }
+    };
+
+    el.addEventListener('pointerdown', onPointerDown);
+    return () => el.removeEventListener('pointerdown', onPointerDown);
+  }, []);
+
+  const dragStyle: React.CSSProperties = isSlidingUp
+    ? { transform: 'translateY(-100%)', opacity: 0 }
+    : dragOffset > 0
+    ? {
+        transform: `translateY(-${dragOffset}px)`,
+        opacity: Math.max(0.2, 1 - dragOffset / 420),
+        transition: 'none',
+      }
+    : {};
 
   return (
     <div
+      ref={containerRef}
       onClick={handleUnlock}
-      className={`fixed inset-0 z-[1900] select-none cursor-pointer flex flex-col justify-between items-center py-10 px-6 bg-cover bg-center text-[#E2E2E6] font-sans transition-transform duration-400 ease-[cubic-bezier(0.1,0.9,0.2,1)] ${
-        isSlidingUp ? '-translate-y-full opacity-90' : 'translate-y-0 opacity-100'
-      }`}
-      style={{
-        backgroundImage: "url('/pixel.jpg')",
-        backgroundColor: '#0c0f17',
-      }}
+      style={dragStyle}
+      className="fixed inset-0 z-[1900] select-none cursor-pointer flex flex-col justify-between items-center py-10 px-6 bg-cover bg-center text-[#E2E2E6] font-sans transition-all duration-350 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
     >
-      {/* Dark Ambient Layer for Readability */}
-      <div className="absolute inset-0 bg-black/45 pointer-events-none" />
+      {/* Background Gradient Layer */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 pointer-events-none" />
 
       {/* Top Punch Hole & Status */}
       <div className="relative z-10 w-full flex items-center justify-between px-2 text-xs text-neutral-300">
-        <span className="text-[11px] font-medium text-neutral-200">Telkomsel</span>
+        <span className="text-[11px] font-medium text-neutral-200">5G • Rado-Net</span>
         <div className="w-[11px] h-[11px] rounded-full bg-black ring-[1px] ring-white/10 shadow-inner flex items-center justify-center">
           <div className="w-[3px] h-[3px] rounded-full bg-[#111827]/80" />
         </div>
         <div className="flex items-center gap-1.5 text-neutral-200">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2.4 20.6L19.4 3.6C20.1 2.9 21.3 3.4 21.3 4.4V20.5C21.3 21.3 20.7 22 19.9 22H3.8C2.8 22 2.3 20.8 2.4 20.6Z" />
-          </svg>
-          <svg width="14" height="11" viewBox="0 0 24 19" fill="currentColor">
-            <path d="M12 3.5C7.5 3.5 3.39 5.3 0.29 8.24C-0.1 8.62 -0.1 9.25 0.29 9.63L11.29 20.63C11.68 21.02 12.31 21.02 12.7 20.63L23.7 9.63C24.1 9.25 24.1 8.62 23.71 8.24C20.61 5.3 16.5 3.5 12 3.5Z" />
-          </svg>
-          <svg width="20" height="10" viewBox="0 0 22 11" fill="none">
-            <rect x="0.6" y="0.6" width="18" height="9.8" rx="2.4" stroke="currentColor" strokeWidth="1.2" />
-            <path d="M20.2 3.8C20.8 4.1 20.8 6.9 20.2 7.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-            <rect x="2.2" y="2.2" width="13.5" height="6.6" rx="1.2" fill="currentColor" />
-          </svg>
+          <span className="text-[11px] font-semibold">88%</span>
         </div>
       </div>
 
-      {/* Center Pixel Stacked Digital Clock */}
+      {/* Center Pixel Giant Clock & Subtitle */}
       <div className="relative z-10 flex flex-col items-center select-none my-auto">
-        <div className="flex flex-col items-center leading-[0.85] font-semibold tracking-tighter text-[#A8C7FA] select-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.7)]">
-          <span className="text-[110px]">{hourStr}</span>
-          <span className="text-[110px]">{minStr}</span>
-        </div>
+        <h1 className="text-[88px] leading-none font-light tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+          {timeStr}
+        </h1>
 
-        {/* Date & Weather Subtitle */}
-        <div className="flex items-center gap-2 mt-4 text-sm font-medium text-neutral-200 drop-shadow-md">
-          <span>{dateStr || 'Rab, 28 Okt'}</span>
+        <div className="flex items-center gap-2 mt-2 text-sm font-medium text-neutral-200 drop-shadow-md">
+          <span>{dateStr}</span>
           <span>•</span>
-          <span className="flex items-center gap-1">
-            <span className="material-symbols-rounded text-amber-300 text-base">partly_cloudy_day</span>
+          <span className="flex items-center gap-1 text-amber-300">
+            <span className="material-symbols-rounded text-base">partly_cloudy_day</span>
             <span>29°C</span>
           </span>
         </div>
+
+        {/* Lockscreen Notification Pill */}
+        <div className="mt-8 px-4 py-2.5 rounded-[20px] bg-white/10 backdrop-blur-md border border-white/10 flex items-center gap-3 max-w-xs shadow-lg">
+          <div className="w-7 h-7 rounded-full bg-[#A9C4FF] text-[#0D2A63] font-bold text-xs flex items-center justify-center shrink-0">
+            RN
+          </div>
+          <div className="text-left text-xs min-w-0">
+            <p className="font-semibold text-white/95 truncate">Rado Situmorang</p>
+            <p className="text-[11px] text-white/70 truncate">
+              {language === 'id' ? 'Sentuh untuk membuka portofolio' : 'Tap to open portfolio'}
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Bottom Unlock Pill & Prompt */}
-      <div className="relative z-10 flex flex-col items-center gap-3">
-        <div className="w-12 h-12 rounded-full border border-white/20 bg-white/10 backdrop-blur-xs flex items-center justify-center text-white/80 animate-pulse">
-          <span className="material-symbols-rounded text-2xl">lock_open</span>
-        </div>
-        <p className="text-xs text-neutral-300 tracking-wide drop-shadow-sm">
-          Ketuk atau geser ke atas untuk membuka
+      {/* Bottom Unlock Bob & Prompt */}
+      <div className="relative z-10 flex flex-col items-center gap-2">
+        <div className="w-9 h-1 rounded-full bg-white pixel-bob" />
+        <p className="text-xs text-neutral-300 tracking-wide drop-shadow-sm font-medium">
+          {language === 'id' ? 'Geser ke atas untuk membuka' : 'Swipe up to unlock'}
         </p>
-        <div className="w-28 h-1 rounded-full bg-white/40 mt-2" />
       </div>
     </div>
   );

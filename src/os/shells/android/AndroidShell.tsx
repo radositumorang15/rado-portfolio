@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Monitor } from 'lucide-react';
 import { StatusBar } from './StatusBar';
 import { Home } from './Home';
@@ -8,10 +8,13 @@ import { AppScaffold } from './AppScaffold';
 import { QuickShade } from './QuickShade';
 import { Recents } from './Recents';
 import { PixelWallpaper } from './PixelWallpaper';
+import { AndroidLockScreen } from './AndroidLockScreen';
 import { Palette } from '../windows/Palette';
 import { useWindowsStore } from '../../../store/windows';
 import { usePrefsStore } from '../../../store/prefs';
 import { AppId } from '../../../lib/constants';
+import { usePixelGestures } from './usePixelGestures';
+import './pixelAnimate.css';
 
 import {
   PixelAboutView,
@@ -45,10 +48,57 @@ export const AndroidShell: React.FC = () => {
   const openWindow = useWindowsStore((s) => s.openWindow);
   const closeWindow = useWindowsStore((s) => s.closeWindow);
   const setShell = usePrefsStore((s) => s.setShell);
+  const reduceMotion = usePrefsStore((s) => s.reduceMotion);
+  const language = usePrefsStore((s) => s.language);
 
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isShadeOpen, setIsShadeOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isRecentsOpen, setIsRecentsOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [showCoach, setShowCoach] = useState(false);
+  const [brightness, setBrightness] = useState(1);
+  const [isTorch, setIsTorch] = useState(false);
+  const [isWifi, setIsWifi] = useState(true);
+  const [isBt, setIsBt] = useState(true);
+  const [originRect, setOriginRect] = useState<DOMRect | null>(null);
+
+  // Pixel Navigation & Edge Gestures Hook
+  const { gestureTransform } = usePixelGestures({
+    containerRef,
+    hasActiveApp: Boolean(activeId),
+    isShadeOpen,
+    onGoHome: () => {
+      if (activeId) closeWindow(activeId);
+    },
+    onOpenRecents: () => setIsRecentsOpen(true),
+    onOpenShade: () => setIsShadeOpen(true),
+    onCloseShade: () => setIsShadeOpen(false),
+  });
+
+  const handleOpenApp = (id: AppId, rect?: DOMRect) => {
+    setOriginRect(rect || null);
+    openWindow(id);
+  };
+
+  const handleUnlock = () => {
+    setIsLocked(false);
+    setShowCoach(true);
+    setTimeout(() => setShowCoach(false), 4200);
+  };
+
+  // Keyboard shortcut: Escape to close shade/recents/app
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isShadeOpen) setIsShadeOpen(false);
+        else if (isRecentsOpen) setIsRecentsOpen(false);
+        else if (activeId) closeWindow(activeId);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isShadeOpen, isRecentsOpen, activeId, closeWindow]);
 
   const renderAppContent = (id: AppId) => {
     switch (id) {
@@ -67,9 +117,6 @@ export const AndroidShell: React.FC = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#070b10] flex flex-col items-center justify-center select-none text-[var(--m3-on-surface)]">
-      {/* Outer Desktop Canvas Backdrop */}
-      <div className="absolute inset-0 bg-radial from-[#132034]/40 via-[#070b10] to-[#040608] z-0 pointer-events-none" />
-
       {/* Top Banner on Large Desktop Screens */}
       <header className="hidden md:flex items-center justify-between w-full max-w-4xl px-6 py-2 z-10 text-xs text-white/70">
         <div className="flex items-center gap-2">
@@ -86,50 +133,64 @@ export const AndroidShell: React.FC = () => {
         </button>
       </header>
 
-      {/* Phone Mockup Frame (Desktop) / Native Viewport (Mobile) */}
-      <main className="relative z-10 w-full h-full md:w-[390px] md:h-[820px] md:max-h-[92vh] md:rounded-[46px] md:border-[7px] md:border-neutral-800 md:shadow-[0_25px_80px_rgba(0,0,0,0.9)] md:ring-1 md:ring-white/10 flex flex-col overflow-hidden bg-transparent">
-        {/* Pixel Fluid Dynamic Wallpaper */}
-        <PixelWallpaper />
-
-        {/* Pixel Punch-Hole Status Bar */}
+      {/* Phone Mockup Frame / Viewport */}
+      <main
+        ref={containerRef}
+        style={{ filter: `brightness(${brightness})` }}
+        className="relative z-10 w-full h-full md:w-[390px] md:h-[820px] md:max-h-[92vh] md:rounded-[46px] md:border-[7px] md:border-neutral-800 md:shadow-[0_25px_80px_rgba(0,0,0,0.9)] md:ring-1 md:ring-white/10 flex flex-col overflow-hidden bg-transparent"
+      >
+        <PixelWallpaper reducedMotion={reduceMotion} />
         <StatusBar onPullDownShade={() => setIsShadeOpen(true)} />
 
-        {/* Pixel Home Screen */}
         <Home
-          onOpenApp={(id) => openWindow(id)}
+          onOpenApp={handleOpenApp}
           onOpenSearch={() => setIsSearchOpen(true)}
           onOpenRecents={() => setIsRecentsOpen(true)}
         />
 
-        {/* Active App Full-Screen Scaffold */}
         {activeId && (
           <AppScaffold
             appId={activeId}
             title={APP_TITLES[activeId]}
             hideHeader={activeId === 'projects'}
+            originRect={originRect}
+            gestureTransform={gestureTransform}
             onBack={() => closeWindow(activeId)}
           >
             {renderAppContent(activeId)}
           </AppScaffold>
         )}
 
-        {/* Recents App Switcher Carousel */}
-        <Recents
-          isOpen={isRecentsOpen}
-          onClose={() => setIsRecentsOpen(false)}
-        />
+        {isTorch && <div className="pixel-torch" />}
 
-        {/* Quick Settings Pull-down Shade */}
+        {showCoach && (
+          <div className="pixel-coach">
+            {language === 'id'
+              ? 'Geser ke atas dari bar untuk ke beranda. Tahan untuk Recents.'
+              : 'Swipe up from the bar to go home. Hold longer for Recents.'}
+          </div>
+        )}
+
+        {isLocked && <AndroidLockScreen onUnlock={handleUnlock} />}
+
+        <Recents isOpen={isRecentsOpen} onClose={() => setIsRecentsOpen(false)} />
+
         <QuickShade
           isOpen={isShadeOpen}
           onClose={() => setIsShadeOpen(false)}
+          onLockDevice={() => setIsLocked(true)}
+          brightness={brightness}
+          onBrightnessChange={setBrightness}
+          isWifi={isWifi}
+          onToggleWifi={() => setIsWifi(!isWifi)}
+          isBt={isBt}
+          onToggleBt={() => setIsBt(!isBt)}
+          isTorch={isTorch}
+          onToggleTorch={() => setIsTorch(!isTorch)}
+          onOpenApp={(id) => openWindow(id)}
         />
 
-        {/* Search Palette */}
-        <Palette
-          isOpen={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-        />
+        <Palette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </main>
     </div>
   );

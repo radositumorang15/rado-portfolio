@@ -1,168 +1,155 @@
 'use client';
 
 import React from 'react';
-import { Moon, Sun, Globe, Monitor, Zap, X, Bell, Palette } from 'lucide-react';
+import { Sun, Power, X } from 'lucide-react';
 import { usePrefsStore } from '../../../store/prefs';
+import { QuickShadeTiles } from './QuickShadeTiles';
+import { QuickShadeNotifications } from './QuickShadeNotifications';
+import { AppId } from '../../../lib/constants';
 
 interface QuickShadeProps {
   isOpen: boolean;
   onClose: () => void;
+  onLockDevice?: () => void;
+  brightness: number;
+  onBrightnessChange: (v: number) => void;
+  isWifi: boolean;
+  onToggleWifi: () => void;
+  isBt: boolean;
+  onToggleBt: () => void;
+  isTorch: boolean;
+  onToggleTorch: () => void;
+  onOpenApp?: (appId: AppId) => void;
 }
 
-export const QuickShade: React.FC<QuickShadeProps> = ({ isOpen, onClose }) => {
+export const QuickShade: React.FC<QuickShadeProps> = ({
+  isOpen,
+  onClose,
+  onLockDevice,
+  brightness,
+  onBrightnessChange,
+  isWifi,
+  onToggleWifi,
+  isBt,
+  onToggleBt,
+  isTorch,
+  onToggleTorch,
+  onOpenApp,
+}) => {
   const resolvedTheme = usePrefsStore((s) => s.resolvedTheme);
   const setTheme = usePrefsStore((s) => s.setTheme);
   const language = usePrefsStore((s) => s.language);
   const setLanguage = usePrefsStore((s) => s.setLanguage);
   const reduceMotion = usePrefsStore((s) => s.reduceMotion);
   const setReduceMotion = usePrefsStore((s) => s.setReduceMotion);
-  const themedIcons = usePrefsStore((s) => s.themedIcons);
-  const setThemedIcons = usePrefsStore((s) => s.setThemedIcons);
   const setShell = usePrefsStore((s) => s.setShell);
 
   if (!isOpen) return null;
 
-  const triggerHaptic = () => {
-    if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-      navigator.vibrate?.(10);
-    }
-  };
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  const dateStr = now.toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  });
 
   return (
     <div
-      className="fixed inset-0 z-[1500] bg-black/75 backdrop-blur-[28px] flex flex-col p-5 text-white animate-in slide-in-from-top-6 duration-200 select-none overflow-y-auto"
+      className="fixed inset-0 z-[1500] bg-[#10131a]/95 backdrop-blur-[24px] flex flex-col p-5 text-white animate-in slide-in-from-top-6 duration-200 select-none overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md mx-auto flex flex-col gap-5"
+        className="w-full max-w-md mx-auto flex flex-col gap-4"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Top Header: Clock, Date, and Lock/Power Button */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10">
-          <span className="text-sm font-semibold tracking-wide text-[var(--m3-on-surface)]">
-            Quick Settings
+          <div>
+            <span className="text-xl font-normal tracking-tight text-white">{timeStr}</span>
+            <span className="block text-xs text-white/60">{dateStr}</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {onLockDevice && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onLockDevice();
+                }}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/90 transition-colors cursor-pointer"
+                title="Lock Device"
+                aria-label="Lock Device"
+              >
+                <Power size={17} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/90 transition-colors cursor-pointer"
+              title="Close Quick Settings"
+              aria-label="Close"
+            >
+              <X size={17} />
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Settings Tiles Grid */}
+        <QuickShadeTiles
+          isWifi={isWifi}
+          onToggleWifi={onToggleWifi}
+          isBt={isBt}
+          onToggleBt={onToggleBt}
+          isTorch={isTorch}
+          onToggleTorch={onToggleTorch}
+          isDark={resolvedTheme === 'dark'}
+          onToggleDark={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+          language={language}
+          onToggleLanguage={() => setLanguage(language === 'en' ? 'id' : 'en')}
+          isSaver={reduceMotion}
+          onToggleSaver={() => setReduceMotion(!reduceMotion)}
+          onSwitchShell={() => {
+            setShell('windows');
+            onClose();
+          }}
+        />
+
+        {/* Brightness Slider */}
+        <div className="flex items-center gap-3 px-3 py-2 rounded-2xl bg-white/5 border border-white/5">
+          <Sun size={17} className="text-white/70 shrink-0" />
+          <input
+            type="range"
+            min="0.35"
+            max="1"
+            step="0.01"
+            value={brightness}
+            onChange={(e) => onBrightnessChange(parseFloat(e.target.value))}
+            className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#A9C4FF]"
+            aria-label="Brightness"
+          />
+          <span className="text-[11px] font-mono text-white/60 min-w-[32px] text-right">
+            {Math.round(brightness * 100)}%
           </span>
-          <button
-            onClick={() => {
-              triggerHaptic();
-              onClose();
-            }}
-            className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-          >
-            <X size={18} />
-          </button>
         </div>
 
-        {/* M3 Expressive Morphing Tiles Grid */}
-        <div className="grid grid-cols-2 gap-2.5">
-          {/* Dark Theme Tile */}
-          <button
-            data-active={resolvedTheme === 'dark'}
-            onClick={() => {
-              triggerHaptic();
-              setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-            }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
-          >
-            {resolvedTheme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
-            <div className="leading-tight">
-              <p className="text-xs font-semibold">Dark Theme</p>
-              <p className="text-[10px] opacity-75">{resolvedTheme === 'dark' ? 'Active' : 'Off'}</p>
-            </div>
-          </button>
+        {/* Notifications Stack */}
+        <QuickShadeNotifications
+          language={language}
+          onOpenApp={(id) => {
+            onClose();
+            onOpenApp?.(id);
+          }}
+        />
 
-          {/* Themed Icons Tile */}
-          <button
-            data-active={themedIcons}
-            onClick={() => {
-              triggerHaptic();
-              setThemedIcons(!themedIcons);
-            }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
-          >
-            <Palette size={18} />
-            <div className="leading-tight">
-              <p className="text-xs font-semibold">Themed Icons</p>
-              <p className="text-[10px] opacity-75">{themedIcons ? 'Monochrome' : '2.5D Color'}</p>
-            </div>
-          </button>
-
-          {/* Language Tile */}
-          <button
-            data-active={language === 'id'}
-            onClick={() => {
-              triggerHaptic();
-              setLanguage(language === 'en' ? 'id' : 'en');
-            }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
-          >
-            <Globe size={18} />
-            <div className="leading-tight">
-              <p className="text-xs font-semibold">Language</p>
-              <p className="text-[10px] opacity-75">{language.toUpperCase()}</p>
-            </div>
-          </button>
-
-          {/* Switch to Windows 11 */}
-          <button
-            data-active={false}
-            onClick={() => {
-              triggerHaptic();
-              setShell('windows');
-              onClose();
-            }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer"
-          >
-            <Monitor size={18} />
-            <div className="leading-tight">
-              <p className="text-xs font-semibold">Windows 11</p>
-              <p className="text-[10px] opacity-75">Switch Shell</p>
-            </div>
-          </button>
-
-          {/* Animations / Reduced Motion */}
-          <button
-            data-active={!reduceMotion}
-            onClick={() => {
-              triggerHaptic();
-              setReduceMotion(!reduceMotion);
-            }}
-            className="m3-expressive-tile flex items-center gap-3 p-3.5 border border-white/10 text-left cursor-pointer col-span-2"
-          >
-            <Zap size={18} />
-            <div className="leading-tight">
-              <p className="text-xs font-semibold">Animations & Physics</p>
-              <p className="text-[10px] opacity-75">{reduceMotion ? 'Reduced Motion' : 'M3 Spatial Spring Motion'}</p>
-            </div>
-          </button>
-        </div>
-
-        {/* Grouped Notification Cards Stack (M3 Expressive) */}
-        <div className="flex flex-col gap-1.5 mt-2">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--m3-on-surface-variant)] px-1">
-            <Bell size={13} />
-            <span>Notifications</span>
-          </div>
-
-          <div className="flex flex-col gap-1">
-            {/* Top Card */}
-            <div className="m3-card-stack-top p-3.5 bg-[var(--m3-surface-container-high)] border border-white/5 flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[var(--m3-primary)]">Rado Situmorang • Status</span>
-                <span className="text-[10px] text-white/40">Now</span>
-              </div>
-              <p className="text-xs text-[var(--m3-on-surface)]">Available for Mobile Developer opportunities.</p>
-            </div>
-
-            {/* Bottom Card */}
-            <div className="m3-card-stack-bottom p-3.5 bg-[var(--m3-surface-container-high)] border border-white/5 flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-[var(--m3-tertiary)]">Interactive CV</span>
-                <span className="text-[10px] text-white/40">10m ago</span>
-              </div>
-              <p className="text-xs text-[var(--m3-on-surface)]">UNS Informatics Education final-year student. Tap to inspect resume.</p>
-            </div>
-          </div>
+        {/* Bottom Grab Handle for Gesture Pull-Up */}
+        <div
+          data-shade-handle
+          onClick={onClose}
+          className="flex justify-center py-2 cursor-grab active:cursor-grabbing"
+          title="Swipe up or tap to close"
+        >
+          <div className="w-10 h-1.5 rounded-full bg-white/40 hover:bg-white/70 transition-colors" />
         </div>
       </div>
     </div>

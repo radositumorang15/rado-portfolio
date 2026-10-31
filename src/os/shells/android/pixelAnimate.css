@@ -1,0 +1,165 @@
+/* Google Pixel Interactive Animations & Physics */
+
+:root {
+  --px: 0;
+  --bri: 1;
+}
+
+/* 1. Dynamic Parallax Live Wallpaper Drift */
+.pixel-wall {
+  position: absolute;
+  inset: -6%;
+  background: linear-gradient(170deg, #1c4a35 0%, #0f2a1e 100%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pixel-wall svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: pixelDrift 14s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.pixel-wall svg:nth-child(1) {
+  transform: translateX(calc(var(--px, 0) * 6px));
+}
+
+.pixel-wall svg:nth-child(2) {
+  transform: translateX(calc(var(--px, 0) * 12px));
+  animation-delay: -4s;
+}
+
+.pixel-wall svg:nth-child(3) {
+  transform: translateX(calc(var(--px, 0) * 20px));
+  animation-delay: -8s;
+}
+
+@keyframes pixelDrift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(16px);
+  }
+}
+
+/* 2. Spring Pop Stagger for App Launcher Icons */
+@keyframes pixelPop {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pixel-app-item {
+  animation: pixelPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+}
+
+.pixel-app-item:active .pixel-icon-target {
+  transform: scale(0.88);
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 3. Lock Screen Unlock Bob Animation */
+@keyframes pixelBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.pixel-bob {
+  animation: pixelBob 1.4s ease-in-out infinite;
+}
+
+/* 4. Material 3 Touch Ripple Effect */
+.pixel-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.1) 70%);
+  transform: scale(0);
+  animation: pixelRippleAnim 0.55s ease-out forwards;
+  pointer-events: none;
+  z-index: 99;
+}
+
+@keyframes pixelRippleAnim {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* 5. Flashlight Torch Screen Overlay */
+.pixel-torch {
+  position: absolute;
+  z-index: 45;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 65%;
+  background: radial-gradient(60% 70% at 50% 0, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: pixelFadeIn 0.3s both;
+}
+
+/* 6. Pixel Gesture Coach Pill */
+.pixel-coach {
+  position: absolute;
+  z-index: 55;
+  left: 50%;
+  bottom: 44px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #121316;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  animation: pixelFadeIn 0.4s both;
+}
+
+/* 7. General Fade In Keyframe */
+@keyframes pixelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 8. Reduced Motion & Battery Saver Mode */
+.pixel-saver *,
+.pixel-saver .pixel-wall svg {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  .pixel-wall svg,
+  .pixel-app-item,
+  .pixel-bob {
+    animation: none !important;
+    transition: none !important;
+  }
+}
