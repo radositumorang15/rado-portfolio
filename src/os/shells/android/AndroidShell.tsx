@@ -17,18 +17,12 @@ import { usePixelGestures } from './usePixelGestures';
 import './pixelAnimate.css';
 
 import {
-  PixelAboutView,
-  PixelSkillsView,
-  PixelProjectsView,
-  PixelExperienceView,
-  PixelContactView,
-  PixelResumeView,
-  PixelSettingsView,
-  PixelPlayStoreView,
-  PixelChromeView,
+  PixelAboutView, PixelSkillsView, PixelExperienceView, PixelContactView,
+  PixelResumeView, PixelSettingsView, PixelPlayStoreView, PixelChromeView,
 } from './apps';
 import { TerminalApp } from '../../../apps/terminal';
 import { TaskManagerApp } from '../../../apps/taskmanager';
+import { PinballApp, SnaxiaApp } from '../../../apps/games';
 
 const APP_TITLES: Record<AppId, string> = {
   about: 'About Device',
@@ -41,6 +35,8 @@ const APP_TITLES: Record<AppId, string> = {
   settings: 'Wallpaper & Style',
   taskmanager: 'System Activity',
   androidstudio: 'Google Play',
+  pinball: 'Cyber Pinball',
+  snaxia: 'Snaxia',
 };
 
 export const AndroidShell: React.FC = () => {
@@ -63,14 +59,11 @@ export const AndroidShell: React.FC = () => {
   const [isBt, setIsBt] = useState(true);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
 
-  // Pixel Navigation & Edge Gestures Hook
   const { gestureTransform } = usePixelGestures({
     containerRef,
     hasActiveApp: Boolean(activeId),
     isShadeOpen,
-    onGoHome: () => {
-      if (activeId) closeWindow(activeId);
-    },
+    onGoHome: () => { if (activeId) closeWindow(activeId); },
     onOpenRecents: () => setIsRecentsOpen(true),
     onOpenShade: () => setIsShadeOpen(true),
     onCloseShade: () => setIsShadeOpen(false),
@@ -87,7 +80,6 @@ export const AndroidShell: React.FC = () => {
     setTimeout(() => setShowCoach(false), 4200);
   };
 
-  // Di Pixel Launcher, jangan otomatis buka aplikasi saat pertama kali dibuka (cukup di Windows saja)
   useEffect(() => {
     if (typeof window !== 'undefined' && !window.location.hash) {
       const cur = useWindowsStore.getState().activeId;
@@ -95,7 +87,6 @@ export const AndroidShell: React.FC = () => {
     }
   }, [closeWindow]);
 
-  // Keyboard shortcut: Escape to close shade/recents/app
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -120,12 +111,13 @@ export const AndroidShell: React.FC = () => {
       case 'settings': return <PixelSettingsView />;
       case 'taskmanager': return <TaskManagerApp />;
       case 'androidstudio': return <PixelPlayStoreView />;
+      case 'pinball': return <PinballApp />;
+      case 'snaxia': return <SnaxiaApp />;
     }
   };
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#070b10] flex flex-col items-center justify-center select-none text-[var(--m3-on-surface)]">
-      {/* Top Banner on Large Desktop Screens */}
       <header className="hidden md:flex items-center justify-between w-full max-w-4xl px-6 py-2 z-10 text-xs text-white/70">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#81C995] animate-pulse" />
@@ -141,7 +133,6 @@ export const AndroidShell: React.FC = () => {
         </button>
       </header>
 
-      {/* Phone Mockup Frame / Viewport */}
       <main
         ref={containerRef}
         data-pixel-device="true"
@@ -171,19 +162,13 @@ export const AndroidShell: React.FC = () => {
         )}
 
         {isTorch && <div className="pixel-torch" />}
-
         {showCoach && (
           <div className="pixel-coach">
-            {language === 'id'
-              ? 'Geser ke atas dari bar untuk ke beranda. Tahan untuk Recents.'
-              : 'Swipe up from the bar to go home. Hold longer for Recents.'}
+            {language === 'id' ? 'Geser ke atas dari bar untuk ke beranda. Tahan untuk Recents.' : 'Swipe up from the bar to go home. Hold longer for Recents.'}
           </div>
         )}
-
         {isLocked && <AndroidLockScreen onUnlock={handleUnlock} />}
-
         <Recents isOpen={isRecentsOpen} onClose={() => setIsRecentsOpen(false)} />
-
         <QuickShade
           isOpen={isShadeOpen}
           onClose={() => setIsShadeOpen(false)}
@@ -198,7 +183,6 @@ export const AndroidShell: React.FC = () => {
           onToggleTorch={() => setIsTorch(!isTorch)}
           onOpenApp={(id) => openWindow(id)}
         />
-
         <Palette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       </main>
     </div>

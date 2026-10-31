@@ -25,6 +25,8 @@ const DEFAULT_BOUNDS: Record<AppId, { w: number; h: number }> = {
   settings: { w: 860, h: 580 },
   taskmanager: { w: 820, h: 540 },
   androidstudio: { w: 1080, h: 680 },
+  pinball: { w: 760, h: 620 },
+  snaxia: { w: 540, h: 620 },
 };
 
 interface WindowsStore {
@@ -51,6 +53,8 @@ const initialWindows: Record<AppId, WindowState> = {
   settings: { id: 'settings', title: 'Settings', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 290, y: 100, ...DEFAULT_BOUNDS.settings },
   taskmanager: { id: 'taskmanager', title: 'Task Manager', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 200, y: 120, ...DEFAULT_BOUNDS.taskmanager },
   androidstudio: { id: 'androidstudio', title: 'Android Studio — Mobile Portfolio', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 90, y: 50, ...DEFAULT_BOUNDS.androidstudio },
+  pinball: { id: 'pinball', title: 'Cyber Cadet Pinball', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 120, y: 60, ...DEFAULT_BOUNDS.pinball },
+  snaxia: { id: 'snaxia', title: 'Snaxia Arcade', isOpen: false, isMinimized: false, isMaximized: false, z: 100, x: 220, y: 70, ...DEFAULT_BOUNDS.snaxia },
 };
 
 export const useWindowsStore = create<WindowsStore>((set, get) => ({
@@ -187,4 +191,3 @@ export const useWindowsStore = create<WindowsStore>((set, get) => ({
     });
   },
 }));
-

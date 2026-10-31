@@ -30,7 +30,8 @@ export const APP_IDS = [
   'settings',
   'taskmanager',
   'androidstudio',
+  'pinball',
+  'snaxia',
 ] as const;
 
 export type AppId = (typeof APP_IDS)[number];
-

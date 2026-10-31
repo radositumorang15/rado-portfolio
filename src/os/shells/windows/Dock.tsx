@@ -32,24 +32,16 @@ export const Dock: React.FC<DockProps> = ({
   const handleAppClick = (id: AppId) => {
     onCloseFlyouts?.();
     const win = windows[id];
-    if (!win.isOpen) {
-      openWindow(id);
-    } else if (win.isMinimized) {
-      focusWindow(id);
-    } else if (activeId === id) {
-      minimizeWindow(id);
-    } else {
-      focusWindow(id);
-    }
+    if (!win.isOpen) openWindow(id);
+    else if (win.isMinimized) focusWindow(id);
+    else if (activeId === id) minimizeWindow(id);
+    else focusWindow(id);
   };
 
   const handleOpenLink = (url: string, title: string) => {
     onCloseFlyouts?.();
     playWindowsSound('click');
-    notch.show({
-      title: `Opening ${title}`,
-      subtitle: url,
-    });
+    notch.show({ title: `Opening ${title}`, subtitle: url });
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -76,7 +68,6 @@ export const Dock: React.FC<DockProps> = ({
 
       {/* Center: Windows 11 Taskbar Group */}
       <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto scrollbar-none py-1 px-1 justify-start md:justify-center min-w-0 max-w-full pointer-events-auto">
-        {/* 1. START & SEARCH */}
         <DockItem id="start" label="Start Menu" iconSrc="/icons/win11/home.png" onClick={onToggleStart} />
 
         <div
@@ -94,110 +85,54 @@ export const Dock: React.FC<DockProps> = ({
 
         <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
 
-        {/* 2. SYSTEM & PORTFOLIO APPS */}
         <DockItem
-          id="projects"
-          label="File Explorer (Projects)"
-          iconSrc="/icons/win11/explorer.png"
-          isOpen={windows.projects.isOpen}
-          isActive={activeId === 'projects' && !windows.projects.isMinimized}
+          id="projects" label="File Explorer (Projects)" iconSrc="/icons/win11/explorer.png"
+          isOpen={windows.projects.isOpen} isActive={activeId === 'projects' && !windows.projects.isMinimized}
           onClick={() => handleAppClick('projects')}
         />
-
         <DockItem
-          id="about"
-          label="This PC (About)"
-          iconSrc="/icons/win11/thispc.png"
-          isOpen={windows.about.isOpen}
-          isActive={activeId === 'about' && !windows.about.isMinimized}
+          id="about" label="This PC (About)" iconSrc="/icons/win11/thispc.png"
+          isOpen={windows.about.isOpen} isActive={activeId === 'about' && !windows.about.isMinimized}
           onClick={() => handleAppClick('about')}
         />
-
         <DockItem
-          id="terminal"
-          label="Windows Terminal"
-          iconSrc="/icons/win11/terminal.png"
-          isOpen={windows.terminal.isOpen}
-          isActive={activeId === 'terminal' && !windows.terminal.isMinimized}
+          id="terminal" label="Windows Terminal" iconSrc="/icons/win11/terminal.png"
+          isOpen={windows.terminal.isOpen} isActive={activeId === 'terminal' && !windows.terminal.isMinimized}
           onClick={() => handleAppClick('terminal')}
         />
-
         <DockItem
-          id="skills"
-          label="Skills & Stack"
-          iconSrc="/icons/win11/skills.svg"
-          isOpen={windows.skills.isOpen}
-          isActive={activeId === 'skills' && !windows.skills.isMinimized}
+          id="skills" label="Skills & Stack" iconSrc="/icons/win11/skills.svg"
+          isOpen={windows.skills.isOpen} isActive={activeId === 'skills' && !windows.skills.isMinimized}
           onClick={() => handleAppClick('skills')}
         />
 
         <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
 
-        {/* 3. DEVELOPER TOOLS: 3D ICONS WITH TRANSPARENT CANVAS */}
+        <DockItem id="figma" label="Figma" iconSrc="/icons/win11/figma.png" onClick={() => handleOpenLink('https://www.figma.com', 'Figma Design')} />
+        <DockItem id="chrome" label="Google Chrome" iconSrc="/icons/win11/chrome.png" onClick={() => handleOpenLink('https://www.google.com', 'Google Chrome')} />
         <DockItem
-          id="figma"
-          label="Figma"
-          iconSrc="/icons/win11/figma.png"
-          onClick={() => handleOpenLink('https://www.figma.com', 'Figma Design')}
-        />
-
-        <DockItem
-          id="chrome"
-          label="Google Chrome"
-          iconSrc="/icons/win11/chrome.png"
-          onClick={() => handleOpenLink('https://www.google.com', 'Google Chrome')}
-        />
-
-        <DockItem
-          id="androidstudio"
-          label="Android Studio (Mobile Projects)"
-          iconSrc="/icons/win11/androidstudio.png"
-          isOpen={windows.androidstudio?.isOpen}
-          isActive={activeId === 'androidstudio' && !windows.androidstudio?.isMinimized}
+          id="androidstudio" label="Android Studio (Mobile Projects)" iconSrc="/icons/win11/androidstudio.png"
+          isOpen={windows.androidstudio?.isOpen} isActive={activeId === 'androidstudio' && !windows.androidstudio?.isMinimized}
           onClick={() => handleAppClick('androidstudio')}
         />
-
-        <DockItem
-          id="github"
-          label="GitHub Desktop"
-          iconSrc="/icons/win11/github.png"
-          onClick={() => handleOpenLink(profileData.github, 'GitHub Desktop')}
-        />
+        <DockItem id="github" label="GitHub Desktop" iconSrc="/icons/win11/github.png" onClick={() => handleOpenLink(profileData.github, 'GitHub Desktop')} />
 
         <div className="w-[1px] h-5 bg-white/15 mx-0.5 shrink-0" />
 
-        {/* 4. CONNECTIVITY & SETTINGS */}
         <DockItem
-          id="experience"
-          label="Experience & Career"
-          iconSrc="/icons/win11/folder.png"
-          isOpen={windows.experience.isOpen}
-          isActive={activeId === 'experience' && !windows.experience.isMinimized}
+          id="experience" label="Experience & Career" iconSrc="/icons/win11/folder.png"
+          isOpen={windows.experience.isOpen} isActive={activeId === 'experience' && !windows.experience.isMinimized}
           onClick={() => handleAppClick('experience')}
         />
-
+        <DockItem id="linkedin" label="LinkedIn / radositumorang" iconSrc="/icons/win11/linkedin.svg" onClick={() => handleOpenLink(profileData.linkedin, 'LinkedIn')} />
         <DockItem
-          id="linkedin"
-          label="LinkedIn / radositumorang"
-          iconSrc="/icons/win11/linkedin.svg"
-          onClick={() => handleOpenLink(profileData.linkedin, 'LinkedIn')}
-        />
-
-        <DockItem
-          id="contact"
-          label="Mail / Contact"
-          iconSrc="/icons/win11/mail.png"
-          isOpen={windows.contact.isOpen}
-          isActive={activeId === 'contact' && !windows.contact.isMinimized}
+          id="contact" label="Mail / Contact" iconSrc="/icons/win11/mail.png"
+          isOpen={windows.contact.isOpen} isActive={activeId === 'contact' && !windows.contact.isMinimized}
           onClick={() => handleAppClick('contact')}
         />
-
         <DockItem
-          id="settings"
-          label="Settings"
-          iconSrc="/icons/win11/settings.png"
-          isOpen={windows.settings.isOpen}
-          isActive={activeId === 'settings' && !windows.settings.isMinimized}
+          id="settings" label="Settings" iconSrc="/icons/win11/settings.png"
+          isOpen={windows.settings.isOpen} isActive={activeId === 'settings' && !windows.settings.isMinimized}
           onClick={() => handleAppClick('settings')}
         />
       </div>

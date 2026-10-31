@@ -1,11 +1,12 @@
 import React from 'react';
 import { AppId } from '../../../lib/constants';
+import { PixelPinballIconGraphic, PixelSnaxiaIconGraphic } from './PixelGameIcons';
 
 export type PixelAppId = AppId;
 
 interface PixelAdaptiveIconProps {
   id: PixelAppId;
-  themed?: boolean; // false = 2.5D Full Color Pixel Icon, true = Monochrome Themed Icon
+  themed?: boolean;
   size?: number;
 }
 
@@ -14,7 +15,6 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
   themed = false,
   size = 54,
 }) => {
-  // JIKA PENGGUNA MENGAKTIFKAN "THEMED ICONS" DI WALLPAPER & STYLE:
   if (themed) {
     const symbolMap: Record<PixelAppId, string> = {
       about: 'person',
@@ -27,6 +27,8 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
       settings: 'settings',
       taskmanager: 'monitoring',
       androidstudio: 'shopping_bag',
+      pinball: 'sports_esports',
+      snaxia: 'stadia_controller',
     };
     return (
       <div
@@ -42,7 +44,6 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
 
   const filterId = `pixel25d_${id}`;
 
-  // MODE DEFAULT PIXEL: 2.5D Multi-Layered Adaptive Icons (Full Color + Depth Shadow)
   return (
     <div
       style={{ width: size, height: size }}
@@ -50,13 +51,15 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
     >
       <svg viewBox="0 0 108 108" className="w-full h-full select-none">
         <defs>
-          {/* Efek Bayangan Lipatan Kertas 2.5D Khas Google Material */}
           <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#000" floodOpacity="0.22" />
           </filter>
         </defs>
 
-        {/* 1. ABOUT — Gaya Google Contacts 2.5D */}
+        {id === 'pinball' && <PixelPinballIconGraphic filterId={filterId} />}
+        {id === 'snaxia' && <PixelSnaxiaIconGraphic filterId={filterId} />}
+
+        {/* 1. ABOUT */}
         {id === 'about' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
@@ -68,7 +71,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 2. CHROME — Google Chrome 2.5D Multi-color Pinwheel */}
+        {/* 2. CHROME */}
         {id === 'projects' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
@@ -78,14 +81,11 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
               <path d="M68 91 C58 96 46 96 36 91 C23 85 14 73 14 59 L48 59 C48 64 51 68 55 70 C63 75 73 72 77 64 L68 91 Z" fill="#34A853" />
               <circle cx="54" cy="54" r="20" fill="#FFFFFF" />
               <circle cx="54" cy="54" r="15" fill="#1A73E8" />
-
-
-
             </g>
           </>
         )}
 
-        {/* 3. EXPERIENCE — Gaya Google Jobs / Briefcase Layered */}
+        {/* 3. EXPERIENCE */}
         {id === 'experience' && (
           <>
             <rect width="108" height="108" fill="#FFF8E1" />
@@ -98,7 +98,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 4. SKILLS — Gaya Google Pixel AI Core / Gemini Sparkle 2.5D */}
+        {/* 4. SKILLS */}
         {id === 'skills' && (
           <>
             <rect width="108" height="108" fill="#F3E8FD" />
@@ -115,7 +115,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 5. TERMINAL — Gaya Android Crostini / Pixel Linux Terminal */}
+        {/* 5. TERMINAL */}
         {id === 'terminal' && (
           <>
             <rect width="108" height="108" fill="#202124" />
@@ -127,7 +127,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 6. RESUME — Gaya Google Docs 2.5D dengan Lipatan Kertas */}
+        {/* 6. RESUME */}
         {id === 'resume' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
@@ -141,7 +141,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 7. CONTACT — Gaya Gmail 4-Color Envelope 2.5D */}
+        {/* 7. CONTACT */}
         {id === 'contact' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
@@ -154,7 +154,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 8. SETTINGS — Gaya Android 16 Pixel Settings Gear */}
+        {/* 8. SETTINGS */}
         {id === 'settings' && (
           <>
             <rect width="108" height="108" fill="#E8F0FE" />
@@ -165,7 +165,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 9. TASK MANAGER — Gaya Android 16 System Health / Activity Monitor */}
+        {/* 9. TASK MANAGER */}
         {id === 'taskmanager' && (
           <>
             <rect width="108" height="108" fill="#1E293B" />
@@ -177,7 +177,7 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
           </>
         )}
 
-        {/* 10. GOOGLE PLAY STORE — 4-Color Authentic Triangle 2.5D */}
+        {/* 10. GOOGLE PLAY STORE */}
         {id === 'androidstudio' && (
           <>
             <rect width="108" height="108" fill="#FFFFFF" />
@@ -193,4 +193,3 @@ export const PixelAdaptiveIcon: React.FC<PixelAdaptiveIconProps> = ({
     </div>
   );
 };
-

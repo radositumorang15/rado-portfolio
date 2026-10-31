@@ -9,6 +9,7 @@ import { experienceData } from '../../data/experience';
 import { useWindowsStore } from '../../store/windows';
 import { usePrefsStore } from '../../store/prefs';
 import { notch } from '../../os/notch';
+import { getGameData } from '../../lib/gameStorage';
 
 export const TerminalApp: React.FC = () => {
   const [history, setHistory] = useState<TerminalEntry[]>([]);
@@ -25,11 +26,10 @@ export const TerminalApp: React.FC = () => {
     const root = parts[0];
 
     if (!cmd) return;
-
     setCmdHistory((prev) => [...prev, raw]);
     setHistIndex(-1);
 
-    let output: string = '';
+    let output = '';
 
     switch (root) {
       case 'help':
@@ -41,16 +41,16 @@ export const TerminalApp: React.FC = () => {
   skills       - List competencies
   resume       - Download Rado's CV
   contact      - Open contact window
+  pinball      - Launch Cyber Cadet Pinball (or 'run pinball')
+  snaxia       - Launch Snaxia Retro-Modern (or 'run snaxia')
+  scores       - View arcade game high scores
   theme <mode> - Switch theme ('light' or 'dark')
   clear        - Clear terminal screen
   sudo hire    - Fast-track interview / hire Easter egg`;
         break;
 
       case 'whoami':
-        output = `${profileData.name} (${profileData.shortName})
-${profileData.tagline.en}
-Location: ${profileData.location.en}
-Education: ${profileData.education.institution} (GPA ${profileData.education.gpa})`;
+        output = `${profileData.name} (${profileData.shortName})\n${profileData.tagline.en}\nLocation: ${profileData.location.en}\nEducation: ${profileData.education.institution} (GPA ${profileData.education.gpa})`;
         break;
 
       case 'about':
@@ -79,6 +79,34 @@ Education: ${profileData.education.institution} (GPA ${profileData.education.gpa
         openWindow('contact');
         output = `Opening Contact form...`;
         break;
+
+      case 'pinball':
+        openWindow('pinball');
+        output = `Launching Cyber Cadet Pinball...`;
+        break;
+
+      case 'snaxia':
+        openWindow('snaxia');
+        output = `Launching Snaxia Retro-Modern Snake...`;
+        break;
+
+      case 'run':
+        if (parts[1] === 'pinball') {
+          openWindow('pinball');
+          output = `Launching Cyber Cadet Pinball...`;
+        } else if (parts[1] === 'snaxia') {
+          openWindow('snaxia');
+          output = `Launching Snaxia Retro-Modern Snake...`;
+        } else {
+          output = `Usage: run pinball | run snaxia`;
+        }
+        break;
+
+      case 'scores': {
+        const d = getGameData();
+        output = `═══ RADO OS ARCADE HIGH SCORES ═══\n• Cyber Cadet Pinball : ${d.pinball.highScore.toLocaleString()} pts (Played: ${d.pinball.gamesPlayed})\n• Snaxia Retro-Modern  : ${d.snaxia.highScore.toLocaleString()} pts (Max Length: ${d.snaxia.maxLength})`;
+        break;
+      }
 
       case 'theme':
         if (parts[1] === 'light' || parts[1] === 'dark') {
@@ -152,4 +180,3 @@ Education: ${profileData.education.institution} (GPA ${profileData.education.gpa
     />
   );
 };
-

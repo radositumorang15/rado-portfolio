@@ -2,11 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { Command } from 'cmdk';
-import { Search, Monitor, Sun, Moon, Download, ExternalLink, Code2 } from 'lucide-react';
+import { Search, Monitor, Sun, Moon, Download } from 'lucide-react';
 import { useWindowsStore } from '../../../store/windows';
 import { usePrefsStore } from '../../../store/prefs';
 import { projectsData } from '../../../data/projects';
-import { skillsData } from '../../../data/skills';
 import { AppId } from '../../../lib/constants';
 
 interface PaletteProps {
@@ -53,7 +52,7 @@ export const Palette: React.FC<PaletteProps> = ({ isOpen, onClose }) => {
             <Search size={16} className="text-white/50" />
             <Command.Input
               autoFocus
-              placeholder="Type a command or search..."
+              placeholder="Type a command, app, or game to search..."
               className="w-full bg-transparent border-none outline-none text-sm text-white placeholder-white/40"
             />
           </div>
@@ -61,7 +60,19 @@ export const Palette: React.FC<PaletteProps> = ({ isOpen, onClose }) => {
           <Command.List className="max-h-[360px] overflow-y-auto p-2 flex flex-col gap-1 text-xs">
             <Command.Empty className="p-4 text-center text-white/50">No results found.</Command.Empty>
 
-            <Command.Group heading="Applications" className="px-2 py-1 text-[11px] font-semibold text-white/40">
+            <Command.Group heading="Applications & Games" className="px-2 py-1 text-[11px] font-semibold text-white/40">
+              <Command.Item
+                onSelect={() => handleSelectApp('pinball')}
+                className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 cursor-pointer"
+              >
+                <span>Cyber Cadet Pinball (Arcade Game)</span>
+              </Command.Item>
+              <Command.Item
+                onSelect={() => handleSelectApp('snaxia')}
+                className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 cursor-pointer"
+              >
+                <span>Snaxia (Retro-Modern Snake)</span>
+              </Command.Item>
               <Command.Item
                 onSelect={() => handleSelectApp('about')}
                 className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 cursor-pointer"
@@ -163,4 +174,3 @@ export const Palette: React.FC<PaletteProps> = ({ isOpen, onClose }) => {
     </div>
   );
 };
-

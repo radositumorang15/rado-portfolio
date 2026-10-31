@@ -19,6 +19,8 @@ interface AppItem {
 const MAIN_APPS: AppItem[] = [
   { id: 'about', label: 'About' },
   { id: 'androidstudio', label: 'Play Store' },
+  { id: 'pinball', label: 'Pinball' },
+  { id: 'snaxia', label: 'Snaxia' },
   { id: 'experience', label: 'Experience' },
   { id: 'skills', label: 'Skills' },
   { id: 'projects', label: 'Chrome' },
@@ -136,7 +138,7 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
               key={`dock-${app.id}`}
               onClick={(e) => handleLaunch(app.id, e)}
               className="pixel-app-item group focus:outline-none cursor-pointer"
-              style={{ '--i': idx + 8 } as React.CSSProperties}
+              style={{ '--i': idx + 10 } as React.CSSProperties}
               aria-label={app.label}
             >
               <div className="pixel-icon-target transition-transform duration-150">
@@ -154,7 +156,7 @@ export const Home: React.FC<HomeProps> = ({ onOpenApp, onOpenSearch, onOpenRecen
           <div className="flex items-center gap-2.5 flex-1">
             <span className="text-base font-bold text-[var(--m3-on-secondary-container)]">G</span>
             <span className="text-xs text-[var(--m3-on-surface-variant)] truncate">
-              {language === 'id' ? 'Cari aplikasi & project...' : 'Search apps & projects...'}
+              {language === 'id' ? 'Cari aplikasi, game & project...' : 'Search apps, games & projects...'}
             </span>
           </div>
           <div className="flex items-center gap-2.5 text-[var(--m3-on-secondary-container)]">
