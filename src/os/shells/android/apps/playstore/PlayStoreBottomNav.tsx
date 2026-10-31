@@ -15,7 +15,7 @@ export const PlayStoreBottomNav: React.FC<PlayStoreBottomNavProps> = ({
   onAppsClick,
 }) => {
   return (
-    <nav className={`shrink-0 flex items-start justify-around pt-3 pb-3 border-t ${T.line} ${T.card}`}>
+    <nav className={`shrink-0 flex items-start justify-around pt-2.5 pb-1 border-t ${T.line} ${T.card}`}>
       {[
         { id: 'games', label: 'Games', Icon: Gamepad2 },
         { id: 'apps', label: 'Apps', Icon: LayoutGrid },

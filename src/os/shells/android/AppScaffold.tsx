@@ -142,11 +142,13 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
 
       {/* Android Gesture Navigation Bar */}
       <footer
-        className="h-8 flex items-center justify-center shrink-0 cursor-pointer select-none bg-[var(--m3-bg)] touch-manipulation z-30"
+        className={`h-6 flex items-center justify-center shrink-0 cursor-pointer select-none touch-manipulation z-30 ${
+          appId === 'androidstudio' ? 'bg-[var(--m3-surface-container,#1e1f20)]' : 'bg-[var(--m3-bg)]'
+        }`}
         onClick={handleBack}
         title="Swipe or Tap to Go Home"
       >
-        <div className="w-28 h-1.5 rounded-full bg-[var(--m3-on-surface)]/40 hover:bg-[var(--m3-on-surface)]/70 active:bg-[var(--m3-on-surface)] transition-colors pointer-events-none" />
+        <div className="w-28 h-1 rounded-full bg-[var(--m3-on-surface)]/40 hover:bg-[var(--m3-on-surface)]/70 active:bg-[var(--m3-on-surface)] transition-colors pointer-events-none" />
       </footer>
     </div>
   );

@@ -24,7 +24,7 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 const INSTALLED_KEY = 'play_installed_v1';
-const OS_NAV_SPACE = 'pb-12';
+const OS_NAV_SPACE = '';
 
 const PlayLogo: React.FC = () => (
   <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" aria-hidden>
@@ -107,7 +107,7 @@ export const PixelPlayStoreView: React.FC = () => {
 
   return (
     <div className={`flex-1 min-h-0 flex flex-col font-sans ${T.text} ${OS_NAV_SPACE}`}>
-      <div className="flex-1 overflow-y-auto scrollbar-none">
+      <div className="flex-1 overflow-y-auto scrollbar-none pb-4">
         {/* Search bar */}
         <div className="px-4 pt-3 pb-2">
           <label className={`flex items-center gap-3 h-12 pl-4 pr-2 rounded-full ${T.cardHi} cursor-text`}>
