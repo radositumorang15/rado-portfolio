@@ -61,9 +61,9 @@ export const skillsData: Skill[] = [
     related: ['smileshop'],
   },
   {
-    name: 'VueJS',
+    name: 'Rust',
     level: 'novice',
-    icon: 'layers',
+    icon: 'cpu',
     category: 'novice',
     related: [],
   },

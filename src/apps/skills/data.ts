@@ -134,9 +134,9 @@ export const INSTALLING_SKILLS: InstallingSkill[] = [
     done: 2,
   },
   {
-    name: 'Supabase Realtime Sync',
+    name: 'Rust (Axum & Systems)',
     category: 'Backend',
-    steps: ['Row-Level Security rules', 'Realtime socket subscriptions', 'Offline cache sync'],
+    steps: ['Ownership, lifetimes & borrow checker', 'Async Tokio & Axum microservices', 'UniFFI mobile native bindings'],
     done: 1,
   },
 ];
