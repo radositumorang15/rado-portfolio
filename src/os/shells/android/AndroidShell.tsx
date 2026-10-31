@@ -87,6 +87,14 @@ export const AndroidShell: React.FC = () => {
     setTimeout(() => setShowCoach(false), 4200);
   };
 
+  // Di Pixel Launcher, jangan otomatis buka aplikasi saat pertama kali dibuka (cukup di Windows saja)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.location.hash) {
+      const cur = useWindowsStore.getState().activeId;
+      if (cur) closeWindow(cur);
+    }
+  }, [closeWindow]);
+
   // Keyboard shortcut: Escape to close shade/recents/app
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
