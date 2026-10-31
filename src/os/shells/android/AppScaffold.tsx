@@ -85,7 +85,7 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
       navigator.share({
         title: `Rado Situmorang — ${title}`,
         url: window.location.href,
-      }).catch(() => {});
+      }).catch(() => { });
     } else if (typeof window !== 'undefined') {
       navigator.clipboard?.writeText(window.location.href);
     }
@@ -94,10 +94,10 @@ export const AppScaffold: React.FC<AppScaffoldProps> = ({
   // Compute live gesture transform styles if dragging
   const gestureStyle: React.CSSProperties = gestureTransform
     ? {
-        transform: `translate(${gestureTransform.x}px, ${gestureTransform.y}px) scale(${gestureTransform.scale})`,
-        borderRadius: `${gestureTransform.radius}px`,
-        transition: 'none',
-      }
+      transform: `translate(${gestureTransform.x}px, ${gestureTransform.y}px) scale(${gestureTransform.scale})`,
+      borderRadius: `${gestureTransform.radius}px`,
+      transition: 'none',
+    }
     : {};
 
   return (

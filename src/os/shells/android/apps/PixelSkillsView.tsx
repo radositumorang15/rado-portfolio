@@ -1,160 +1,160 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { skillsData } from '../../../../data/skills';
 import { Skill } from '../../../../data/types';
 import { projectsData } from '../../../../data/projects';
-import { usePrefsStore } from '../../../../store/prefs';
+import { BottomSheet, GroupedItem, PixelPage, SectionTitle, SheetCloseButton, useT } from './pixelUi';
 
-const SKILL_LEVEL_PERCENT: Record<string, number> = {
-  Kotlin: 90,
-  'XML (Android)': 90,
-  JavaScript: 88,
-  'HTML & CSS': 92,
-  'Bootstrap 5': 88,
-  'CodeIgniter 3': 82,
-  ReactJS: 70,
-  Flutter: 65,
-  VueJS: 60,
-  PHP: 75,
-  Git: 88,
-  'Android Studio': 90,
-  Figma: 82,
-  Postman: 85,
-  Firebase: 72,
-  'VS Code': 92,
+const MAX_DOTS = 5;
+
+const projectName = (slug: string) => {
+  const p = projectsData.find((x) => x.slug === slug);
+  return p ? p.title.split('—')[0].trim() : slug;
 };
 
+/** Titik penggunaan: berapa project yang memakai skill ini sebagai bukti kerja nyata */
+const UsageDots: React.FC<{ count: number }> = ({ count }) => (
+  <div className="flex gap-1" aria-hidden>
+    {Array.from({ length: MAX_DOTS }, (_, i) => (
+      <span
+        key={i}
+        className={`w-1.5 h-1.5 rounded-full ${
+          i < count ? 'bg-[var(--m3-primary)]' : 'bg-[var(--m3-surface-container-highest)]'
+        }`}
+      />
+    ))}
+  </div>
+);
+
+/** Progres "sedang dipasang" untuk skill novice/learning */
+const InstallingBar: React.FC = () => (
+  <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-[var(--m3-surface-container-highest)]">
+    <span className="px-slide absolute inset-y-0 w-2/5 rounded-full bg-[var(--m3-primary)] motion-reduce:animate-none" />
+  </div>
+);
+
 export const PixelSkillsView: React.FC = () => {
-  const language = usePrefsStore((s) => s.language);
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const t = useT();
+  const [selected, setSelected] = useState<Skill | null>(null);
 
-  const competent = skillsData.filter((s) => s.category === 'competent');
-  const novice = skillsData.filter((s) => s.category === 'novice');
-  const tools = skillsData.filter((s) => s.category === 'tool');
-
-  const renderSkillGroup = (title: string, list: Skill[]) => (
-    <section className="flex flex-col gap-2">
-      <div className="flex items-center justify-between px-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--m3-primary)]">
-          {title}
-        </h3>
-        <span className="text-[11px] text-[var(--m3-on-surface-variant)]">
-          {list.length} skills
-        </span>
-      </div>
-
-      <div className="flex flex-col gap-[3px]">
-        {list.map((skill, idx, arr) => {
-          const radiusClass =
-            arr.length === 1
-              ? 'rounded-[24px]'
-              : idx === 0
-              ? 'rounded-t-[24px] rounded-b-[4px]'
-              : idx === arr.length - 1
-              ? 'rounded-t-[4px] rounded-b-[24px]'
-              : 'rounded-[4px]';
-
-          const percent = SKILL_LEVEL_PERCENT[skill.name] ?? 75;
-
-          return (
-            <div
-              key={skill.name}
-              onClick={() => setSelectedSkill(skill)}
-              className={`p-4 bg-[var(--m3-surface-container)] hover:bg-[var(--m3-surface-container-high)] cursor-pointer transition-colors active:scale-99 ${radiusClass}`}
-            >
-              <div className="flex justify-between items-center mb-2.5">
-                <span className="text-sm font-semibold">{skill.name}</span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[var(--m3-secondary-container)] text-[var(--m3-on-secondary-container)] text-[10px] font-bold uppercase tracking-wider">
-                  {skill.level}
-                </span>
-              </div>
-
-              {/* M3 Expressive Linear Progress Bar (Active Bar + 6px Gap + Remaining Track + Stop Dot) */}
-              <div className="flex items-center gap-1.5 w-full h-2">
-                <div
-                  style={{ width: `${percent}%` }}
-                  className="h-full rounded-full bg-[var(--m3-primary)] transition-all duration-500"
-                />
-                <div className="flex-1 h-full rounded-full bg-[var(--m3-surface-container-highest)] flex items-center justify-end pr-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--m3-primary)] shrink-0" />
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+  const groups = useMemo(
+    () => [
+      { key: 'competent', title: t('competent'), list: skillsData.filter((s) => s.category === 'competent') },
+      { key: 'tool', title: t('tools'), list: skillsData.filter((s) => s.category === 'tool') },
+      { key: 'novice', title: t('novice'), list: skillsData.filter((s) => s.category === 'novice') },
+    ],
+    [t]
   );
 
+  const installed = skillsData.filter((s) => s.category !== 'novice').length;
+  const installing = skillsData.length - installed;
+
   return (
-    <div className="flex flex-col gap-5 p-4 pb-16 text-[var(--m3-on-surface)] font-sans">
-      {renderSkillGroup('Competent / Production Ready', competent)}
-      {renderSkillGroup('Novice / Learning & Exploring', novice)}
-      {renderSkillGroup('Tools & Development Ecosystem', tools)}
+    <PixelPage>
+      {/* Ringkasan: Installed vs Installing Apps */}
+      <div className="flex gap-2">
+        <div className="flex-1 p-3.5 rounded-[20px] bg-[var(--m3-primary-container)] text-[var(--m3-on-primary-container)]">
+          <div className="text-2xl font-bold leading-none">{installed}</div>
+          <div className="text-[11px] mt-1 opacity-80">{t('installed')}</div>
+        </div>
+        <div className="flex-1 p-3.5 rounded-[20px] bg-[var(--m3-surface-container)]">
+          <div className="text-2xl font-bold leading-none">{installing}</div>
+          <div className="text-[11px] mt-1 text-[var(--m3-on-surface-variant)]">{t('installing')}</div>
+        </div>
+      </div>
 
-      {/* M3 DETAIL BOTTOM SHEET FOR SELECTED SKILL */}
-      {selectedSkill && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs flex flex-col justify-end p-3 animate-in fade-in duration-200"
-          onClick={() => setSelectedSkill(null)}
-        >
-          <div
-            className="w-full max-w-md mx-auto p-5 rounded-[28px] bg-[var(--m3-surface-container)] text-[var(--m3-on-surface)] shadow-2xl flex flex-col gap-4 animate-in slide-in-from-bottom-8 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Sheet Handle */}
-            <div className="w-10 h-1 rounded-full bg-[var(--m3-on-surface-variant)]/40 mx-auto" />
+      {groups.map(
+        (g) =>
+          g.list.length > 0 && (
+            <section key={g.key}>
+              <SectionTitle aside={`${g.list.length} ${t('skills')}`}>{g.title}</SectionTitle>
+              <div className="flex flex-col gap-[3px]">
+                {g.list.map((skill, i) => {
+                  const used = skill.related?.length ?? 0;
+                  const learning = skill.category === 'novice';
+                  return (
+                    <GroupedItem
+                      key={skill.name}
+                      index={i}
+                      count={g.list.length}
+                      onClick={() => setSelected(skill)}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold truncate">{skill.name}</div>
+                          <div className="text-[11px] text-[var(--m3-on-surface-variant)] mt-0.5">
+                            {learning
+                              ? t('learning')
+                              : used > 0
+                              ? `${t('shippedIn')} ${used} ${used > 1 ? t('projects') : t('project')}`
+                              : skill.level}
+                          </div>
+                        </div>
+                        {learning ? null : <UsageDots count={used} />}
+                      </div>
+                      {learning && (
+                        <div className="mt-3">
+                          <InstallingBar />
+                        </div>
+                      )}
+                    </GroupedItem>
+                  );
+                })}
+              </div>
+            </section>
+          )
+      )}
 
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-bold">{selectedSkill.name}</h3>
-                <span className="text-xs uppercase font-semibold text-[var(--m3-primary)]">
-                  {selectedSkill.level} proficiency
+      {/* Detail Bottom Sheet */}
+      <BottomSheet
+        open={Boolean(selected)}
+        onClose={() => setSelected(null)}
+        label={selected?.name ?? ''}
+      >
+        {selected && (
+          <>
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="m-0 text-lg font-bold truncate">{selected.name}</h3>
+                <span className="text-xs font-semibold uppercase text-[var(--m3-primary)]">
+                  {selected.category === 'novice' ? t('learning') : selected.level}
                 </span>
               </div>
-              <button
-                onClick={() => setSelectedSkill(null)}
-                className="w-8 h-8 rounded-full bg-[var(--m3-surface-container-high)] flex items-center justify-center text-[var(--m3-on-surface)]"
-              >
-                <span className="material-symbols-rounded text-[18px]">close</span>
-              </button>
+              <SheetCloseButton onClick={() => setSelected(null)} label={t('close')} />
             </div>
 
-            {/* Related Projects */}
             <div>
-              <p className="text-xs font-semibold text-[var(--m3-on-surface-variant)] mb-2 uppercase tracking-wider">
-                Applied in Projects
+              <p className="m-0 mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--m3-on-surface-variant)]">
+                {t('appliedIn')}
               </p>
-              {selectedSkill.related && selectedSkill.related.length > 0 ? (
+              {selected.related && selected.related.length > 0 ? (
                 <div className="flex flex-wrap gap-1.5">
-                  {selectedSkill.related.map((slug) => {
-                    const proj = projectsData.find((p) => p.slug === slug);
-                    return (
-                      <span
-                        key={slug}
-                        className="px-3 py-1 rounded-full bg-[var(--m3-primary-container)] text-[var(--m3-on-primary-container)] text-xs font-medium"
-                      >
-                        {proj ? proj.title.split('—')[0].trim() : slug}
-                      </span>
-                    );
-                  })}
+                  {selected.related.map((slug) => (
+                    <span
+                      key={slug}
+                      className="px-3 py-1 rounded-full bg-[var(--m3-primary-container)] text-[var(--m3-on-primary-container)] text-xs font-medium"
+                    >
+                      {projectName(slug)}
+                    </span>
+                  ))}
                 </div>
               ) : (
-                <p className="text-xs text-[var(--m3-on-surface-variant)]">Used across multiple repositories and exploratory prototypes.</p>
+                <p className="m-0 text-xs text-[var(--m3-on-surface-variant)]">
+                  {t('learningNote')}
+                </p>
               )}
             </div>
 
             <button
-              onClick={() => setSelectedSkill(null)}
-              className="w-full h-10 rounded-full bg-[var(--m3-primary)] text-[var(--m3-on-primary)] text-xs font-bold active:scale-98 transition-transform"
+              onClick={() => setSelected(null)}
+              className="w-full h-10 rounded-full bg-[var(--m3-primary)] text-[var(--m3-on-primary)] text-xs font-bold cursor-pointer active:scale-[0.98] transition-transform"
             >
-              Done
+              {t('done')}
             </button>
-          </div>
-        </div>
-      )}
-    </div>
+          </>
+        )}
+      </BottomSheet>
+    </PixelPage>
   );
 };
-

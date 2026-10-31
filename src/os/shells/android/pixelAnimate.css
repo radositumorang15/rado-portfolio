@@ -148,7 +148,21 @@
   }
 }
 
-/* 8. Reduced Motion & Battery Saver Mode */
+/* 8. Installing Progress Bar Animation */
+@keyframes px-slide {
+  from {
+    left: -40%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+.px-slide {
+  animation: px-slide 1.4s linear infinite;
+}
+
+/* 9. Reduced Motion & Battery Saver Mode */
 .pixel-saver *,
 .pixel-saver .pixel-wall svg {
   animation: none !important;
@@ -163,3 +177,4 @@
     transition: none !important;
   }
 }
+

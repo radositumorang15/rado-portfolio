@@ -136,6 +136,7 @@ export const AndroidShell: React.FC = () => {
       {/* Phone Mockup Frame / Viewport */}
       <main
         ref={containerRef}
+        data-pixel-device="true"
         style={{ filter: `brightness(${brightness})` }}
         className="relative z-10 w-full h-full md:w-[390px] md:h-[820px] md:max-h-[92vh] md:rounded-[46px] md:border-[7px] md:border-neutral-800 md:shadow-[0_25px_80px_rgba(0,0,0,0.9)] md:ring-1 md:ring-white/10 flex flex-col overflow-hidden bg-transparent"
       >

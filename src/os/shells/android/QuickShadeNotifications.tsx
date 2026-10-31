@@ -134,3 +134,4 @@ export const QuickShadeNotifications: React.FC<QuickShadeNotificationsProps> = (
     </div>
   );
 };
+

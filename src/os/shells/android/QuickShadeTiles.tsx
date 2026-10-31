@@ -129,3 +129,4 @@ export const QuickShadeTiles: React.FC<QuickShadeTilesProps> = ({
     </div>
   );
 };
+
