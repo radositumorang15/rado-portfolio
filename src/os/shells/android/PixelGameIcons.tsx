@@ -48,3 +48,4 @@ export const PixelSnaxiaIconGraphic: React.FC<{ filterId: string }> = ({ filterI
     </g>
   </>
 );
+

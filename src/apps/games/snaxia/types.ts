@@ -41,3 +41,4 @@ export const TICK_ACCEL_MS = 4;
 export const BUG_DURATION = 6.0;
 
 export const TECH_LIST = ['Kotlin', 'Flutter', 'React', 'TypeScript', 'Next.js', 'Rust'];
+

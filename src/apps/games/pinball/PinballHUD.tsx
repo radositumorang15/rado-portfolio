@@ -1,4 +1,5 @@
 import React from 'react';
+import { Rocket } from 'lucide-react';
 import { DropTarget } from './types';
 
 interface PinballHUDProps {
@@ -7,10 +8,14 @@ interface PinballHUDProps {
   ballsLeft: number;
   multiplier: number;
   targets: DropTarget[];
+  onLaunch?: () => void;
+  onLeftFlipper?: (up: boolean) => void;
+  onRightFlipper?: (up: boolean) => void;
 }
 
 export const PinballHUD: React.FC<PinballHUDProps> = ({
   score, highScore, ballsLeft, multiplier, targets,
+  onLaunch, onLeftFlipper, onRightFlipper,
 }) => {
   const hitCount = targets.filter((t) => t.hit).length;
   const progressPct = Math.round((hitCount / targets.length) * 100);
@@ -24,7 +29,7 @@ export const PinballHUD: React.FC<PinballHUDProps> = ({
       </div>
 
       {/* 2. Scores */}
-      <div className="flex flex-col gap-3 my-2">
+      <div className="flex flex-col gap-2.5 my-2">
         <div className="flex flex-col">
           <span className="text-[10px] text-white/50 uppercase">Current Score</span>
           <span className="text-xl font-bold text-[#00F0FF] tracking-wider">
@@ -73,22 +78,52 @@ export const PinballHUD: React.FC<PinballHUDProps> = ({
             <div className="h-full bg-gradient-to-r from-[#00F0FF] to-[#FF007F] transition-all duration-300" style={{ width: `${progressPct}%` }} />
           </div>
         </div>
+
+        {/* Desktop Quick Interactive Controls */}
+        <div className="flex flex-col gap-1.5 pt-1">
+          <button
+            onClick={onLaunch}
+            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#0078D4] to-[#00F0FF] hover:brightness-110 active:scale-95 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-transform shadow-lg cursor-pointer"
+          >
+            <Rocket size={14} />
+            <span>Launch Ball</span>
+          </button>
+
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              onPointerDown={() => onLeftFlipper?.(true)}
+              onPointerUp={() => onLeftFlipper?.(false)}
+              onPointerLeave={() => onLeftFlipper?.(false)}
+              className="py-1.5 rounded-lg bg-[#00F0FF]/20 active:bg-[#00F0FF]/50 border border-[#00F0FF]/30 text-white text-[10px] font-bold uppercase active:scale-95 cursor-pointer"
+            >
+              ◀ Flip L
+            </button>
+            <button
+              onPointerDown={() => onRightFlipper?.(true)}
+              onPointerUp={() => onRightFlipper?.(false)}
+              onPointerLeave={() => onRightFlipper?.(false)}
+              className="py-1.5 rounded-lg bg-[#FF007F]/20 active:bg-[#FF007F]/50 border border-[#FF007F]/30 text-white text-[10px] font-bold uppercase active:scale-95 cursor-pointer"
+            >
+              Flip R ▶
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 3. Controls Legend */}
       <div className="pt-2 border-t border-white/10 text-[10px] text-white/60 flex flex-col gap-1">
-        <span className="text-[9px] text-white/40 uppercase font-semibold">Controls</span>
+        <span className="text-[9px] text-white/40 uppercase font-semibold">Keyboard Controls</span>
         <div className="flex justify-between">
-          <span className="text-white/80">[Z / ←]</span> <span>Left Flipper</span>
+          <span className="text-white/80">[Z / A / ←]</span> <span>Left Flipper</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-white/80">[/ / →]</span> <span>Right Flipper</span>
+          <span className="text-white/80">[/ / D / →]</span> <span>Right Flipper</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-white/80">[SPACE]</span> <span>Hold Plunger</span>
+          <span className="text-white/80">[SPACE / ENTER]</span> <span>Launch Ball</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-white/80">[X]</span> <span>Nudge Table</span>
+          <span className="text-white/80">[X / N]</span> <span>Nudge Table</span>
         </div>
       </div>
     </div>

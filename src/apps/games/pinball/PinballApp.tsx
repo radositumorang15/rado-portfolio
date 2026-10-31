@@ -7,18 +7,21 @@ import { PinballTable } from './PinballTable';
 import { PinballHUD } from './PinballHUD';
 import { PinballMobileControls } from './PinballMobileControls';
 import { useWindowsStore } from '../../../store/windows';
+import { usePrefsStore } from '../../../store/prefs';
 import { isMuted, setMuted } from '../../../lib/gameAudio';
 
 export const PinballApp: React.FC = () => {
   const activeId = useWindowsStore((s) => s.activeId);
-  const isFocused = activeId === 'pinball';
+  const resolvedShell = usePrefsStore((s) => s.resolvedShell);
+  const isMobile = resolvedShell === 'android';
+  const isFocused = activeId === 'pinball' || isMobile;
   const [muted, setMutedState] = useState(isMuted());
 
   const {
     ball, leftFlipper, rightFlipper, bumpers, targets,
     score, highScore, ballsLeft, multiplier, isGameOver, isTilted,
     plungerCharge, shake, setLeftFlipper, setRightFlipper,
-    startPlunger, releasePlunger, nudge, restartGame,
+    startPlunger, releasePlunger, launchBall, nudge, restartGame,
   } = usePinballEngine(isFocused);
 
   const toggleSound = () => {
@@ -30,7 +33,7 @@ export const PinballApp: React.FC = () => {
   return (
     <div className="relative w-full h-full flex flex-col justify-between p-3 select-none bg-[#0a0f18] text-white font-sans overflow-y-auto">
       {/* 1. TOP MOBILE COMPACT BAR */}
-      <div className="flex md:hidden items-center justify-between px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs mb-2">
+      <div className="flex md:hidden items-center justify-between px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs mb-1.5 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-white/50 uppercase font-mono">Score:</span>
           <span className="font-mono font-bold text-[#00F0FF]">{score}</span>
@@ -42,10 +45,7 @@ export const PinballApp: React.FC = () => {
         <div className="flex items-center gap-2">
           <div className="flex gap-1">
             {[1, 2, 3].map((b) => (
-              <span
-                key={b}
-                className={`w-2 h-2 rounded-full ${b <= ballsLeft ? 'bg-[#00F0FF]' : 'bg-white/20'}`}
-              />
+              <span key={b} className={`w-2 h-2 rounded-full ${b <= ballsLeft ? 'bg-[#00F0FF]' : 'bg-white/20'}`} />
             ))}
           </div>
           {multiplier > 1 && (
@@ -53,18 +53,14 @@ export const PinballApp: React.FC = () => {
               {multiplier}X
             </span>
           )}
-          <button
-            onClick={toggleSound}
-            className="p-1 rounded-md bg-white/10 text-white/70"
-            title="Mute/Unmute"
-          >
+          <button onClick={toggleSound} className="p-1 rounded-md bg-white/10 text-white/70 cursor-pointer" title="Mute/Unmute">
             {muted ? <VolumeX size={13} /> : <Volume2 size={13} />}
           </button>
         </div>
       </div>
 
-      {/* 2. MAIN PLAY AREA (2-Column on Desktop) */}
-      <div className="relative flex-1 flex flex-col md:flex-row items-center justify-center gap-3">
+      {/* 2. MAIN PLAY AREA */}
+      <div className="relative flex-1 flex flex-col md:flex-row items-center justify-center gap-3 min-h-0">
         <PinballTable
           ball={ball}
           leftFlipper={leftFlipper}
@@ -74,21 +70,27 @@ export const PinballApp: React.FC = () => {
           plungerCharge={plungerCharge}
           isTilted={isTilted}
           shake={shake}
+          onLeftFlipper={setLeftFlipper}
+          onRightFlipper={setRightFlipper}
+          onLaunch={() => launchBall()}
         />
 
         {/* Desktop Sidebar HUD */}
-        <div className="hidden md:flex h-full flex-col justify-between">
+        <div className="hidden md:flex h-full flex-col justify-between shrink-0">
           <PinballHUD
             score={score}
             highScore={highScore}
             ballsLeft={ballsLeft}
             multiplier={multiplier}
             targets={targets}
+            onLaunch={() => launchBall()}
+            onLeftFlipper={setLeftFlipper}
+            onRightFlipper={setRightFlipper}
           />
           <div className="flex justify-end pt-2">
             <button
               onClick={toggleSound}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white/80 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs text-white/80 transition-colors cursor-pointer"
             >
               {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               <span>{muted ? 'Muted' : 'Sound ON'}</span>
@@ -114,13 +116,14 @@ export const PinballApp: React.FC = () => {
         )}
       </div>
 
-      {/* 3. MOBILE CONTROLS (Small screens) */}
-      <div className="block md:hidden">
+      {/* 3. MOBILE NAVIGATOR & CONTROLS (Shown whenever in mobile shell or screen < 768px) */}
+      <div className={`shrink-0 ${isMobile ? 'block' : 'block md:hidden'}`}>
         <PinballMobileControls
           onLeftFlipper={setLeftFlipper}
           onRightFlipper={setRightFlipper}
           onStartPlunger={startPlunger}
           onReleasePlunger={releasePlunger}
+          onLaunch={() => launchBall()}
           onNudge={nudge}
           plungerCharge={plungerCharge}
         />

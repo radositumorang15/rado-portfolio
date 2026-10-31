@@ -56,14 +56,9 @@ export function usePinballEngine(isFocused: boolean) {
     rightFlipper.current.isUp = up;
   }, [isTilted]);
 
-  const startPlunger = useCallback(() => {
-    if (!ballRef.current.active) isCharging.current = true;
-  }, []);
-
-  const releasePlunger = useCallback(() => {
-    if (!isCharging.current) return;
+  const launchBall = useCallback((force = 0.85) => {
+    if (ballRef.current.active) return;
     isCharging.current = false;
-    const force = Math.max(0.3, plungerCharge);
     setPlungerCharge(0);
     gameAudio.plungerRelease();
     gameHaptics.plungerLaunch();
@@ -71,7 +66,18 @@ export function usePinballEngine(isFocused: boolean) {
     ballRef.current.vx = -1.5;
     ballRef.current.vy = -12 - force * 14;
     launchTime.current = Date.now();
-  }, [plungerCharge]);
+  }, []);
+
+  const startPlunger = useCallback(() => {
+    if (!ballRef.current.active) isCharging.current = true;
+  }, []);
+
+  const releasePlunger = useCallback(() => {
+    if (!ballRef.current.active) {
+      const force = Math.max(0.4, plungerCharge || 0.85);
+      launchBall(force);
+    }
+  }, [plungerCharge, launchBall]);
 
   const nudge = useCallback(() => {
     if (isTilted) return;
@@ -93,30 +99,30 @@ export function usePinballEngine(isFocused: boolean) {
   }, [isTilted]);
 
   useEffect(() => {
-    if (!isFocused || isGameOver) return;
+    if (isGameOver) return;
     const onDown = (e: KeyboardEvent) => {
-      if (e.code === 'KeyZ' || e.code === 'ArrowLeft') setLeftFlipper(true);
-      else if (e.code === 'Slash' || e.code === 'ArrowRight') setRightFlipper(true);
-      else if (e.code === 'Space') startPlunger();
-      else if (e.code === 'KeyX') nudge();
+      const k = e.key.toLowerCase(); const c = e.code;
+      if (c === 'KeyZ' || c === 'KeyA' || c === 'ArrowLeft' || k === 'z' || k === 'a' || k === 'arrowleft') setLeftFlipper(true);
+      else if (c === 'Slash' || c === 'KeyD' || c === 'ArrowRight' || k === '/' || k === 'd' || k === 'arrowright') setRightFlipper(true);
+      else if (c === 'Space' || c === 'Enter' || c === 'ArrowUp' || c === 'ArrowDown' || k === ' ' || k === 'enter') startPlunger();
+      else if (c === 'KeyX' || c === 'KeyN' || k === 'x' || k === 'n') nudge();
     };
     const onUp = (e: KeyboardEvent) => {
-      if (e.code === 'KeyZ' || e.code === 'ArrowLeft') setLeftFlipper(false);
-      else if (e.code === 'Slash' || e.code === 'ArrowRight') setRightFlipper(false);
-      else if (e.code === 'Space') releasePlunger();
+      const k = e.key.toLowerCase(); const c = e.code;
+      if (c === 'KeyZ' || c === 'KeyA' || c === 'ArrowLeft' || k === 'z' || k === 'a' || k === 'arrowleft') setLeftFlipper(false);
+      else if (c === 'Slash' || c === 'KeyD' || c === 'ArrowRight' || k === '/' || k === 'd' || k === 'arrowright') setRightFlipper(false);
+      else if (c === 'Space' || c === 'Enter' || c === 'ArrowUp' || c === 'ArrowDown' || k === ' ' || k === 'enter') releasePlunger();
     };
-    window.addEventListener('keydown', onDown);
-    window.addEventListener('keyup', onUp);
+    window.addEventListener('keydown', onDown); window.addEventListener('keyup', onUp);
     return () => { window.removeEventListener('keydown', onDown); window.removeEventListener('keyup', onUp); };
-  }, [isFocused, isGameOver, setLeftFlipper, setRightFlipper, startPlunger, releasePlunger, nudge]);
+  }, [isGameOver, setLeftFlipper, setRightFlipper, startPlunger, releasePlunger, nudge]);
 
   useEffect(() => {
     let animId: number;
     const loop = () => {
       if (isCharging.current) setPlungerCharge((p) => Math.min(1, p + 0.03));
       if (multiplierTime.current > 0 && Date.now() - multiplierTime.current > 30000) {
-        multiplierTime.current = 0;
-        setMultiplier(1);
+        multiplierTime.current = 0; setMultiplier(1);
       }
       [leftFlipper.current, rightFlipper.current].forEach((f) => {
         f.angle += ((f.isUp ? f.upAngle : f.restAngle) - f.angle) * 0.45;
@@ -124,17 +130,15 @@ export function usePinballEngine(isFocused: boolean) {
 
       const b = ballRef.current;
       if (b.active) {
-        b.vy += GRAVITY; b.vx *= DAMPING; b.vy *= DAMPING;
-        b.x += b.vx; b.y += b.vy;
+        b.vy += GRAVITY; b.vx *= DAMPING; b.vy *= DAMPING; b.x += b.vx; b.y += b.vy;
         b.trail = [{ x: b.x, y: b.y }, ...b.trail.slice(0, 7)];
-
         updateBallPhysics(b, TABLE_WIDTH - 32);
+
         const bmpPts = checkBumperCollisions(b, bumpers.current, multiplier);
         if (bmpPts > 0) setScore((s) => s + bmpPts);
 
         const tgtPts = checkTargetCollisions(b, targets.current, multiplier, () => {
-          setScore((s) => s + 2500 * multiplier);
-          setMultiplier(2);
+          setScore((s) => s + 2500 * multiplier); setMultiplier(2);
           multiplierTime.current = Date.now();
           notch.show({ title: '2x Multiplier Active!', subtitle: 'Targets cleared!' });
           setTimeout(() => targets.current.forEach((x) => (x.hit = false)), 800);
@@ -151,9 +155,7 @@ export function usePinballEngine(isFocused: boolean) {
             setBallsLeft((bl) => {
               const next = bl - 1;
               if (next <= 0) {
-                setIsGameOver(true);
-                gameAudio.gameOver();
-                gameHaptics.gameOver();
+                setIsGameOver(true); gameAudio.gameOver(); gameHaptics.gameOver();
                 const { isNewHigh, highScore: nh } = updatePinballScore(score);
                 setHighScore(nh);
                 if (isNewHigh) {
@@ -175,11 +177,8 @@ export function usePinballEngine(isFocused: boolean) {
   }, [multiplier, score]);
 
   const restartGame = () => {
-    setScore(0);
-    setBallsLeft(MAX_BALLS);
-    setMultiplier(1);
-    setIsGameOver(false);
-    setIsTilted(false);
+    setScore(0); setBallsLeft(MAX_BALLS); setMultiplier(1);
+    setIsGameOver(false); setIsTilted(false);
     targets.current.forEach((t) => (t.hit = false));
     ballRef.current = { x: TABLE_WIDTH - 20, y: TABLE_HEIGHT - 60, vx: 0, vy: 0, radius: 9, active: false, trail: [] };
   };
@@ -188,6 +187,6 @@ export function usePinballEngine(isFocused: boolean) {
     ball: ballRef.current, leftFlipper: leftFlipper.current, rightFlipper: rightFlipper.current,
     bumpers: bumpers.current, targets: targets.current, score, highScore, ballsLeft,
     multiplier, isGameOver, isTilted, plungerCharge, shake,
-    setLeftFlipper, setRightFlipper, startPlunger, releasePlunger, nudge, restartGame,
+    setLeftFlipper, setRightFlipper, startPlunger, releasePlunger, launchBall, nudge, restartGame,
   };
 }

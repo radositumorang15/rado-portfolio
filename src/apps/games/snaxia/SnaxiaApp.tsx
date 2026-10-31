@@ -6,11 +6,14 @@ import { useSnaxiaEngine } from './useSnaxiaEngine';
 import { SnaxiaBoard } from './SnaxiaBoard';
 import { SnaxiaDPad } from './SnaxiaDPad';
 import { useWindowsStore } from '../../../store/windows';
+import { usePrefsStore } from '../../../store/prefs';
 import { isMuted, setMuted } from '../../../lib/gameAudio';
 
 export const SnaxiaApp: React.FC = () => {
   const activeId = useWindowsStore((s) => s.activeId);
-  const isFocused = activeId === 'snaxia';
+  const resolvedShell = usePrefsStore((s) => s.resolvedShell);
+  const isMobile = resolvedShell === 'android';
+  const isFocused = activeId === 'snaxia' || isMobile;
   const [muted, setMutedState] = useState(isMuted());
 
   const {
@@ -25,18 +28,10 @@ export const SnaxiaApp: React.FC = () => {
     setMutedState(next);
   };
 
-  const toggleTheme = () => {
-    setTheme(theme === 'cyber_dark' ? 'nokia_lcd' : 'cyber_dark');
-  };
-
-  const toggleWall = () => {
-    setWallMode(wallMode === 'wrap' ? 'box' : 'wrap');
-  };
-
   return (
     <div className="relative w-full h-full flex flex-col justify-between p-3 select-none bg-[#0a0f18] text-white font-sans overflow-y-auto">
       {/* 1. TOP HUD TOOLBAR */}
-      <div className="flex items-center justify-between px-2 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs">
+      <div className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs shrink-0">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <span className="text-[10px] text-white/50 font-mono uppercase">Score</span>
@@ -52,32 +47,31 @@ export const SnaxiaApp: React.FC = () => {
           </div>
         </div>
 
-        {/* CONTROLS & TOGGLES */}
         <div className="flex items-center gap-1.5">
           <button
-            onClick={toggleWall}
-            className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-white/80 active:scale-95"
+            onClick={() => setWallMode(wallMode === 'wrap' ? 'box' : 'wrap')}
+            className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-[11px] font-mono text-white/80 active:scale-95 cursor-pointer"
             title="Toggle Wall Mode"
           >
             {wallMode === 'wrap' ? 'WRAP' : 'BOX (1.2x)'}
           </button>
           <button
-            onClick={toggleTheme}
-            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95"
+            onClick={() => setTheme(theme === 'cyber_dark' ? 'nokia_lcd' : 'cyber_dark')}
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95 cursor-pointer"
             title="Switch Theme"
           >
             <Palette size={14} />
           </button>
           <button
             onClick={toggleSound}
-            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95"
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95 cursor-pointer"
             title="Mute/Unmute"
           >
             {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>
           <button
             onClick={() => setIsPaused(!isPaused)}
-            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95"
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white/80 active:scale-95 cursor-pointer"
             title="Pause/Play"
           >
             {isPaused ? <Play size={14} /> : <Pause size={14} />}
@@ -85,8 +79,8 @@ export const SnaxiaApp: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. GAME BOARD */}
-      <div className="relative flex-1 flex items-center justify-center my-2">
+      {/* 2. GAME BOARD + OVERLAYS */}
+      <div className="relative flex-1 flex flex-col items-center justify-center my-1 min-h-0">
         <SnaxiaBoard
           snake={snake}
           direction={direction}
@@ -95,9 +89,9 @@ export const SnaxiaApp: React.FC = () => {
           techItem={techItem}
           theme={theme}
           wallMode={wallMode}
+          onSwipe={enqueueDirection}
         />
 
-        {/* GAME OVER OVERLAY */}
         {isGameOver && (
           <div className="absolute inset-0 z-30 bg-black/85 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-4 text-center animate-in fade-in duration-200">
             <h2 className="text-xl font-bold text-[#FF3B30] tracking-wider mb-1">GAME OVER</h2>
@@ -114,7 +108,6 @@ export const SnaxiaApp: React.FC = () => {
           </div>
         )}
 
-        {/* PAUSE OVERLAY */}
         {isPaused && !isGameOver && (
           <div className="absolute inset-0 z-20 bg-black/60 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center">
             <span className="text-lg font-bold tracking-widest text-[#00F0FF]">PAUSED</span>
@@ -123,14 +116,14 @@ export const SnaxiaApp: React.FC = () => {
         )}
       </div>
 
-      {/* 3. VIRTUAL TOUCH D-PAD (On Mobile / Small screen) */}
-      <div className="block md:hidden">
+      {/* 3. VIRTUAL TOUCH NAVIGATOR (Always shown in Mobile or toggled on Desktop) */}
+      <div className="shrink-0">
         <SnaxiaDPad onDirection={enqueueDirection} />
       </div>
 
       {/* 4. FOOTER TECH BADGES */}
-      <div className="flex items-center justify-between px-2 pt-1 border-t border-white/5 text-[11px] text-white/60">
-        <span className="truncate">Tech Unlocked: {unlockedTech.length}/6</span>
+      <div className="flex items-center justify-between px-2 pt-1 border-t border-white/5 text-[11px] text-white/60 shrink-0">
+        <span className="truncate">Tech: {unlockedTech.length}/6</span>
         <div className="flex gap-1 overflow-x-auto scrollbar-none">
           {unlockedTech.map((t) => (
             <span key={t} className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-mono">

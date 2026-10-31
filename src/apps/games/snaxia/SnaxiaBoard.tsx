@@ -9,12 +9,33 @@ interface SnaxiaBoardProps {
   techItem: TechItem | null;
   theme: ThemeMode;
   wallMode: WallMode;
+  onSwipe?: (dir: Direction) => void;
 }
 
 export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
-  snake, direction, food, bug, techItem, theme, wallMode,
+  snake, direction, food, bug, techItem, theme, wallMode, onSwipe,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 20) {
+      onSwipe?.(dx > 0 ? 'RIGHT' : 'LEFT');
+    } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 20) {
+      onSwipe?.(dy > 0 ? 'DOWN' : 'UP');
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -30,7 +51,6 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
     if (theme === 'nokia_lcd') {
       ctx.fillStyle = '#879176';
       ctx.fillRect(0, 0, width, height);
-      // Nokia pixel ghost grid
       ctx.strokeStyle = '#7E886D';
       ctx.lineWidth = 0.5;
       for (let i = 0; i <= GRID_SIZE; i++) {
@@ -40,7 +60,6 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
     } else {
       ctx.fillStyle = '#0F141C';
       ctx.fillRect(0, 0, width, height);
-      // Subtle cyber grid
       ctx.strokeStyle = '#1A2230';
       ctx.lineWidth = 1;
       for (let i = 0; i <= GRID_SIZE; i++) {
@@ -54,7 +73,7 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
       }
     }
 
-    // Draw Food
+    // Food
     const fx = food.x * cell;
     const fy = food.y * cell;
     if (theme === 'nokia_lcd') {
@@ -70,7 +89,7 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
       ctx.shadowBlur = 0;
     }
 
-    // Draw Bug (+50 timer)
+    // Bug (+50)
     if (bug) {
       const bx = bug.x * cell;
       const by = bug.y * cell;
@@ -83,14 +102,13 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
         ctx.fillStyle = '#FF007F';
         ctx.fillRect(bx + 2, by + 2, cell - 4, cell - 4);
         ctx.shadowBlur = 0;
-        // Countdown mini bar
         const pct = Math.max(0, bug.timer / bug.maxTimer);
         ctx.fillStyle = '#FF007F';
         ctx.fillRect(bx + 1, by - 4, cell * pct, 3);
       }
     }
 
-    // Draw Tech Item
+    // Tech Item
     if (techItem) {
       const tx = techItem.x * cell;
       const ty = techItem.y * cell;
@@ -106,7 +124,7 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
       ctx.shadowBlur = 0;
     }
 
-    // Draw Snake
+    // Snake
     const len = snake.length;
     snake.forEach((pt, i) => {
       const px = pt.x * cell;
@@ -119,7 +137,6 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
       }
 
       if (i === 0) {
-        // Head
         ctx.shadowColor = '#00F0FF';
         ctx.shadowBlur = 12;
         ctx.fillStyle = '#00F0FF';
@@ -128,7 +145,6 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // Eyes
         ctx.fillStyle = '#0F141C';
         let e1 = { x: px + 4, y: py + 4 };
         let e2 = { x: px + cell - 6, y: py + 4 };
@@ -145,7 +161,6 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
         ctx.fillRect(e1.x, e1.y, 2.5, 2.5);
         ctx.fillRect(e2.x, e2.y, 2.5, 2.5);
       } else {
-        // Body with gradient fade
         const progress = i / len;
         const scale = 1 - progress * 0.15;
         const offset = ((1 - scale) * cell) / 2;
@@ -158,12 +173,16 @@ export const SnaxiaBoard: React.FC<SnaxiaBoardProps> = ({
   }, [snake, direction, food, bug, techItem, theme, wallMode]);
 
   return (
-    <div className="relative flex items-center justify-center p-2 rounded-2xl bg-black/40 border border-white/10 shadow-inner">
+    <div
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      className="relative flex items-center justify-center p-2 rounded-2xl bg-black/40 border border-white/10 shadow-inner select-none cursor-pointer"
+    >
       <canvas
         ref={canvasRef}
         width={400}
         height={400}
-        className="w-full max-w-[380px] aspect-square rounded-xl object-contain touch-none"
+        className="w-full max-w-[340px] md:max-w-[380px] aspect-square rounded-xl object-contain touch-none"
       />
     </div>
   );

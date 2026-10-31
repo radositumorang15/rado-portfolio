@@ -10,12 +10,36 @@ interface PinballTableProps {
   plungerCharge: number;
   isTilted: boolean;
   shake: { x: number; y: number };
+  onLeftFlipper?: (up: boolean) => void;
+  onRightFlipper?: (up: boolean) => void;
+  onLaunch?: () => void;
 }
 
 export const PinballTable: React.FC<PinballTableProps> = ({
   ball, leftFlipper, rightFlipper, bumpers, targets, plungerCharge, isTilted, shake,
+  onLeftFlipper, onRightFlipper, onLaunch,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const laneX = TABLE_WIDTH - 32;
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const scaleX = TABLE_WIDTH / rect.width;
+    const clickX = (e.clientX - rect.left) * scaleX;
+
+    if (clickX >= laneX) {
+      onLaunch?.();
+    } else if (clickX < TABLE_WIDTH * 0.45) {
+      onLeftFlipper?.(true);
+    } else {
+      onRightFlipper?.(true);
+    }
+  };
+
+  const handlePointerUp = () => {
+    onLeftFlipper?.(false);
+    onRightFlipper?.(false);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,24 +50,19 @@ export const PinballTable: React.FC<PinballTableProps> = ({
     ctx.save();
     ctx.translate(shake.x, shake.y);
 
-    // 1. Table Background & Grid
     ctx.fillStyle = '#0F141C';
     ctx.fillRect(0, 0, TABLE_WIDTH, TABLE_HEIGHT);
 
-    // Decorative cyber grid lines
     ctx.strokeStyle = '#182232';
     ctx.lineWidth = 1;
     for (let x = 30; x < TABLE_WIDTH - 30; x += 30) {
       ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x, TABLE_HEIGHT - 60); ctx.stroke();
     }
 
-    // 2. Outer Border & Plunger Lane
     ctx.strokeStyle = '#00F0FF';
     ctx.lineWidth = 2.5;
     ctx.strokeRect(12, 12, TABLE_WIDTH - 24, TABLE_HEIGHT - 24);
 
-    // Plunger lane divider
-    const laneX = TABLE_WIDTH - 32;
     ctx.strokeStyle = '#2A364B';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -51,14 +70,12 @@ export const PinballTable: React.FC<PinballTableProps> = ({
     ctx.lineTo(laneX, TABLE_HEIGHT - 12);
     ctx.stroke();
 
-    // Plunger spring indicator
     if (plungerCharge > 0) {
       ctx.fillStyle = '#FF007F';
       const pHeight = 40 * plungerCharge;
       ctx.fillRect(laneX + 4, TABLE_HEIGHT - 20 - pHeight, 16, pHeight);
     }
 
-    // 3. Drop Targets (K-O-T-L-I-N)
     targets.forEach((t) => {
       ctx.fillStyle = t.hit ? '#1A2230' : '#00F0FF';
       ctx.strokeStyle = t.hit ? '#2A364B' : '#FFFFFF';
@@ -75,7 +92,6 @@ export const PinballTable: React.FC<PinballTableProps> = ({
       ctx.fillText(t.char, t.x + t.width / 2, t.y + t.height / 2);
     });
 
-    // 4. Bumpers
     bumpers.forEach((bmp) => {
       const isShock = bmp.shockwaveTimer > 0;
       const r = bmp.radius * (isShock ? 1.25 : 1);
@@ -106,7 +122,6 @@ export const PinballTable: React.FC<PinballTableProps> = ({
       ctx.fillText(bmp.hits >= 10 ? '250' : '100', bmp.x, bmp.y);
     });
 
-    // 5. Flippers
     [leftFlipper, rightFlipper].forEach((f) => {
       const fx2 = f.x + Math.cos(f.angle) * f.length;
       const fy2 = f.y + Math.sin(f.angle) * f.length;
@@ -125,7 +140,6 @@ export const PinballTable: React.FC<PinballTableProps> = ({
       ctx.fill();
     });
 
-    // 6. Ball Motion Trail & Ball
     if (ball.active) {
       ball.trail.forEach((pt, idx) => {
         const alpha = Math.max(0, 0.4 - idx * 0.05);
@@ -143,14 +157,12 @@ export const PinballTable: React.FC<PinballTableProps> = ({
       ctx.fill();
       ctx.shadowBlur = 0;
     } else {
-      // Resting in plunger
       ctx.fillStyle = '#A0AEC0';
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    // 7. Tilt Overlay
     if (isTilted) {
       ctx.fillStyle = 'rgba(255, 59, 48, 0.85)';
       ctx.font = 'bold 36px monospace';
@@ -159,15 +171,18 @@ export const PinballTable: React.FC<PinballTableProps> = ({
     }
 
     ctx.restore();
-  }, [ball, leftFlipper, rightFlipper, bumpers, targets, plungerCharge, isTilted, shake]);
+  }, [ball, leftFlipper, rightFlipper, bumpers, targets, plungerCharge, isTilted, shake, laneX]);
 
   return (
-    <div className="relative flex items-center justify-center p-2 rounded-2xl bg-black/50 border border-white/10 shadow-2xl">
+    <div className="relative flex items-center justify-center p-2 rounded-2xl bg-black/50 border border-white/10 shadow-2xl select-none">
       <canvas
         ref={canvasRef}
         width={TABLE_WIDTH}
         height={TABLE_HEIGHT}
-        className="w-full max-w-[340px] md:max-w-[360px] aspect-[360/540] rounded-xl object-contain touch-none"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        className="w-full max-w-[320px] md:max-w-[360px] aspect-[360/540] rounded-xl object-contain touch-none cursor-pointer"
       />
     </div>
   );

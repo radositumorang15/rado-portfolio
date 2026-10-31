@@ -56,3 +56,4 @@ export const TABLE_HEIGHT = 540;
 export const GRAVITY = 0.28;
 export const DAMPING = 0.985;
 export const MAX_BALLS = 3;
+

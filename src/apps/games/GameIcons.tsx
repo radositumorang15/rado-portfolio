@@ -74,3 +74,4 @@ export const SnaxiaIcon: React.FC<{ size?: number; className?: string }> = ({ si
     <circle cx="83" cy="72" r="5" fill="#FF3B30" filter="url(#glowFood)" />
   </svg>
 );
+
