@@ -52,7 +52,7 @@ export const PixelResumeView: React.FC = () => {
             <p className="text-xs font-semibold text-[var(--m3-primary)] mb-1">Education</p>
             <p className="text-sm font-bold">{profileData.education.institution}</p>
             <p className="text-xs text-[var(--m3-on-surface-variant)] mt-0.5">
-              {profileData.education.program[language]} • GPA {profileData.education.gpa} (Cumlaude Track)
+              {profileData.education.program[language]} • GPA {profileData.education.gpa}
             </p>
           </div>
 

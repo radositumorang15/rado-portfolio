@@ -70,7 +70,7 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <h2 className="text-base font-semibold truncate">{profile.name}</h2>
               <p className="text-xs text-[#60CDFF] font-semibold">{profile.tagline[lang]}</p>
               <p className="text-xs text-white/60 mt-0.5 truncate">
-                {profile.education.institution} • GPA {profile.education.gpa} (Cumlaude Track)
+                {profile.education.institution} • GPA {profile.education.gpa}
               </p>
             </div>
           </div>
